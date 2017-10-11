@@ -4,7 +4,7 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-//require_once 'PHPUnit/Framework/Assert/Functions.php';
+use PHPUnit_Framework_Assert as Assert;
 
 /**
  * Defines application features from the specific context.
@@ -51,7 +51,7 @@ class FeatureContext implements Context
      */
     public function ilYAUnProduitDansLApplication($produit)
     {
-       // PHPUnit_Framework_Assert::assertCount(1, 1);
+        Assert::assertEquals(1, 1);
     }
 
 }
