@@ -1,0 +1,23 @@
+.category {
+	width: 256px;
+    position: relative;
+    height: 256px;
+	display: inline-block;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+
+.category_name {
+	text-align: center;
+    background: #000000c4;
+    color: white;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: 32px;
+    line-height: 32px;
+}
+
+.category_image {
+	
+}

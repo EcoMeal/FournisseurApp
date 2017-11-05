@@ -1,0 +1,73 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+	{{ parent() }}
+	<link rel="stylesheet" href="css/category/category.css">
+
+{% endblock %}
+
+{% block title %}Ajout de catégories{% endblock %}
+
+{% block body %}
+
+	<h1>Ajouter une catégorie de produits</h1>
+
+	{% if error is defined %}
+	
+		<p> {{error}} </p>
+	
+	{% endif %}
+	
+	{{ form_start(form) }}
+	
+		{{ form_errors(form) }}
+		
+		<div class="form-horizontal">
+		
+			<div class="form-group">
+				{{ form_label(form.name, "Nom de la catégorie", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+				<div class="col-sm-6">
+					{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+				</div>
+			</div>
+			
+			<div class="form-group">
+				{{ form_label(form.imagePath, "Image", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+				<div class="col-sm-6">
+					{{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+				</div>
+			</div>
+			
+			<div class="form-group"> 
+				<div class="col-sm-offset-2 col-sm-6">
+					<button type="submit" class="btn btn-default">Valider</button>
+				</div>
+			</div>
+		
+		</div>
+		
+	{{ form_end(form) }}
+	
+	<h2>Catégories existantes : </h2>
+	
+	{% if categories is defined %}
+	
+		{% for category in categories %}
+			
+			<div class="category">
+				<div class="category_name">
+					{{ category.name }}
+				</div>
+				<div class="category_image">
+					<img src="{{ asset('uploads/images/' ~ category.imagePath) }}" />
+				</div>
+			</div>
+			
+		{% endfor %}
+	
+	{% else %}
+		<p>Aucune catégorie n'est créée pour l'instant</p>
+	{% endif %}
+
+{% endblock %}
