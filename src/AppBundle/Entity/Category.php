@@ -31,7 +31,7 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="imagePath", type="string", length=255)
+     * @ORM\Column(name="imagePath", type="string", length=255, nullable=true)
      */
     private $imagePath;
 
@@ -94,4 +94,3 @@ class Category
         return $this->imagePath;
     }
 }
-

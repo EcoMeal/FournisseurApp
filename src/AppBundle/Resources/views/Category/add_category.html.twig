@@ -60,7 +60,9 @@
 					{{ category.name }}
 				</div>
 				<div class="category_image">
-					<img src="{{ asset('uploads/images/' ~ category.imagePath) }}" />
+                    {% if category.imagePath != null %}
+					    <img src="{{ asset('uploads/images/' ~ category.imagePath) }}" />
+                    {% endif %}
 				</div>
 			</div>
 			

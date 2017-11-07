@@ -18,7 +18,9 @@ class CategoryType extends AbstractType
     {
         $builder
 			->add('name')
-			->add('imagePath', FileType::class);
+			->add('imagePath', FileType::class, array(
+                'required' => false,
+            ));
     }
     
     /**

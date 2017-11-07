@@ -15,28 +15,24 @@ use AppBundle\Form\CategoryType;
 class CategoryController extends Controller
 {
 	
-	 /**
-     * @Route("/addCategory")
-	 * @Method("GET")
-     */
-	 public function createCategoryAction() {
-		 
-		//Création du formulaire
-		$category = new Category();
-		$form = $this->createForm(CategoryType::class, $category);
-		 
-		//Récupération de la liste de catégories existantes
-		$doct = $this->getDoctrine()->getManager();
-		$categories = $doct->getRepository("AppBundle:Category")->findBy([], ['name' => 'ASC']);
-		 
-		return $this->render('AppBundle:Category:add_category.html.twig', 
-			array( "categories" => $categories, "form" => $form->createView())
-		);
-	 }
-	
+
+
+
     /**
-     * @Route("/addCategory")
-	 * @Method("POST")
+     * @Route("/category/clean")
+     */
+    public function cleanAllCategoryAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager(); 
+        $connection = $em->getConnection();
+        $platform   = $connection->getDatabasePlatform();
+        $connection->executeUpdate($platform->getTruncateTableSQL('category', true /* whether to ccascade */));
+        return $this->redirect('/category');
+    }
+
+
+    /**
+     * @Route("/category")
      */
     public function saveCategoryAction(Request $request)
     {
@@ -61,24 +57,27 @@ class CategoryController extends Controller
 				$error = "La catégorie existe déjà";
 			} else {
 				
-				// On enregistre le fichier
-				$file = $category->getImagePath();
+                if(!is_null($category->getImagePath())) {
+                
+                    // On enregistre le fichier
+				    $file = $category->getImagePath();
 				
-				// Generate a unique name for the file before saving it
-				$fileName = md5(uniqid()).'.'.$file->guessExtension();
+				    // Generate a unique name for the file before saving it
+				    $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
-				// Move the file to the directory where brochures are stored
-				$file->move(
-					$this->getParameter('image_directory'),
-					$fileName
-				);
+				    // Move the file to the directory where brochures are stored
+				    $file->move(
+					    $this->getParameter('image_directory'),
+					    $fileName
+				    );
 				
-				$category->setImagePath($fileName);
+				    $category->setImagePath($fileName);
+
+                }
 				
 				// On enregistre la catégorie
 				$doct->persist($category);
-				$doct->flush(); 
-				
+				$doct->flush();
 				
 			}
 			
