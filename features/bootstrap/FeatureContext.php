@@ -1,25 +1,19 @@
 <?php
-
 // To avoid the kernel exception due to WebtestCase...
 $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
-
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-
 use PHPUnit_Framework_Assert as Assert;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext extends WebTestCase implements Context
 {
-
     private $client = null;
     private $crawler = null;
-
     /**
      * Initializes context.
      *
@@ -31,22 +25,18 @@ class FeatureContext extends WebTestCase implements Context
     {
       $this->client = static::createClient();
     }
-
-
     /**
      * @Given il n'y a aucune categorie dans l'application
      */
     public function ilNyAAucuneCategorieDansLapplication()
     {
         $category = "<div class=\"category\">";
-
 	    $crawler = $this->client->request('GET', '/category');
 	    $this->assertNotContains(
         $category,
             $this->client->getResponse()->getContent()
         );
     }
-
     /**
      * @When j'ajoute la categorie :cate dans l'application
      */
@@ -60,7 +50,6 @@ class FeatureContext extends WebTestCase implements Context
       // submit the form
       $this->client->submit($form);
     }
-
     /**
      * @Then il y a une categorie :cate dans l'application
      */
