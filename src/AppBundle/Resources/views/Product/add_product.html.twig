@@ -31,8 +31,13 @@
 						{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
 					</div>
 				</div>
-			
 				
+				<div class="form-group">
+					{{ form_label(form.imagePath, "Image", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+					</div>
+				</div>
 
 				<div class="form-group">
 					{{ form_label(form.category, "Catégorie", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
@@ -63,9 +68,9 @@
 
 		</div>
 	
-		{% if products is defined %}
+		{% if product_list is defined %}
 	
-			{% for product in products %}
+			{% for product in product_list %}
 			
 
 				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
