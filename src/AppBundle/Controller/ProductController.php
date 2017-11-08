@@ -26,7 +26,7 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager(); 
         $connection = $em->getConnection();
         $platform   = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('product', true /* whether to ccascade */));
+        $connection->executeUpdate($platform->getTruncateTableSQL('product', true /* whether to cascade */));
         return $this->redirect('/product');
     }
 

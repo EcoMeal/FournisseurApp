@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ProductType extends AbstractType
 {
@@ -18,8 +19,10 @@ class ProductType extends AbstractType
         ->add('category', EntityType::class, array(
                 'class' => 'AppBundle:Category',
                 'choice_label' => 'name',
-                'multiple'     => false)
-        );
+                'multiple'     => false))
+        ->add('imagePath', FileType::class, array(
+                'required' => false,
+        ));
 
     }
     
