@@ -35,6 +35,12 @@ class Product
      */
     private $category;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="imagePath", type="string", length=255, nullable=true)
+     */
+    private $imagePath;
 
     /**
      * Get id
@@ -92,6 +98,30 @@ class Product
     public function getCategory()
     {
         return $this->category;
+    }
+    
+    /**
+     * Set imagePath
+     *
+     * @param string $imagePath
+     *
+     * @return Product
+     */
+    public function setImagePath($imagePath)
+    {
+        $this->imagePath = $imagePath;
+
+        return $this;
+    }
+
+    /**
+     * Get imagePath
+     *
+     * @return string
+     */
+    public function getImagePath()
+    {
+        return $this->imagePath;
     }
 }
 
