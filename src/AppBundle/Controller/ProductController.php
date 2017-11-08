@@ -37,27 +37,29 @@ class ProductController extends Controller
     public function saveProductAction(Request $request)
     {
 		
-		$product = new Product();
-		$form = $this->createForm(ProductType::class, $product);
-		$form->handleRequest($request);
+	$product = new Product();
+	$form = $this->createForm(ProductType::class, $product);
+	$form->handleRequest($request);
 		
-		//Doctrine manager
-		$doct = $this->getDoctrine()->getManager();
+	//Doctrine manager
+	$doct = $this->getDoctrine()->getManager();
 		
-		//Error
-		$error = null;
+	//Error
+	$error = null;
 
-		//En cas de formulaire valide
+	//En cas de formulaire valide
         if ($form->isValid()) {
 		
             // On enregistre la catégorie
-			$doct->persist($product);
-			$doct->flush();
+            $doct->persist($product);
+            $doct->flush();
+	}
+        $product_list = $doct->getRepository("AppBundle:Product")->findBy([], ['name' => 'ASC']);
 			
-		}
-			
-		return $this->render('AppBundle:Product:add_product.html.twig', array("form" => $form->createView(), "error" => $error
-		));
+	return $this->render('AppBundle:Product:add_product.html.twig',
+                array("form" => $form->createView(), "product_list" => $product_list,
+                    "error" => $error
+	));
 		
     }
 
