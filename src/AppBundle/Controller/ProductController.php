@@ -50,6 +50,25 @@ class ProductController extends Controller
 	//En cas de formulaire valide
         if ($form->isValid()) {
 		
+            
+            if(!is_null($product->getImagePath())) {
+                
+                    // On enregistre le fichier
+		    $file = $product->getImagePath();
+		
+		    // Generate a unique name for the file before saving it
+		    $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+		    // Move the file to the directory where brochures are stored
+		    $file->move(
+			    $this->getParameter('image_directory'),
+			    $fileName
+		    );
+				
+		    $product->setImagePath($fileName);
+
+            }
+                
             // On enregistre la catégorie
             $doct->persist($product);
             $doct->flush();
