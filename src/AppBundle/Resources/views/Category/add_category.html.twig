@@ -18,7 +18,8 @@
 		<p> {{error}} </p>
 	
 	{% endif %}
-	<div class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card">
+	
+	<div  id="createCategory"  class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card ">
 		<h2 class="card-title">Ajouter une catégorie de produits</h2>
 		{{ form_start(form) }}
 	
@@ -49,8 +50,18 @@
 		{{ form_end(form) }}
 	
 	</div>
+
 	<div class="row col-xs-12">
-		<h2>Catégories existantes : </h2>
+		<h2>Catégories : </h2>
+
+		<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+			<img class="card-image" src="images/add_element.ico" onclick="scrollCreate()"/>
+
+			<div class="card-image-label">
+				ajouter une categorie
+			</div>
+
+		</div>
 	
 		{% if categories is defined %}
 	
@@ -69,9 +80,17 @@
 
 				</div>
 			{% endfor %}
-	
-		{% else %}
-			<p>Aucune catégorie n'est créée pour l'instant</p>
+
 		{% endif %}
 	</div>
+<script>
+	$(document).ready(function(){
+		$("#createCategory").hide();
+	});
+	function scrollCreate(){
+		$("#createCategory").show();
+	        $("#createCategory").get(0).scrollTop();
+	}
+</script>
+	
 {% endblock %}
