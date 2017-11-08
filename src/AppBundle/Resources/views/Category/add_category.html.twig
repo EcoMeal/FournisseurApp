@@ -57,7 +57,7 @@
 			{% for category in categories %}
 			
 
-				<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 					{% if category.imagePath != null %}
 						<img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
 					{% else %}
