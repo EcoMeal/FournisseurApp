@@ -11,65 +11,67 @@
 
 {% block body %}
 
-	<h1>Ajouter une catégorie de produits</h1>
+
 
 	{% if error is defined %}
 	
 		<p> {{error}} </p>
 	
 	{% endif %}
+	<div class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card">
+		<h2 class="card-title">Ajouter une catégorie de produits</h2>
+		{{ form_start(form) }}
 	
-	{{ form_start(form) }}
-	
-		{{ form_errors(form) }}
+			{{ form_errors(form) }}
 		
-		<div class="form-horizontal">
+			<div class="form-horizontal">
 		
-			<div class="form-group">
-				{{ form_label(form.name, "Nom de la catégorie", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-				<div class="col-sm-6">
-					{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+				<div class="form-group">
+					{{ form_label(form.name, "Nom de la catégorie", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+					</div>
 				</div>
-			</div>
 			
-			<div class="form-group">
-				{{ form_label(form.imagePath, "Image", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-				<div class="col-sm-6">
-					{{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+				<div class="form-group">
+					{{ form_label(form.imagePath, "Image", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+					</div>
 				</div>
-			</div>
 			
-			<div class="form-group"> 
-				<div class="col-sm-offset-2 col-sm-6">
-					<button type="submit" class="btn btn-default">Valider</button>
+				<div class="form-group"> 
+					<button type="submit" class="btn btn-default col-xs-offset-8">Valider</button>
 				</div>
+		
 			</div>
 		
-		</div>
-		
-	{{ form_end(form) }}
+		{{ form_end(form) }}
 	
-	<h2>Catégories existantes : </h2>
+	</div>
+	<div class="row col-xs-12">
+		<h2>Catégories existantes : </h2>
 	
-	{% if categories is defined %}
+		{% if categories is defined %}
 	
-		{% for category in categories %}
+			{% for category in categories %}
 			
-			<div class="category">
-				<div class="category_name">
-					{{ category.name }}
-				</div>
-				<div class="category_image">
-                    {% if category.imagePath != null %}
-					    <img src="{{ asset('uploads/images/' ~ category.imagePath) }}" />
-                    {% endif %}
-				</div>
-			</div>
-			
-		{% endfor %}
-	
-	{% else %}
-		<p>Aucune catégorie n'est créée pour l'instant</p>
-	{% endif %}
 
+				<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+					{% if category.imagePath != null %}
+						<img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
+					{% else %}
+						<img class="card-image" src="images/placeholder.png"/>
+					{% endif %}
+					<div class="card-image-label">
+						{{ category.name }}
+					</div>
+
+				</div>
+			{% endfor %}
+	
+		{% else %}
+			<p>Aucune catégorie n'est créée pour l'instant</p>
+		{% endif %}
+	</div>
 {% endblock %}
