@@ -1,19 +1,18 @@
-Feature: Ajouter un produit
+Feature: Ajouter une categorie
 
 	En tant que gestionnaire
-	Je veux pouvoir ajouter des produits
-	Afin de lister les produits que nous acceptons de recevoir
+	Je veux pouvoir ajouter des categories
+	Afin de pouvoir créer des produits avec une catégorie et permettre un meilleur référencement
 	
 	Règles :
-	- Les noms des produits sont uniques
+	- Les noms des catégories sont uniques
 
-	Scenario Outline: Ajouter un produit
-		Given un produit <nom_produit>
-		And il n'y a aucun produit dans l'application
-		When j'ajoute le produit <nom_produit> dans l'application
-		Then il y a un produit <nom_produit> dans l'application
+	Scenario Outline: Ajouter une categorie
+		Given il n'y a aucune categorie dans l'application
+		When j'ajoute la categorie <nom_categorie> dans l'application
+		Then il y a une categorie <nom_categorie> dans l'application
 
 	Examples:
-		| nom_produit 	|
-		| poulet		|
-		| oeuf			|
+		| nom_categorie	|
+		| "viande"	|
+		| "legumes"	|

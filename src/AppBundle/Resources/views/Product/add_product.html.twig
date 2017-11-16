@@ -1,0 +1,102 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+	{{ parent() }}
+	<link rel="stylesheet" href="css/category/category.css">
+
+{% endblock %}
+
+{% block title %}Ajout de produits{% endblock %}
+
+{% block body %}
+
+
+	{% if error is defined %}
+	
+		<p> {{error}} </p>
+	
+	{% endif %}
+	<div  id="createProduct" class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card">
+		<h2 class="card-title">Ajouter un produit</h2>
+		{{ form_start(form) }}
+	
+			{{ form_errors(form) }}
+		
+			<div class="form-horizontal">
+		
+				<div class="form-group">
+					{{ form_label(form.name, "Nom du produit", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+					</div>
+				</div>
+				
+				<div class="form-group">
+					{{ form_label(form.imagePath, "Image", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+					</div>
+				</div>
+
+				<div class="form-group">
+					{{ form_label(form.category, "Catégorie", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+					</div>
+				</div>	
+			
+				<div class="form-group"> 
+					<button type="submit" class="btn btn-default col-xs-offset-8">Valider</button>
+				</div>
+		
+			</div>
+		
+		{{ form_end(form) }}
+	
+	</div>
+
+	<div class="row col-xs-12">
+		<h2>Produits: </h2>
+
+		<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+			<img class="card-image" src="images/add_element.ico" onclick="scrollCreate()"/>
+
+			<div class="card-image-label">
+				ajouter un produit
+			</div>
+
+		</div>
+	
+		{% if product_list is defined %}
+	
+			{% for product in product_list %}
+			
+
+				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+					{% if product.imagePath != null %}
+						<img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}"/>
+					{% else %}
+						<img class="card-image" src="images/placeholder.png"/>
+					{% endif %}
+					<div class="card-image-label">
+						{{ product.name }}
+					</div>
+
+				</div>
+			{% endfor %}
+
+		{% endif %}
+	</div>
+	<script>
+		$(document).ready(function(){
+			$("#createProduct").hide();
+		});
+		function scrollCreate(){
+			$("#createProduct").show();
+			$("#createProduct").get(0).scrollTop();
+		}
+	</script>
+
+
+{% endblock %}

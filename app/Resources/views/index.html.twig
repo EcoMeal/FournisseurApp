@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>EcoMeal</title>
+	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	{% block css %}
+	
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="css/override.css">
+	
+	{% endblock %}
+
+    <script src="jquery.min.js"></script> 
+    <script src="js/bootstrap.min.js"></script>
+
+  </head>	
+  <body style="background-color: #eeeeee">
+	
+
+{% include 'topbar.html' %}
+
+  
+<div class="container-fluid" style="margin-top:40px">
+    <div class="content-container col-lg-12 col-md-12 col-xs-12">
+ 	{% block body %}{% endblock %} 
+    </div>   
+  </div>
+
+  </body>
+</html>
