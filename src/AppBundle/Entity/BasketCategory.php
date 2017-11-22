@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Product
+ * BasketCategory
  *
- * @ORM\Table(name="product")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductRepository")
+ * @ORM\Table(name="basket_category")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\BasketCategoryRepository")
  */
-class Product
+class BasketCategory
 {
     /**
      * @var int
@@ -28,19 +28,13 @@ class Product
      */
     private $name;
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $category;
-
     /**
      * @var string
      *
-     * @ORM\Column(name="imagePath", type="string", length=255, nullable=true)
+     * @ORM\Column(name="imagePath", type="text", nullable=true)
      */
     private $imagePath;
+
 
     /**
      * Get id
@@ -57,7 +51,7 @@ class Product
      *
      * @param string $name
      *
-     * @return Product
+     * @return BasketCategory
      */
     public function setName($name)
     {
@@ -77,35 +71,11 @@ class Product
     }
 
     /**
-     * Set category
-     *
-     * @param string $category
-     *
-     * @return Product
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return Category
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-    
-    /**
      * Set imagePath
      *
      * @param string $imagePath
      *
-     * @return Product
+     * @return BasketCategory
      */
     public function setImagePath($imagePath)
     {
