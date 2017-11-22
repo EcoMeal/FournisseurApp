@@ -35,6 +35,21 @@ class CategoryController extends Controller
         $em->flush();
         return $this->redirect('/category');
     }
+    
+     /**
+     * @Route("/category/delete/{id}", requirements={"id" = "\d+"})
+     * 
+     * Deletes the category with the given id from the database.  
+     */
+    public function deleteCategoryAction($id)
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $category = $em->getRepository("AppBundle:Category")->findOneById($id);    
+        $em->remove($category);          
+        $em->flush();
+        return $this->redirect('/category');
+    }
 
 
     /**
