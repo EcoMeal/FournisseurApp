@@ -25,9 +25,14 @@ class CategoryController extends Controller
     public function cleanAllCategoryAction()
     {
         $em = $this->getDoctrine()->getManager(); 
-        $connection = $em->getConnection();
-        $platform   = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('category', true /* whether to cascade */));
+
+        $category_list = $em->getRepository("AppBundle:Category")->findAll();
+        
+        for($i = 0; $i < count($category_list); $i++){
+             $em->remove($category_list[$i]);
+        }
+           
+        $em->flush();
         return $this->redirect('/category');
     }
 
