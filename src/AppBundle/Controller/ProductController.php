@@ -29,6 +29,21 @@ class ProductController extends Controller
         $connection->executeUpdate($platform->getTruncateTableSQL('product', true /* whether to cascade */));
         return $this->redirect('/product');
     }
+    
+    /**
+     * @Route("/product/delete/{id}", requirements={"id" = "\d+"})
+     * 
+     * Deletes the product with the given id from the database.  
+     */
+    public function deleteCategoryAction($id)
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $product = $em->getRepository("AppBundle:Product")->findOneById($id);    
+        $em->remove($product);          
+        $em->flush();
+        return $this->redirect('/product');
+    }
 
 
     /**

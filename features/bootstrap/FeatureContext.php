@@ -3,8 +3,6 @@
 $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 use PHPUnit_Framework_Assert as Assert;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
@@ -30,11 +28,10 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilNyAAucuneCategorieDansLapplication()
     {
-        $category = "<div class=\"category\">";
-	    $crawler = $this->client->request('GET', '/category');
-	    $this->assertNotContains(
-        $category,
-            $this->client->getResponse()->getContent()
+	$crawler = $this->client->request('GET', '/category');
+        
+	$this->assertEquals(0,
+            $crawler->filterXPath('//*[@id=\'listCategory\']')->count()
         );
     }
     /**
@@ -55,11 +52,67 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilYAUneCategorieDansLapplication($cate)
     {
-        $crawler = $this->client->request('GET', '/category');
-	    $this->assertContains(
-            $cate, $this->client->getResponse()->getContent()
+        $this->client->request('GET', '/category');
+	$this->assertContains(
+        $cate, $this->client->getResponse()->getContent()
         );
         //Clean the category.
         $this->client->request('GET', '/category/clean');
+    }
+
+    
+    /**
+     * @Given il n'y a aucun produit dans l'application
+     */
+    public function ilNyAAucunProduitDansLapplication()
+    {   
+	$crawler = $this->client->request('GET', '/product');
+               
+	$this->assertEquals($crawler->filter('.card-container')->count(), 1);
+    }
+    
+    /**
+     * @Given il existe une catégorie dans l'application.
+     */
+    public function ilExisteUneCategorieDansLapplication()
+    {
+        $crawler = $this->client->request('GET', '/category');
+      
+        $form = $crawler->selectButton('Valider')->form();
+        // Set the category values
+        $form->setValues(array('appbundle_category[name]' => "testCategory"));
+        // submit the form
+        $this->client->submit($form);
+        
+        $crawler = $this->client->request('GET', '/category');
+        
+	$this->assertEquals($crawler->filter('.card-container')->count(), 2);
+        
+    }
+    
+    /**
+     * @When j'ajoute le produit :product dans l'application
+     */
+    public function jajouteLeProduitDansLapplication($product)
+    {
+        $crawler = $this->client->request('GET', '/product');
+      
+        $form = $crawler->selectButton('Valider')->form();
+        // Set the product values
+        $form->setValues(array('appbundle_product[name]' => $product));
+        // submit the form
+        $this->client->submit($form);
+    }
+
+    /**
+     * @Then il y a un produit :product dans l'application
+     */
+    public function ilYAUnProduitDansLapplication($product)
+    {    
+	$crawler = $this->client->request('GET', '/product');
+               
+	$this->assertEquals($crawler->filter('.card-container')->count(), 2);
+        // Clean the product.
+        $this->client->request('GET', '/product/clean');
     }
 }

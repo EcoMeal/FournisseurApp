@@ -25,9 +25,29 @@ class CategoryController extends Controller
     public function cleanAllCategoryAction()
     {
         $em = $this->getDoctrine()->getManager(); 
-        $connection = $em->getConnection();
-        $platform   = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('category', true /* whether to cascade */));
+
+        $category_list = $em->getRepository("AppBundle:Category")->findAll();
+        
+        for($i = 0; $i < count($category_list); $i++){
+             $em->remove($category_list[$i]);
+        }
+           
+        $em->flush();
+        return $this->redirect('/category');
+    }
+    
+     /**
+     * @Route("/category/delete/{id}", requirements={"id" = "\d+"})
+     * 
+     * Deletes the category with the given id from the database.  
+     */
+    public function deleteCategoryAction($id)
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $category = $em->getRepository("AppBundle:Category")->findOneById($id);    
+        $em->remove($category);          
+        $em->flush();
         return $this->redirect('/category');
     }
 
