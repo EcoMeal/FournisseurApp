@@ -35,3 +35,7 @@
 	font-style: bold;
     	font-size: 20px;
 }
+
+.btn-clickable{
+    cursor: pointer;
+}
