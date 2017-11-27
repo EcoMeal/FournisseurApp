@@ -115,4 +115,5 @@ class FeatureContext extends WebTestCase implements Context
         // Clean the product.
         $this->client->request('GET', '/product/clean');
     }
+    
 }

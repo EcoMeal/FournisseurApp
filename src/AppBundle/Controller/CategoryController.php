@@ -11,9 +11,6 @@ use AppBundle\Form\CategoryType;
 class CategoryController extends Controller
 {
 	
-
-
-
     /**
      * @Route("/category/clean")
      * 
