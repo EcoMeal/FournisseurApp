@@ -51,7 +51,7 @@
 	</div>
 
 	<div id="listCategories" class="row col-xs-12">
-		<h2>Catégories : </h2>
+		<h2>Catégories produit: </h2>
 
 		<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 			<img class="card-image" src="images/add_element.ico" onclick="scrollCreate()"/>
@@ -68,7 +68,7 @@
 			
 
 				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
-					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteCategory('{{ category.name }}')"></span>					
+					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteCategory('{{ category.name }}','{{category.id}}')"></span>					
 					{% if category.imagePath != null %}
 						<img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
 					{% else %}
@@ -91,9 +91,9 @@
 		$("#createCategory").show();
 	        $("#createCategory").get(0).scrollTop();
 	}
-	function deleteCategory(name){
+	function deleteCategory(name,id){
 		if(confirm("Voulez-vous vraiment supprimer la Category : " + name)){
-			// link delete	
+			document.location.href="/category/delete/" + id
 		}
 	}
 </script>
