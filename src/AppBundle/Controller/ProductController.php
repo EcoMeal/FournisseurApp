@@ -64,29 +64,39 @@ class ProductController extends Controller
 
 	//En cas de formulaire valide
         if ($form->isValid()) {
-		
             
-            if(!is_null($product->getImagePath())) {
+            // Checks if the category already exists
+            $productWithSameName = $doct->getRepository("AppBundle:Product")->findOneByName($product->getName());
+
+            if(!is_null($productWithSameName)) {
+                $error = "Le produit existe déjà";
+            } else {
                 
-                    // On enregistre le fichier
-		    $file = $product->getImagePath();
-		
-		    // Generate a unique name for the file before saving it
-		    $fileName = md5(uniqid()).'.'.$file->guessExtension();
+                 if(!is_null($product->getImagePath())) {
+                
+                        // On enregistre le fichier
+                        $file = $product->getImagePath();
 
-		    // Move the file to the directory where brochures are stored
-		    $file->move(
-			    $this->getParameter('image_directory'),
-			    $fileName
-		    );
-				
-		    $product->setImagePath($fileName);
+                        // Generate a unique name for the file before saving it
+                        $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
+                        // Move the file to the directory where brochures are stored
+                        $file->move(
+                                $this->getParameter('image_directory'),
+                                $fileName
+                        );
+
+                        $product->setImagePath($fileName);
+
+                }
+
+                // On enregistre la catégorie
+                $doct->persist($product);
+                $doct->flush();
+                
+                
             }
-                
-            // On enregistre la catégorie
-            $doct->persist($product);
-            $doct->flush();
+		
 	}
         $product_list = $doct->getRepository("AppBundle:Product")->findBy([], ['name' => 'ASC']);
 			
