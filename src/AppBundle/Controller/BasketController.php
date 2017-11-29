@@ -58,6 +58,7 @@ class BasketController extends Controller
             ));
       
         }
+        return $data;
     }
     
     /**
