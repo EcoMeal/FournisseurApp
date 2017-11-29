@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class FeatureContext extends WebTestCase implements Context
 {
     private $client = null;
-    private $crawler = null;
     /**
      * Initializes context.
      *
@@ -30,9 +29,7 @@ class FeatureContext extends WebTestCase implements Context
     {
 	$crawler = $this->client->request('GET', '/category');
         
-	$this->assertEquals(0,
-            $crawler->filterXPath('//*[@id=\'listCategory\']')->count()
-        );
+	$this->assertEquals($crawler->filter('#listCategory')->count(), 0);
     }
     /**
      * @When j'ajoute la categorie :cate dans l'application
@@ -53,9 +50,7 @@ class FeatureContext extends WebTestCase implements Context
     public function ilYAUneCategorieDansLapplication($cate)
     {
         $this->client->request('GET', '/category');
-	$this->assertContains(
-        $cate, $this->client->getResponse()->getContent()
-        );
+	$this->assertContains($cate, $this->client->getResponse()->getContent());
         //Clean the category.
         $this->client->request('GET', '/category/clean');
     }
@@ -67,8 +62,9 @@ class FeatureContext extends WebTestCase implements Context
     public function ilNyAAucunProduitDansLapplication()
     {   
 	$crawler = $this->client->request('GET', '/product');
-               
-	$this->assertEquals($crawler->filter('.card-container')->count(), 1);
+        // By default there is already one card for the product creation 
+        // which has the same class
+	$this->assertEquals($crawler->filter('.card-image-label')->count(), 1);
     }
     
     /**
@@ -86,7 +82,7 @@ class FeatureContext extends WebTestCase implements Context
         
         $crawler = $this->client->request('GET', '/category');
         
-	$this->assertEquals($crawler->filter('.card-container')->count(), 2);
+	$this->assertEquals($crawler->filter('.card-image-label')->count(), 2);
         
     }
     
@@ -110,8 +106,20 @@ class FeatureContext extends WebTestCase implements Context
     public function ilYAUnProduitDansLapplication($product)
     {    
 	$crawler = $this->client->request('GET', '/product');
-               
-	$this->assertEquals($crawler->filter('.card-container')->count(), 2);
+  
+        $product_count = $crawler->filter('.card-image-label')->reduce(
+                function ($node, $i) {
+            return false;       
+           /* file_put_contents("test.txt", node->text());
+                    if (strcmp($node->text(), $product) == 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }*/
+                }
+        )->count();
+        
+	$this->assertEquals(5, $product_count);
         // Clean the product.
         $this->client->request('GET', '/product/clean');
     }
