@@ -90,7 +90,7 @@ class ProductController extends Controller
 
                 }
 
-                // On enregistre la catégorie
+                // On enregistre le produit
                 $doct->persist($product);
                 $doct->flush();
                 

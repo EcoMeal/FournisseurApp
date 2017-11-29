@@ -71,11 +71,22 @@ class BasketController extends Controller
         
         //Doctrine manager
 	$em = $this->getDoctrine()->getManager();
+        
+        $error = null;
 	
         if($form->isSubmitted() && $form->isValid()) {
             
-            //On vérifie l'intégrité des données
-         
+            //On vérifie qu'il n'y a pas déjà un panier avec le même nom
+            $basketWithSameName = $em->getRepository("AppBundle:Basket")->findOneByName($basket->getName());
+            
+            if(!is_null($basketWithSameName)) {
+                $error = "Le panier existe déjà";
+            } else {
+                // On enregistre le panier
+                $em->persist($basket);
+                $em->flush();
+            }
+            
         }
         
         //Get the existing products
@@ -88,7 +99,8 @@ class BasketController extends Controller
         return $this->render('AppBundle:Basket:add_basket.html.twig', array(
             "form" => $form->createView(),
             "basket_list" => $baskets, 
-            "product_list" => $product_list
+            "product_list" => $product_list,
+            "error" => $error
         ));
         
         
