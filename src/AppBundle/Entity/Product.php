@@ -31,7 +31,7 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $category;
 

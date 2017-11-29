@@ -29,7 +29,10 @@ class FeatureContext extends WebTestCase implements Context
     {
 	$crawler = $this->client->request('GET', '/category');
         
-	$this->assertEquals($crawler->filter('#listCategory')->count(), 0);
+	// By default there is already one card for the category creation 
+        // which has the same class
+	$this->assertEquals(1, $crawler->filter('.card-image-label')->count(),
+                "A category already exist before the test run");
     }
     /**
      * @When j'ajoute la categorie :cate dans l'application
@@ -49,9 +52,21 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilYAUneCategorieDansLapplication($cate)
     {
-        $this->client->request('GET', '/category');
-	$this->assertContains($cate, $this->client->getResponse()->getContent());
-        //Clean the category.
+        $crawler = $this->client->request('GET', '/category');
+	
+        // By default there is already one card for the category creation 
+        // which has the same class
+        $category_count = $crawler->filter('.card-image-label')->reduce(
+                function ($node, $i) use($cate) {                      
+                    if (strcmp(trim($node->text()), $cate) == 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+        )->count();
+	$this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
+        // Clean all the category.
         $this->client->request('GET', '/category/clean');
     }
 
@@ -64,7 +79,8 @@ class FeatureContext extends WebTestCase implements Context
 	$crawler = $this->client->request('GET', '/product');
         // By default there is already one card for the product creation 
         // which has the same class
-	$this->assertEquals($crawler->filter('.card-image-label')->count(), 1);
+	$this->assertEquals(1, $crawler->filter('.card-image-label')->count(),
+                "There is already a product in the application before the test run.");
     }
     
     /**
@@ -78,12 +94,7 @@ class FeatureContext extends WebTestCase implements Context
         // Set the category values
         $form->setValues(array('appbundle_category[name]' => "testCategory"));
         // submit the form
-        $this->client->submit($form);
-        
-        $crawler = $this->client->request('GET', '/category');
-        
-	$this->assertEquals($crawler->filter('.card-image-label')->count(), 2);
-        
+        $this->client->submit($form);              
     }
     
     /**
@@ -106,22 +117,20 @@ class FeatureContext extends WebTestCase implements Context
     public function ilYAUnProduitDansLapplication($product)
     {    
 	$crawler = $this->client->request('GET', '/product');
-  
+        
         $product_count = $crawler->filter('.card-image-label')->reduce(
-                function ($node, $i) {
-            return false;       
-           /* file_put_contents("test.txt", node->text());
-                    if (strcmp($node->text(), $product) == 0) {
+                function ($node, $i) use( $product) {                      
+                    if (strcmp(trim($node->text()), $product) == 0) {
                         return true;
                     } else {
                         return false;
-                    }*/
+                    }
                 }
         )->count();
         
-	$this->assertEquals(5, $product_count);
+	$this->assertEquals(1, $product_count, "The product '". $product."' count is incorrect.");
         // Clean the product.
-        $this->client->request('GET', '/product/clean');
+        $this->client->request('GET', '/category/clean');
     }
     
 }
