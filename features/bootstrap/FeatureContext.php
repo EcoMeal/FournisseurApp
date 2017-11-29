@@ -5,6 +5,8 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use PHPUnit_Framework_Assert as Assert;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
+
 /**
  * Defines application features from the specific context.
  */
@@ -67,7 +69,7 @@ class FeatureContext extends WebTestCase implements Context
         )->count();
 	$this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
         // Clean all the category.
-        $this->client->request('GET', '/category/clean');
+      //  $this->client->request('GET', '/category/clean');
     }
 
     
@@ -128,9 +130,14 @@ class FeatureContext extends WebTestCase implements Context
                 }
         )->count();
         
-	$this->assertEquals(1, $product_count, "The product '". $product."' count is incorrect.");
-        // Clean the product.
-        $this->client->request('GET', '/category/clean');
+	$this->assertEquals(1, $product_count, "The product '". $product."' count is incorrect.");    
+    }
+    
+    /** @AfterScenario */
+    public function after(AfterScenarioScope $scope)
+    {
+        // Clean all the categories hence all the products.
+        $this->client->request('GET', '/category/clean');    
     }
     
 }
