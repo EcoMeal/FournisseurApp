@@ -184,7 +184,8 @@ class FeatureContext extends WebTestCase implements Context
         // Set the product values
         $form2->setValues(array('appbundle_product[name]' => $product));
         // submit the form
-        $this->client->submit($form2);   
+        $this->client->submit($form2);  
+        
     }
 
     /**
@@ -192,7 +193,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jeSupprimeLeProduitDansLapplication($product)
     {
-        $crawler = $this->client->request('GET', '/category');
+        $crawler = $this->client->request('GET', '/product');
         // Filter to find the correct onclick attribute for the product.
         $filter = "[onclick*=\"deleteProduct('". $product ."',\"]";
        
@@ -239,10 +240,10 @@ class FeatureContext extends WebTestCase implements Context
     {
         // Filter to find the correct onclick attribute for the product.
         //$filter = "[onclick*=\"deleteProduct('". $product ."',\"]";
-        echo "Filter = ".$filter;
+        // DEBUG echo "Filter = ".$filter;
         // On the js function, we can find the item ID.
         $node_attribute = $crawler->filter($filter)->attr("onclick");
-        echo "Node attribute = ".$node_attribute;
+        // DEBUG echo "Node attribute = ".$node_attribute;
         // The product ID is located in the 4th index.
         $itemID = explode("'", $node_attribute)[3];
         return $itemID;
