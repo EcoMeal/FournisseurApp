@@ -2,6 +2,16 @@
 
 {% block body %}
     
-    {{ form(form) }}
+    {{ form_start(form) }}
+    
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name) }}
+        
+        {{ form_label(form.imagePath) }}
+        {{ form_widget(form.imagePath) }}
+    
+        <button type="submit">Valider</button>
+    
+    {{ form_end(form) }}
     
 {% endblock %}
