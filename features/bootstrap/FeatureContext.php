@@ -242,6 +242,12 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilNyAAucuneCategorieDePanierDansLapplication()
     {
+        $crawler = $this->client->request('GET', '/basket_category');
+        // By default there is already one card for the basket category creation 
+        // which has the same class
+	$this->assertEquals(1, $crawler->filter('.card-image-label')->count(),
+                "There is already a basket category in the application before the test run.");
+        
         throw new PendingException();
     }
 
@@ -250,7 +256,13 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jajouteLaCategorieDePanierDansLapplication($basketCate)
     {
-        throw new PendingException();
+        $crawler = $this->client->request('GET', '/basket_category');
+      
+        $form = $crawler->selectButton('Valider')->form();
+        // Set the task values
+        $form->setValues(array('appbundle_basket_category[name]' => $basketCate));
+        // submit the form
+        $this->client->submit($form);
     }
 
     /**
@@ -258,6 +270,12 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilYAUneCategorieDePanierDansLapplication($basketCate)
     {
-        throw new PendingException();
+        $crawler = $this->client->request('GET', '/basket_category');
+	
+        // By default there is already one card for the category creation 
+        // which has the same class
+        $basket_category_count = $this->getItemCardCount($crawler, $basketCate); 
+        
+	$this->assertEquals(1, $basket_category_count, "Basket category '". $basketCate ."' count is incorrect");
     }
 }
