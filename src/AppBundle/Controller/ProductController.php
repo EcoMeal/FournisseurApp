@@ -21,12 +21,16 @@ class ProductController extends Controller
     /**
      * @Route("/product/clean")
      */
-    public function cleanAllProductAction(Request $request)
+    public function cleanAllProductAction()
     {
         $em = $this->getDoctrine()->getManager(); 
-        $connection = $em->getConnection();
-        $platform   = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('product', true /* whether to cascade */));
+        $product_list = $em->getRepository("AppBundle:Product")->findAll();
+        
+        for($i = 0; $i < count($product_list); $i++){
+             $em->remove($product_list[$i]);
+        }
+           
+        $em->flush();
         return $this->redirect('/product');
     }
     
@@ -35,7 +39,7 @@ class ProductController extends Controller
      * 
      * Deletes the product with the given id from the database.  
      */
-    public function deleteCategoryAction($id)
+    public function deleteProductAction($id)
     {
         $em = $this->getDoctrine()->getManager(); 
 
@@ -64,29 +68,39 @@ class ProductController extends Controller
 
 	//En cas de formulaire valide
         if ($form->isValid()) {
-		
             
-            if(!is_null($product->getImagePath())) {
+            // Checks if the category already exists
+            $productWithSameName = $doct->getRepository("AppBundle:Product")->findOneByName($product->getName());
+
+            if(!is_null($productWithSameName)) {
+                $error = "Le produit existe déjà";
+            } else {
                 
-                    // On enregistre le fichier
-		    $file = $product->getImagePath();
-		
-		    // Generate a unique name for the file before saving it
-		    $fileName = md5(uniqid()).'.'.$file->guessExtension();
+                 if(!is_null($product->getImagePath())) {
+                
+                        // On enregistre le fichier
+                        $file = $product->getImagePath();
 
-		    // Move the file to the directory where brochures are stored
-		    $file->move(
-			    $this->getParameter('image_directory'),
-			    $fileName
-		    );
-				
-		    $product->setImagePath($fileName);
+                        // Generate a unique name for the file before saving it
+                        $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
+                        // Move the file to the directory where brochures are stored
+                        $file->move(
+                                $this->getParameter('image_directory'),
+                                $fileName
+                        );
+
+                        $product->setImagePath($fileName);
+
+                }
+
+                // On enregistre le produit
+                $doct->persist($product);
+                $doct->flush();
+                
+                
             }
-                
-            // On enregistre la catégorie
-            $doct->persist($product);
-            $doct->flush();
+		
 	}
         $product_list = $doct->getRepository("AppBundle:Product")->findBy([], ['name' => 'ASC']);
 			

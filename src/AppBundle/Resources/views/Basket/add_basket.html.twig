@@ -9,6 +9,12 @@
 {% block title %}Ajout de paniers{% endblock %}
 
 {% block body %}
+    
+    {% if error is defined %}
+	
+	<p> {{error}} </p>
+	
+    {% endif %}
 
 
 	{% if error is defined %}
