@@ -236,25 +236,28 @@ class FeatureContext extends WebTestCase implements Context
         )->count();
     }        
     
-    public function getItemCardId($crawler, $filter)
+
+    /**
+     * @Given il n'y a aucune catégorie de panier dans l'application
+     */
+    public function ilNyAAucuneCategorieDePanierDansLapplication()
     {
-        // Filter to find the correct onclick attribute for the product.
-        //$filter = "[onclick*=\"deleteProduct('". $product ."',\"]";
-        // DEBUG echo "Filter = ".$filter;
-        // On the js function, we can find the item ID.
-        $node_attribute = $crawler->filter($filter)->attr("onclick");
-        // DEBUG echo "Node attribute = ".$node_attribute;
-        // The product ID is located in the 4th index.
-        $itemID = explode("'", $node_attribute)[3];
-        return $itemID;
+        throw new PendingException();
     }
-      
-    
-    /** @AfterScenario */
-    public function after(AfterScenarioScope $scope)
+
+    /**
+     * @When j'ajoute la catégorie de panier :basketCate dans l'application
+     */
+    public function jajouteLaCategorieDePanierDansLapplication($basketCate)
     {
-        // Clean all the categories hence all the products.
-        $this->client->request('GET', '/category/clean');    
+        throw new PendingException();
     }
-    
+
+    /**
+     * @Then il y a une catégorie de panier :basketCate dans l'application
+     */
+    public function ilYAUneCategorieDePanierDansLapplication($basketCate)
+    {
+        throw new PendingException();
+    }
 }
