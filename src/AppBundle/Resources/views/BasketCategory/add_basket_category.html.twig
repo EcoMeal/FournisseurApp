@@ -1,17 +1,103 @@
-{# empty Twig template #}
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+    <link rel="stylesheet" href="css/category/category.css">
+
+{% endblock %}
+
+{% block title %}Ajout de catégories de paniers{% endblock %}
 
 {% block body %}
-    
-    {{ form_start(form) }}
-    
-        {{ form_label(form.name) }}
-        {{ form_widget(form.name) }}
-        
-        {{ form_label(form.imagePath) }}
-        {{ form_widget(form.imagePath) }}
-    
-        <button type="submit">Valider</button>
-    
-    {{ form_end(form) }}
-    
+
+    {% if error is defined %}
+
+        <p> {{error}} </p>
+
+    {% endif %}
+
+
+    <div  id="createCategory"  class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card ">
+        <h2 class="card-title">Ajouter une catégorie de produits</h2>
+        {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                {{ form_label(form.name, "Nom de la catégorie de panier", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                <div class="col-sm-6">
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.imagePath, "Image", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                <div class="col-sm-6">
+                    {{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group"> 
+                <button type="submit" class="btn btn-default col-xs-offset-8">Valider</button>
+            </div>
+
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+
+
+    <div id="listCategories" class="row col-xs-12">
+        <h2>Catégories de paniers : </h2>
+
+        <div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+            <img class="card-image" src="images/add_element.ico" onclick="scrollCreate();"/>
+
+            <div class="card-image-label">
+                ajouter une categorie
+            </div>
+
+        </div>
+
+        {% if categories is defined %}
+
+            {% for category in categories %}
+
+
+                <div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                    {#<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteCategory('{{ category.name }}', '{{category.id}}')"></span>#}					
+                    {% if category.imagePath != null %}
+                        <img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
+                    {% else %}
+                        <img class="card-image" src="images/placeholder.png"/>
+                    {% endif %}
+                    <div class="card-image-label">
+                        {{ category.name }}
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        {% endif %}
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#createCategory").hide();
+        });
+        function scrollCreate() {
+            $("#createCategory").show();
+            $("#createCategory").get(0).scrollTop();
+        }
+        /*function deleteCategory(name, id) {
+            if (confirm("Voulez-vous vraiment supprimer la catégorie : " + name)) {
+                document.location.href = "/basket_category/delete/" + id
+            }
+        }*/
+    </script>
+
 {% endblock %}

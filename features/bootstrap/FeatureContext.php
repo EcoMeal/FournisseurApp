@@ -247,8 +247,6 @@ class FeatureContext extends WebTestCase implements Context
         // which has the same class
 	$this->assertEquals(1, $crawler->filter('.card-image-label')->count(),
                 "There is already a basket category in the application before the test run.");
-        
-        throw new PendingException();
     }
 
     /**
