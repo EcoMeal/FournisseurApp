@@ -21,12 +21,16 @@ class ProductController extends Controller
     /**
      * @Route("/product/clean")
      */
-    public function cleanAllProductAction(Request $request)
+    public function cleanAllProductAction()
     {
         $em = $this->getDoctrine()->getManager(); 
-        $connection = $em->getConnection();
-        $platform   = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('product', true /* whether to cascade */));
+        $product_list = $em->getRepository("AppBundle:Product")->findAll();
+        
+        for($i = 0; $i < count($product_list); $i++){
+             $em->remove($product_list[$i]);
+        }
+           
+        $em->flush();
         return $this->redirect('/product');
     }
     
@@ -35,7 +39,7 @@ class ProductController extends Controller
      * 
      * Deletes the product with the given id from the database.  
      */
-    public function deleteCategoryAction($id)
+    public function deleteProductAction($id)
     {
         $em = $this->getDoctrine()->getManager(); 
 
