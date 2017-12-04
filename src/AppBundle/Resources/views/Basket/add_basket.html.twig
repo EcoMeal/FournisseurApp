@@ -1,10 +1,206 @@
 {% extends "::index.html.twig" %}
 
+{% block css %}
+
+	{{ parent() }}
+
+{% endblock %}
+
+{% block title %}Ajout de paniers{% endblock %}
+
 {% block body %}
 
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit">Valider</button>
-{{ form_end(form) }}
+
+	{% if error is defined %}
+	
+		<p> {{error}} </p>
+	
+	{% endif %}
+	<div  id="createBasket" class="row col-md-offset-1 col-md-10 card">
+		<h2 class="card-title">Créer un panier</h2>
+		{{ form_start(form) }}
+	
+			{{ form_errors(form) }}
+		
+			<div class="form-horizontal">
+		
+				<div class="form-group">
+					{{ form_label(form.name, "Nom du panier", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+					</div>
+				</div>
+
+				<div class="form-group">
+					{{ form_label(form.price, "Prix", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+					</div>
+
+				</div>
+				
+				<div class="form-group">
+					{{ form_label(form.category, "Catégorie", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+					</div>
+				</div>	
+
+				<!--product_list -->
+				<ul id="list_product" class="col-md-offset-1 col-md-6 zone-panier">
+				{% if product_list is defined %}
+					<input type="text" id="filterInput" onkeyup="filterProduct()" placeholder="chercher un produit...">
+					{% for product in product_list %}
+					
+						<div value="{{ product.id }}" class="card-container draggable draggable-product ui-widget-content ui-corner-tr">
+							{% if product.imagePath != null %}
+								<img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}" />
+							{% else %}
+								<img class="card-image" src="images/placeholder.png"/>
+							{% endif %}
+							<div class="card-image-label card-small-label">
+								{{ product.name }}
+							</div>
+						</div>
+
+					{% endfor %}
+
+				{% endif %}
+				</ul>
+
+				<div id="basket_product" class="col-md-offset-1 col-md-3 ui-widget-content ui-state-default zone-panier"></div>
+				
+
+				<div id="listProductForm" class="hidden">
+						{{ form_widget(form.product_list, {'attr': {'class': 'form-control'}}) }}
+				</div>		
+
+				<div class="form-group"> 
+					<button type="submit" class="btn btn-default col-xs-offset-8">Valider</button>
+				</div>
+		
+			</div>
+		
+		{{ form_end(form) }}
+	
+	</div>
+
+	<div id="listpaniers" class="row col-xs-12">
+		<h2>Paniers : </h2>
+
+		<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+			<img class="card-image" src="images/add_element.ico" onclick="scrollCreate()"/>
+
+			<div class="card-image-label">
+				ajouter un panier
+			</div>
+
+		</div>
+	
+		{% if basket_list is defined %}
+	
+			{% for basket in basket_list %}
+			
+
+				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteBasket('{{ basket.name }}', '{{ basket.id }}')"></span>
+					{% if basket.category.imagePath != null %}
+						<img class="card-image" src="{{ asset('uploads/images/' ~ basket.category.imagePath) }}"/>
+					{% else %}
+						<img class="card-image" src="images/placeholder.png"/>
+					{% endif %}
+					<div class="card-image-label">
+						{{ product.name }}
+					</div>
+
+
+				</div>
+			{% endfor %}
+
+		{% endif %}
+	</div>
+	<script>
+	var $trash, $gallery;
+	var listProductBasket = [];
+		$(document).ready(function(){
+			$list_product = $( "#list_product" );
+     		$basket_product = $( "#basket_product" );
+
+			$( "div", $list_product ).draggable({
+		      revert: "invalid", // when not dropped, the item will revert back to its initial position
+		      containment: "document",
+		      helper: "clone",
+		      cursor: "move",
+		      scroll: false,
+		      appendTo: 'body' 
+		    });
+
+			
+			$basket_product.droppable({
+		      accept: "#list_product > .draggable",
+		      classes: {
+		        "ui-droppable-active": "drag-state-active"
+		      },
+		      drop: function( event, ui ) {
+		        addProduct( ui.draggable );
+		      }
+		    });
+
+		    $list_product.droppable({
+		      accept: "#basket_product > .draggable",
+		      classes: {
+		        "ui-droppable-active": "drag-state-active"
+		      },
+		      drop: function( event, ui ) {
+		        removeProduct( ui.draggable );
+		      }
+   			 });
+		});
+
+		function addProduct( $item ) {
+	      $item.fadeOut(function() {	 
+	        $item.appendTo( $basket_product ).fadeIn(function() {
+	          $item.animate({ width: "80px" });
+	        });
+	      });
+	      
+	      listProductBasket.push($item[0].attributes.value.value);
+		  $("#listProductForm > select").val(listProductBasket);
+	    }
+ 
+	    function removeProduct( $item ) {
+	      $item.fadeOut(function() {
+	      	$item.appendTo( $list_product ).fadeIn(function() {
+	        	$item.animate({ width: "100px" });
+	        });
+	      });
+	      listProductBasket = listProductBasket.filter(word => word !== $item[0].attributes.value.value);
+		  $("#listProductForm > select").val(listProductBasket);
+	    }
+
+
+		function scrollCreate(){
+			$("#createBasket").show();
+			$("#createBasket").get(0).scrollTop();
+		}
+
+		function deleteProduct(name,id){
+			if(confirm("Voulez-vous vraiment supprimer le panier : " + name)){
+				document.location.href="/basket/delete/" + id
+			}
+		}
+
+		function filterProduct(){
+			var filter = $("#filterInput").val();
+			var list = $("#list_product > .draggable");
+			var listName = $("#list_product > .draggable > .card-image-label");
+			var regexp = new RegExp(filter, 'i');
+
+			for(var i=0;i<list.length;i++){
+				list[i].style.display = (listName.eq(i).text().trim().match(regexp) ? "" : "none");
+			}
+		}
+	</script>
+
 
 {% endblock %}

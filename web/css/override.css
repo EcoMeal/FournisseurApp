@@ -15,27 +15,70 @@
 }
 
 .card-container{
+	z-index:10;
 	margin-top : 30px;
 	margin-bottom : 30px;
 }
 
 .card-image{
-    	box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	margin: 0px;
 	padding: 0px;
 	width:100%;
 }
 
 .card-image-label{
-    	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	background-color : #555;
 	color : white;
 	padding : 8px;
 	text-align: center;
 	font-style: bold;
-    	font-size: 20px;
+    font-size: 20px;
+}
+
+.card-small-fix{
+    width: 100px;
+    margin-left: 15px;
+}
+
+.card-small-label{
+	font-size: 10px;
 }
 
 .btn-clickable{
     cursor: pointer;
+}
+
+.red {
+	color : red;
+}
+
+.white {
+	color : white;
+}
+
+.zone-panier{
+	height: 360px;
+	border: 1px solid #ddd; 
+	border-radius: 3px;
+	background-color: #ddd;
+	overflow-y: auto; 
+}
+
+.zone-panier.drag-state-active{
+	border: 1px solid #ccc; 
+	background-color: #ccc;
+}
+
+ 
+.draggable-product { 
+	float: left; 
+	width: 96px; 
+	margin: 2em 0 0 2em; 	
+	text-align: center; 
+}
+
+.zone-panier > input { 
+	width: 100%; margin: 8px 0px 2px 0px;
 }

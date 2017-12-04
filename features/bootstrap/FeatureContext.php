@@ -99,7 +99,7 @@ class FeatureContext extends WebTestCase implements Context
       
         $form = $crawler->selectButton('Valider')->form();
         // Set the product values
-        $form->setValues(array('appbundle_product[name]' => $product));
+        $form->setValues(array(' [name]' => $product));
         // submit the form
         $this->client->submit($form);
     }
