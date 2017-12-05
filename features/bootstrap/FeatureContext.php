@@ -236,25 +236,44 @@ class FeatureContext extends WebTestCase implements Context
         )->count();
     }        
     
-    public function getItemCardId($crawler, $filter)
+
+    /**
+     * @Given il n'y a aucune catégorie de panier dans l'application
+     */
+    public function ilNyAAucuneCategorieDePanierDansLapplication()
     {
-        // Filter to find the correct onclick attribute for the product.
-        //$filter = "[onclick*=\"deleteProduct('". $product ."',\"]";
-        // DEBUG echo "Filter = ".$filter;
-        // On the js function, we can find the item ID.
-        $node_attribute = $crawler->filter($filter)->attr("onclick");
-        // DEBUG echo "Node attribute = ".$node_attribute;
-        // The product ID is located in the 4th index.
-        $itemID = explode("'", $node_attribute)[3];
-        return $itemID;
+        $crawler = $this->client->request('GET', '/basket_category');
+        // By default there is already one card for the basket category creation 
+        // which has the same class
+	$this->assertEquals(1, $crawler->filter('.card-image-label')->count(),
+                "There is already a basket category in the application before the test run.");
     }
+
+    /**
+     * @When j'ajoute la catégorie de panier :basketCate dans l'application
+     */
+    public function jajouteLaCategorieDePanierDansLapplication($basketCate)
+    {
+        $crawler = $this->client->request('GET', '/basket_category');
       
-    
-    /** @AfterScenario */
-    public function after(AfterScenarioScope $scope)
-    {
-        // Clean all the categories hence all the products.
-        $this->client->request('GET', '/category/clean');    
+        $form = $crawler->selectButton('Valider')->form();
+        // Set the task values
+        $form->setValues(array('appbundle_basket_category[name]' => $basketCate));
+        // submit the form
+        $this->client->submit($form);
     }
-    
+
+    /**
+     * @Then il y a une catégorie de panier :basketCate dans l'application
+     */
+    public function ilYAUneCategorieDePanierDansLapplication($basketCate)
+    {
+        $crawler = $this->client->request('GET', '/basket_category');
+	
+        // By default there is already one card for the category creation 
+        // which has the same class
+        $basket_category_count = $this->getItemCardCount($crawler, $basketCate); 
+        
+	$this->assertEquals(1, $basket_category_count, "Basket category '". $basketCate ."' count is incorrect");
+    }
 }
