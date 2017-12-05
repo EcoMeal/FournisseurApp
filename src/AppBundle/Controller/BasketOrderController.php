@@ -27,18 +27,21 @@ class BasketOrderController extends Controller
     }
     
      /**
-     * Returns a delivery time in the time slot 
+     * Returns a delivery time in the time slot encoded in JSON
      * 
+     * QueryParameter(start_time)
+     * QueryParameter(end_time)
      * @Route("/api/deliveryTime_calculation")
      * @Method({"POST"})
+     * 
      */
-    public function returnDeliveryTime(Request $request) {
-        $start = $request->request->get('start_time');
-        $end = $request->request->get('end_time');
+    public function returnDeliveryTime($request) {
+        $start = $request->findByAllParameter('start_time');
+        $end = $this->getRequest()->request->get('end_time')
         $delivery_time = $this->deliveryTimeCalculation($start,$end);
-        return $delivery_time;
+        return json_encode($delivery_time);
     }
-    
+
     /**
      * Calculate a free delivery time between $start and $end
      * @param dateTime $start
