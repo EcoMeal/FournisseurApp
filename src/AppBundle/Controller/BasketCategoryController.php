@@ -12,6 +12,23 @@ use AppBundle\Form\BasketCategoryType;
 class BasketCategoryController extends Controller
 {
     
+    
+    /**
+     * @Route("/basket_category/delete/{id}", requirements={"id" = "\d+"})
+     * 
+     * Deletes the basket category with the given id from the database.  
+     */
+    public function deleteBasketCategoryAction($id)
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $basket_category = $em->getRepository("AppBundle:BasketCategory")->findOneById($id);    
+        $em->remove($basket_category);          
+        $em->flush();
+        return $this->redirect('/basket_category');
+    }
+    
+      
     /**
      * @Route("/basket_category")
      */

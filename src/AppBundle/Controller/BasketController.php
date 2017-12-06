@@ -11,54 +11,38 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Basket;
 use AppBundle\Form\BasketType;
 
+/* Services */
+use AppBundle\Services\JsonFactory;
+
 class BasketController extends Controller
 {
     
+    
     /**
-     * Returns all the baskets stored in the database as json.
+     * @Route("/basket/delete/{id}", requirements={"id" = "\d+"})
+     * 
+     * Deletes the basket with the given id from the database.  
+     */
+    public function deleteBasketAction($id)
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $basket = $em->getRepository("AppBundle:Basket")->findOneById($id);    
+        $em->remove($basket);          
+        $em->flush();
+        return $this->redirect('/basket');
+    }
+    
+    /**
+     * Returns all the baskets stored in the database as JSON.
      * 
      * @Route("/api/basket")
      * @Method({"GET"})
      */
-    public function getAllBaskets() {
+    public function getAllBaskets(JsonFactory $jsonFactory) {
         $em = $this->getDoctrine()->getManager(); 
         $baskets = $em->getRepository("AppBundle:Basket")->findAll();
-        return new JsonResponse($this->getBasketsAsJson($baskets));
-    }
-    
-    /**
-     * Transforms a list of baskets to json format.
-     * 
-     * @param $baskets the list of baskets
-     */
-    private function getBasketsAsJson($baskets) {
-        
-        //An array which stores all the baskets
-        $data = [];
-        
-        foreach ($baskets as $basket){
-            
-            $product_list = [];
-            
-            //List of products in the basket
-            foreach ($basket->getProductList() as $product){  
-               array_push($product_list, array(
-                   "name" => $product->getName(),
-                   "category" => $product->getCategory()->getName()
-               ));
-            }
-            
-            //General informations of the basket
-            array_push($data, array(
-                "name" => $basket->getName(),
-                "price" => $basket->getPrice(),
-                "category" => $basket->getCategory()->getName(),
-                "category_image" => $product->getCategory()->getImagePath(),
-                "products" => $product_list
-            ));
-      
-        }
-        return $data;
+        return new JsonResponse($jsonFactory->getBaskets($baskets));
     }
     
     /**

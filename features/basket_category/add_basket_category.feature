@@ -13,6 +13,6 @@ Feature: Ajouter une catégorie de panier
                 Then il y a une catégorie de panier <nom_categorie_panier> dans l'application
 
             Examples:
-                | nom_categorie     |
-                | "panier vegan"    |
-                | "panier viande"   |
+                | nom_categorie_panier     |
+                | "panier vegan"           |
+                | "panier viande"          |

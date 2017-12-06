@@ -145,7 +145,7 @@ class FeatureContext extends WebTestCase implements Context
       
         $form = $crawler->selectButton('Valider')->form();
         // Set the product values
-        $form->setValues(array(' [name]' => $product));
+        $form->setValues(array('appbundle_product[name]' => $product));
         // submit the form
         $this->client->submit($form);
         
@@ -236,6 +236,19 @@ class FeatureContext extends WebTestCase implements Context
         )->count();
     }        
     
+    public function getItemCardId($crawler, $filter)
+    {
+       // DEBUG echo "Filter = ".$filter;
+       // On the js function, we can find the item ID.
+       $node_attribute = $crawler->filter($filter)->attr("onclick");
+       // DEBUG echo "Node attribute = ".$node_attribute;
+       // The product ID is located in the 4th index.
+        $itemID = explode("'", $node_attribute)[3];
+        return $itemID;
+
+    }
+            
+            
 
     /**
      * @Given il n'y a aucune catégorie de panier dans l'application
@@ -258,7 +271,7 @@ class FeatureContext extends WebTestCase implements Context
       
         $form = $crawler->selectButton('Valider')->form();
         // Set the task values
-        $form->setValues(array('appbundle_basket_category[name]' => $basketCate));
+        $form->setValues(array('appbundle_basketcategory[name]' => $basketCate));
         // submit the form
         $this->client->submit($form);
     }
@@ -276,4 +289,15 @@ class FeatureContext extends WebTestCase implements Context
         
 	$this->assertEquals(1, $basket_category_count, "Basket category '". $basketCate ."' count is incorrect");
     }
+    
+    /** @AfterScenario */
+    public function after(AfterScenarioScope $scope)
+    {
+        // Clean all the categories hence all the products.
+       $this->client->request('GET', '/category/clean');  
+    }
+    
+    
+    
+    
 }
