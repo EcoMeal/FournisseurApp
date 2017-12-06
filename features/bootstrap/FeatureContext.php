@@ -436,7 +436,10 @@ class FeatureContext extends WebTestCase implements Context
     /** @AfterScenario */
     public function after(AfterScenarioScope $scope)
     {
-        // Clean all the categories hence all the products.
+       // Clean all the products. 
+        $this->client->request('GET', '/product/clean');
+        
+       // Clean all the categories.
        $this->client->request('GET', '/category/clean');
        
        // Clean all the basket categories.
