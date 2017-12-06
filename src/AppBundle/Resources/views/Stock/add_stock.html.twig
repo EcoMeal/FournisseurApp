@@ -3,14 +3,62 @@
 {% block css %}
 
 	{{ parent() }}
-	<link rel="stylesheet" href="css/category/category.css">
 
 {% endblock %}
 
-{% block title %}Ajout de catégories{% endblock %}
+{% block title %}Stock{% endblock %}
 
 {% block body %}
+</br></br></br>	
 
-<h1>HELLO</h1>
+		{% if stock_history is defined %}
 	
+			{% for product in stock_history %}
+
+					
+				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+					<div class="card-quantity-top">
+						<span class="col-xs-4 glyphicon glyphicon-minus" style="margin-top:5px" cursor:="pointer" onclick="minusProduct({{product.id}})"> </span>
+						<div class="col-xs-4"> <input id="product{{product.id}}" class="form-control center" value="{{product.quantity}}" onchange="updateProduct({{product.id}})"></input></div>
+						<span class="col-xs-4 	glyphicon glyphicon-plus" style="margin-top:5px" cursor:="pointer" onclick="plusProduct({{product.id}})"> </span>
+					</div>
+					{% if product.product.imagePath != null %}
+						<img class="card-image" src="{{ asset('uploads/images/' ~ product.product.imagePath) }}"/>
+					{% else %}
+						<img class="card-image" src="images/placeholder.png"/>
+					{% endif %}
+					<div class="card-image-label">
+						{{ product.product.name }}
+					</div>
+				</div>
+			{% endfor %}
+
+		{% endif %}
+	
+	<script>
+
+		function updateProduct(id, old){
+			var quantity = $("#product"+id).val();
+			$.ajax( {
+  					url : "/stock/"+id+"/"+quantity,
+  					type : 'POST' // Le type de la requête HTTP.
+      			}).done(function() {
+			    	alert( "success" );
+			    }).fail(function() {
+			    	alert( "error" );
+			    })
+		
+		}
+
+		function minusProduct(id){
+			var quantity = +$("#product"+id).val()-1;
+			$("#product"+id).val(quantity);
+		}
+
+		function plusProduct(id){
+			var quantity = +$("#product"+id).val()+1;
+			$("#product"+id).val(quantity);
+		}
+
+	</script>
 {% endblock %}
