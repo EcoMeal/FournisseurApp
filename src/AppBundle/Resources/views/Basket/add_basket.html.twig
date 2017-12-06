@@ -192,16 +192,17 @@
 			$("#createBasket").get(0).scrollTop();
 		}
 
-		function deleteProduct(name,id){
+		function deleteBasket(name,id){
 			if(confirm("Voulez-vous vraiment supprimer le panier : " + name)){
 				$.ajax( {
-                    url : "/category/" + id,
+                    url : "/basket/" + id,
                     type : 'DELETE' // Le type de la requête HTTP.
                 }).done(function(error) {
-                	if(!error){
-                		$("basket"+id).hide();
+                	console.log(error);
+                	if(!error.error){
+                		$("#basket"+id).hide();
                 	}
-                })		
+                });		
             }
 		}
 

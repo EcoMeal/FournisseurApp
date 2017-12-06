@@ -67,7 +67,7 @@
 			{% for category in categories %}
 			
 
-				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+				<div id="category{{category.id}}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteCategory('{{ category.name }}','{{category.id}}')"></span>					
 					{% if category.imagePath != null %}
 						<img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
@@ -97,9 +97,9 @@
                     url : "/category/" + id,
                     type : 'DELETE' // Le type de la requête HTTP.
                 }).done(function(error) {
-                    alert( "success " + error);
-                }).fail(function(error) {
-                    alert( "error " + error);
+                	if(!error.error){
+                		$("#category"+id).hide();
+                	}
                 });
 		}
 	}
