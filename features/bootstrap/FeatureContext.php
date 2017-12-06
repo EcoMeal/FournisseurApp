@@ -49,41 +49,41 @@ class FeatureContext extends WebTestCase implements Context
     }
     
     /**
-     * @When j'ajoute la categorie :cate dans l'application
+     * @When j'ajoute la categorie :category_name dans l'application
      */
-    public function jajouteLaCategorieDansLapplication($cate)
+    public function jajouteLaCategorieDansLapplication($category_name)
     {
-        $this->createProductCategory($cate);
+        $this->createProductCategory($category_name);
     }
     
     /**
-     * @Then il y a une categorie :cate dans l'application
+     * @Then il y a une categorie :category_name dans l'application
      */
-    public function ilYAUneCategorieDansLapplication($cate)
+    public function ilYAUneCategorieDansLapplication($category_name)
     {
         $crawler = $this->client->request('GET', '/category');
 	
-        $category_count = $this->getItemCardCount($crawler, $cate); 
+        $category_count = $this->getItemCardCount($crawler, $category_name); 
         
-	$this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
+	$this->assertEquals(1, $category_count, "Category '". $category_name ."' count is incorrect");
     }
     
     /**
-     * @Given il existe la categorie :cate dans l'application
+     * @Given il existe la categorie :category_name dans l'application
      */
-    public function ilExisteLaCategorieDansLapplication($cate)
+    public function ilExisteLaCategorieDansLapplication($category_name)
     {  
-      $this->createProductCategory($cate);  
+      $this->createProductCategory($category_name);  
     }
 
     /**
-     * @When je supprime la categorie :cate dans l'application
+     * @When je supprime la categorie :category_name dans l'application
      */
-    public function jeSupprimeLaCategorieDansLapplication($cate)
+    public function jeSupprimeLaCategorieDansLapplication($category_name)
     {
         $crawler = $this->client->request('GET', '/category');
         // Filter to find the correct onclick attribute for the product.
-        $filter = "[onclick*=\"deleteCategory('". $cate ."',\"]";       
+        $filter = "[onclick*=\"deleteCategory('". $category_name ."',\"]";       
 
         $categoryID =  $this->getItemCardId($crawler, $filter);             
        
@@ -92,62 +92,61 @@ class FeatureContext extends WebTestCase implements Context
     }
 
     /**
-     * @Then la categorie :cate n'est plus affichée dans l'application
+     * @Then la categorie :category_name n'est plus affichée dans l'application
      */
-    public function laCategorieNestPlusAfficheeDansLapplication($cate)
+    public function laCategorieNestPlusAfficheeDansLapplication($category_name)
     {
         $crawler = $this->client->request('GET', '/category');
 	
-        $category_count = $this->getItemCardCount($crawler, $cate);  
+        $category_count = $this->getItemCardCount($crawler, $category_name);  
         
-	$this->assertEquals(0, $category_count, "Category '". $cate ."' count is incorrect");
+	$this->assertEquals(0, $category_count, "Category '". $category_name ."' count is incorrect");
     }
     
     /**
-     * @Given il existe la categorie test
+     * @Given il existe la categorie :category_name
      */
-    public function ilExisteLaCategorieTest()
+    public function ilExisteLaCategorie($category_name)
     {
-     $this->createProductCategory("test");
+     $this->createProductCategory($category_name);
     }
 
     
     /**
-     * @When je crée une category test dans l'application
+     * @When je crée une category :category_name dans l'application
      */
-    public function jeCreeUneCategoryTestDansLapplication()
+    public function jeCreeUneCategoryDansLapplication($category_name)
     {
-      $this->createProductCategory("test");
+      $this->createProductCategory($category_name);
     }
 
     /**
-     * @Then la categorie test n'est pas crée car elle existe deja
+     * @Then la categorie :category_name n'est pas crée car elle existe deja
      */
-    public function laCategorieTestNestPasCreeCarElleExisteDeja()
-    {
-      $cate = "test";    
+    public function laCategorieNestPasCreeCarElleExisteDeja($category_name)
+    {  
       $crawler = $this->client->request('GET', '/category');
 	
-      $category_count = $this->getItemCardCount($crawler, $cate);  
-      $this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
+      $category_count = $this->getItemCardCount($crawler, $category_name);  
+      $this->assertEquals(1, $category_count, "Category '". $category_name ."' count is incorrect");
     }
     
      /**
-     * @Given je cree la categorie avec une image
+     * @Given je cree la categorie :category_name avec une image
      */
-    public function jeCreeLaCategorieAvecUneImage()
+    public function jeCreeLaCategorieAvecUneImage($category_name)
     {
-        $this->createProductCategory("test", "placeholder.png");
+        $this->createProductCategory($category_name, "placeholder.png");
     }
 
     /**
-     * @Then la categorie s'affiche avec son image
+     * @Then la categorie :category_name s'affiche avec son image
      */
-    public function laCategorieSafficheAvecSonImage()
+    public function laCategorieSafficheAvecSonImage($category_name)
     {
         $crawler = $this->client->request('GET', '/category');
         
-        $imagePathRaw = $crawler->filter("[onclick*=\"deleteCategory('test',\"] + img")->attr("src");
+        $imagePathRaw = $crawler->filter("[onclick*=\"deleteCategory('". $category_name ."',\"] + img")->attr("src");
         $match_pattern = "/uploads/images/";
         $imagePath = substr($imagePathRaw, 0, strlen($match_pattern));
         
@@ -156,21 +155,21 @@ class FeatureContext extends WebTestCase implements Context
     }
 
     /**
-     * @Given je cree la categorie sans image
+     * @Given je cree la categorie :category_name sans image
      */
-    public function jeCreeLaCategorieSansImage()
+    public function jeCreeLaCategorieSansImage($category_name)
     {
-        $this->createProductCategory("test");
+        $this->createProductCategory($category_name);
     }
 
     /**
-     * @Then la categorie s'affiche avec l'image par défaut
+     * @Then la categorie :category_name s'affiche avec l'image par défaut
      */
-    public function laCategorieSafficheAvecLimageParDefaut()
+    public function laCategorieSafficheAvecLimageParDefaut($category_name)
     {
         $crawler = $this->client->request('GET', '/category');
         
-        $imagePath = $crawler->filter("[onclick*=\"deleteCategory('test',\"] + img")->attr("src");
+        $imagePath = $crawler->filter("[onclick*=\"deleteCategory('". $category_name ."',\"] + img")->attr("src");
         
         $this->assertEquals("images/placeholder.png", $imagePath, "La catégorie ne"
                 . "s'affiche pas avec l'image par default.");
@@ -194,49 +193,49 @@ class FeatureContext extends WebTestCase implements Context
     }
     
     /**
-     * @Given il existe une catégorie dans l'application.
+     * @Given il existe une catégorie :category_name dans l'application.
      */
-    public function ilExisteUneCategorieDansLapplication()
+    public function ilExisteUneCategorieDansLapplication($category_name)
     {
-       $this->createProductCategory("test");       
+       $this->createProductCategory($category_name);       
     }
     
     /**
-     * @When j'ajoute le produit :product dans l'application
+     * @When j'ajoute le produit :product_name dans l'application
      */
-    public function jajouteLeProduitDansLapplication($product)
+    public function jajouteLeProduitDansLapplication($product_name)
     {
-       $this->createProduct($product);
+       $this->createProduct($product_name);
     }
 
     /**
-     * @Then il y a un produit :product dans l'application
+     * @Then il y a un produit :product_name dans l'application
      */
-    public function ilYAUnProduitDansLapplication($product)
+    public function ilYAUnProduitDansLapplication($product_name)
     {    
 	$crawler = $this->client->request('GET', '/product');
         
-        $product_count = $this->getItemCardCount($crawler, $product);     
+        $product_count = $this->getItemCardCount($crawler, $product_name);     
         
-	$this->assertEquals(1, $product_count, "The product '". $product."' count is incorrect.");    
+	$this->assertEquals(1, $product_count, "The product '". $product_name."' count is incorrect.");    
     }
 
     /**
-     * @Given il existe le produit :product dans l'application
+     * @Given il existe le produit :product_name dans l'application
      */
-    public function ilExisteLeProduitDansLapplication($product)
+    public function ilExisteLeProduitDansLapplication($product_name)
     {
-       $this->createProductFromScratch($product);      
+       $this->createProductFromScratch($product_name);      
     }
 
     /**
-     * @When je supprime le produit :product dans l'application
+     * @When je supprime le produit :product_name dans l'application
      */
-    public function jeSupprimeLeProduitDansLapplication($product)
+    public function jeSupprimeLeProduitDansLapplication($product_name)
     {
         $crawler = $this->client->request('GET', '/product');
         // Filter to find the correct onclick attribute for the product.
-        $filter = "[onclick*=\"deleteProduct('". $product ."',\"]";
+        $filter = "[onclick*=\"deleteProduct('". $product_name ."',\"]";
        
         $productID = $this->getItemCardId($crawler, $filter);
        
@@ -245,51 +244,51 @@ class FeatureContext extends WebTestCase implements Context
     }
 
     /**
-     * @Then le produit :product n'est plus affichée dans l'application
+     * @Then le produit :product_name n'est plus affichée dans l'application
      */
-    public function leProduitNestPlusAfficheeDansLapplication($product)
+    public function leProduitNestPlusAfficheeDansLapplication($product_name)
     {
         $crawler = $this->client->request('GET', '/product');
         
-        $product_count = $this->getItemCardCount($crawler, $product);     
+        $product_count = $this->getItemCardCount($crawler, $product_name);     
         
-	$this->assertEquals(0, $product_count, "The product '". $product."' count is incorrect.");    
+	$this->assertEquals(0, $product_count, "The product '". $product_name."' count is incorrect.");    
     }
     
     /**
-     * @Given il existe le produit test
+     * @Given il existe le produit :product_name
      */
-    public function ilExisteLeProduitTest()
+    public function ilExisteLeProduit($product_name)
     {
-        $this->createProductFromScratch("test");
+        $this->createProductFromScratch($product_name);
     }
 
     /**
-     * @When je crée un produit test dans l'application
+     * @When je crée un produit :product_name dans l'application
      */
-    public function jeCreeUnProduitTestDansLapplication()
+    public function jeCreeUnProduitDansLapplication($product_name)
     {
-         $this->createProductFromScratch("test");
+         $this->createProductFromScratch($product_name);
     }
 
     /**
-     * @Then le produit test n'est pas crée car il existe deja
+     * @Then le produit :product_name n'est pas crée car il existe deja
      */
-    public function leProduitTestNestPasCreeCarIlExisteDeja()
+    public function leProduitNestPasCreeCarIlExisteDeja($product_name)
     {
         $crawler = $this->client->request('GET', '/product');
         
-        $product_count = $this->getItemCardCount($crawler, "test");     
+        $product_count = $this->getItemCardCount($crawler, $product_name);     
         
 	$this->assertEquals(1, $product_count, "The product 'test' count is incorrect.");
     }
 
     /**
-     * @Given je cree le produit avec une image
+     * @Given je cree le produit :product_name avec une image
      */
-    public function jeCreeLeProduitAvecUneImage()
+    public function jeCreeLeProduitAvecUneImage($product_name)
     {
-       $this->createProductFromScratch("test", "placeholder.png");
+       $this->createProductFromScratch($product_name, "placeholder.png");
     }
 
     /**
@@ -303,14 +302,14 @@ class FeatureContext extends WebTestCase implements Context
     }
 
     /**
-     * @Then le produit s'affiche avec son image
+     * @Then le produit :product_name s'affiche avec son image
      */
-    public function leProduitSafficheAvecSonImage()
+    public function leProduitSafficheAvecSonImage($product_name)
     {
        
         $crawler = $this->client->request('GET', '/product');
         
-        $imagePathRaw = $crawler->filter("[onclick*=\"deleteProduct('test',\"] + img")->attr("src");
+        $imagePathRaw = $crawler->filter("[onclick*=\"deleteProduct('". $product_name ."',\"] + img")->attr("src");
         $match_pattern = "/uploads/images/";
         $imagePath = substr($imagePathRaw, 0, strlen($match_pattern));
         
@@ -319,21 +318,21 @@ class FeatureContext extends WebTestCase implements Context
     }
 
     /**
-     * @Given je cree le produit sans image
+     * @Given je cree le produit :product_name sans image
      */
-    public function jeCreeLeProduitSansImage()
+    public function jeCreeLeProduitSansImage($product_name)
     {
-        $this->createProductFromScratch("test");
+        $this->createProductFromScratch($product_name);
     }
 
     /**
-     * @Then le produit s'affiche avec l'image par défaut
+     * @Then le produit :product_name s'affiche avec l'image par défaut
      */
-    public function leProduitSafficheAvecLimageParDefaut()
+    public function leProduitSafficheAvecLimageParDefaut($product_name)
     {
         $crawler = $this->client->request('GET', '/product');
         
-        $imagePath = $crawler->filter("[onclick*=\"deleteProduct('test',\"] + img")->attr("src");
+        $imagePath = $crawler->filter("[onclick*=\"deleteProduct('". $product_name ."',\"] + img")->attr("src");
         
         $this->assertEquals("images/placeholder.png", $imagePath, "Le produit ne"
                 . "s'affiche pas avec l'image par default.");
@@ -341,23 +340,23 @@ class FeatureContext extends WebTestCase implements Context
     
     
     /**
-     * @Given il existe un produit :test utilisé dans un panier
+     * @Given il existe un produit :product_name utilisé dans un panier
      */
-    public function ilExisteUnProduitUtiliseDansUnPanier($product)
+    public function ilExisteUnProduitUtiliseDansUnPanier($product_name)
     {
-        $this->createProductFromScratch($product);
+        $this->createProductFromScratch($product_name);
         $this->createBasketCategory("test_basket_category");
         $this->createBasket("test_basket");
     }
 
     /**
-     * @When j'essaie de supprimer le produit :product
+     * @When j'essaie de supprimer le produit :product_name
      */
-    public function jessaieDeSupprimerLeProduit($product)
+    public function jessaieDeSupprimerLeProduit($product_name)
     {
         $crawler = $this->client->request('GET', '/product');
         // Filter to find the correct onclick attribute for the product.
-        $filter = "[onclick*=\"deleteProduct('". $product ."',\"]";
+        $filter = "[onclick*=\"deleteProduct('". $product_name ."',\"]";
        
         $productID = $this->getItemCardId($crawler, $filter);
        
@@ -393,29 +392,29 @@ class FeatureContext extends WebTestCase implements Context
     }
 
     /**
-     * @When j'ajoute la catégorie de panier :basketCate dans l'application
+     * @When j'ajoute la catégorie de panier :basket_category_name dans l'application
      */
-    public function jajouteLaCategorieDePanierDansLapplication($basketCate)
+    public function jajouteLaCategorieDePanierDansLapplication($basket_category_name)
     {
         $crawler = $this->client->request('GET', '/basket_category');
       
         $form = $crawler->selectButton('Valider')->form();
         // Set the task values
-        $form->setValues(array('appbundle_basketcategory[name]' => $basketCate));
+        $form->setValues(array('appbundle_basketcategory[name]' => $basket_category_name));
         // submit the form
         $this->client->submit($form);
     }
 
     /**
-     * @Then il y a une catégorie de panier :basketCate dans l'application
+     * @Then il y a une catégorie de panier :basket_category_name dans l'application
      */
-    public function ilYAUneCategorieDePanierDansLapplication($basketCate)
+    public function ilYAUneCategorieDePanierDansLapplication($basket_category_name)
     {
         $crawler = $this->client->request('GET', '/basket_category');
 	
-        $basket_category_count = $this->getItemCardCount($crawler, $basketCate); 
+        $basket_category_count = $this->getItemCardCount($crawler, $basket_category_name); 
         
-	$this->assertEquals(1, $basket_category_count, "Basket category '". $basketCate ."' count is incorrect");
+	$this->assertEquals(1, $basket_category_count, "Basket category '". $basket_category_name ."' count is incorrect");
     }
     
     // Basket category Feature -------------------------------------------------
@@ -435,23 +434,23 @@ class FeatureContext extends WebTestCase implements Context
     }
 
     /**
-     * @When je crée un panier :basket dans l'application
+     * @When je crée un panier :basket_name dans l'application
      */
-    public function jeCreeUnPanierDansLapplication($basket)
+    public function jeCreeUnPanierDansLapplication($basket_name)
     {
-        $this->createBasketFromScratch($basket);
+        $this->createBasketFromScratch($basket_name);
     }
 
     /**
-     * @Then le panier :basket est affiché
+     * @Then le panier :basket_name est affiché
      */
-    public function lePanierEstAffiche($basket)
+    public function lePanierEstAffiche($basket_name)
     {
         $crawler = $this->client->request('GET', '/basket');
 	
-        $basket_count = $this->getItemCardCount($crawler, $basket); 
+        $basket_count = $this->getItemCardCount($crawler, $basket_name); 
         
-	$this->assertEquals(1, $basket_count, "Basket '". $basket ."' count is incorrect");
+	$this->assertEquals(1, $basket_count, "Basket '". $basket_name ."' count is incorrect");
     }
     
     // Basket Feature ----------------------------------------------------------
