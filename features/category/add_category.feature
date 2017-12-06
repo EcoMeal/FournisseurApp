@@ -7,6 +7,11 @@ Feature: Ajouter une categorie
 	Règles :
 	- Les noms des catégories sont uniques
 
+        Scenario: Ajouter une categorie avec un nom deja existant
+                  Given il existe la categorie test
+                  When je crée une category test dans l'application
+                  Then la categorie test n'est pas crée car elle existe deja
+
 	Scenario Outline: Ajouter une categorie
 		Given il n'y a aucune categorie dans l'application
 		When j'ajoute la categorie <nom_categorie> dans l'application

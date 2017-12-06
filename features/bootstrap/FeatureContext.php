@@ -6,6 +6,7 @@ use Behat\Behat\Context\Context;
 use PHPUnit_Framework_Assert as Assert;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Defines application features from the specific context.
@@ -25,6 +26,8 @@ class FeatureContext extends WebTestCase implements Context
       $this->client = static::createClient();
     }
     
+    // Category Feature --------------------------------------------------------
+    
     /**
      * @Given il n'y a aucune categorie dans l'application
      */
@@ -43,13 +46,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jajouteLaCategorieDansLapplication($cate)
     {
-      $crawler = $this->client->request('GET', '/category');
-      
-      $form = $crawler->selectButton('Valider')->form();
-      // Set the task values
-      $form->setValues(array('appbundle_category[name]' => $cate));
-      // submit the form
-      $this->client->submit($form);
+        $this->createProductCategory($cate);
     }
     
     /**
@@ -70,14 +67,8 @@ class FeatureContext extends WebTestCase implements Context
      * @Given il existe la categorie :cate dans l'application
      */
     public function ilExisteLaCategorieDansLapplication($cate)
-    {
-      $crawler = $this->client->request('GET', '/category');
-      
-      $form = $crawler->selectButton('Valider')->form();
-      // Set the task values
-      $form->setValues(array('appbundle_category[name]' => $cate));
-      // submit the form
-      $this->client->submit($form);
+    {  
+      $this->createProductCategory($cate);  
     }
 
     /**
@@ -100,15 +91,48 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function laCategorieNestPlusAfficheeDansLapplication($cate)
     {
-         $crawler = $this->client->request('GET', '/category');
+        $crawler = $this->client->request('GET', '/category');
 	
         // By default there is already one card for the category creation 
         // which has the same class
         $category_count = $this->getItemCardCount($crawler, $cate);  
         
 	$this->assertEquals(0, $category_count, "Category '". $cate ."' count is incorrect");
-    }   
+    }
+    
+    /**
+     * @Given il existe la categorie test
+     */
+    public function ilExisteLaCategorieTest()
+    {
+     $this->createProductCategory("test");
+    }
 
+    
+    /**
+     * @When je crée une category test dans l'application
+     */
+    public function jeCreeUneCategoryTestDansLapplication()
+    {
+      $this->createProductCategory("test");
+    }
+
+    /**
+     * @Then la categorie test n'est pas crée car elle existe deja
+     */
+    public function laCategorieTestNestPasCreeCarElleExisteDeja()
+    {
+      $cate = "test";    
+      $crawler = $this->client->request('GET', '/category');
+	
+      $category_count = $this->getItemCardCount($crawler, $cate);  
+      $this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
+    }
+
+    // Category Feature --------------------------------------------------------
+
+    
+    // Product Feature ---------------------------------------------------------
     
     /**
      * @Given il n'y a aucun produit dans l'application
@@ -127,13 +151,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilExisteUneCategorieDansLapplication()
     {
-        $crawler = $this->client->request('GET', '/category');
-      
-        $form = $crawler->selectButton('Valider')->form();
-        // Set the category values
-        $form->setValues(array('appbundle_category[name]' => "testCategory"));
-        // submit the form
-        $this->client->submit($form);              
+       $this->createProductCategory("test");       
     }
     
     /**
@@ -141,14 +159,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jajouteLeProduitDansLapplication($product)
     {
-        $crawler = $this->client->request('GET', '/product');
-      
-        $form = $crawler->selectButton('Valider')->form();
-        // Set the product values
-        $form->setValues(array('appbundle_product[name]' => $product));
-        // submit the form
-        $this->client->submit($form);
-        
+       $this->createProduct($product);
     }
 
     /**
@@ -168,24 +179,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilExisteLeProduitDansLapplication($product)
     {
-        // First I create a category.
-        $crawler = $this->client->request('GET', '/category');
-      
-        $form = $crawler->selectButton('Valider')->form();
-        // Set the category values
-        $form->setValues(array('appbundle_category[name]' => "testCategory"));
-        // submit the form
-        $this->client->submit($form);     
-        
-        // Then I create a product.
-        $crawler2 = $this->client->request('GET', '/product');
-      
-        $form2 = $crawler2->selectButton('Valider')->form();
-        // Set the product values
-        $form2->setValues(array('appbundle_product[name]' => $product));
-        // submit the form
-        $this->client->submit($form2);  
-        
+       $this->createProductFromScratch($product);      
     }
 
     /**
@@ -214,42 +208,95 @@ class FeatureContext extends WebTestCase implements Context
         
 	$this->assertEquals(0, $product_count, "The product '". $product."' count is incorrect.");    
     }
+    
+    /**
+     * @Given il existe le produit test
+     */
+    public function ilExisteLeProduitTest()
+    {
+        $this->createProductFromScratch("test");
+    }
 
     /**
-     * 
-     * @param type $crawler The crawler with the HTML DOM from the page we want loaded.
-     * @param type $label Count the occurrences for the item with the given label
-     * @return type The number of item with the given name that appears on the page 
+     * @When je crée un produit test dans l'application
      */
-    public function getItemCardCount($crawler, $label)
+    public function jeCreeUnProduitTestDansLapplication()
     {
-        return $crawler->filter('.card-image-label')->reduce(
-                function ($node, $i) use($label) {
-                    // If the item text match the given text, keep it in the node list.
-                    if (strcmp(trim($node->text()), $label) == 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-        // return the number of item in the list.
-        )->count();
-    }        
-    
-    public function getItemCardId($crawler, $filter)
-    {
-       // DEBUG echo "Filter = ".$filter;
-       // On the js function, we can find the item ID.
-       $node_attribute = $crawler->filter($filter)->attr("onclick");
-       // DEBUG echo "Node attribute = ".$node_attribute;
-       // The product ID is located in the 4th index.
-        $itemID = explode("'", $node_attribute)[3];
-        return $itemID;
-
+         $this->createProductFromScratch("test");
     }
-            
-            
 
+    /**
+     * @Then le produit test n'est pas crée car il existe deja
+     */
+    public function leProduitTestNestPasCreeCarIlExisteDeja()
+    {
+        $crawler = $this->client->request('GET', '/product');
+        
+        $product_count = $this->getItemCardCount($crawler, "test");     
+        
+	$this->assertEquals(1, $product_count, "The product 'test' count is incorrect.");
+    }
+
+    /**
+     * @Given je cree le produit avec une image
+     */
+    public function jeCreeLeProduitAvecUneImage()
+    {
+       $this->createProductFromScratchWithImage("test", "placeholder.png");
+    }
+
+    /**
+     * Placeholder function when no actions can be assigned. To keep the flow:
+     * Given, When, Then.
+     * @When void
+     */
+    public function void()
+    {
+      
+    }
+
+    /**
+     * @Then le produit s'affiche avec son image
+     */
+    public function leProduitSafficheAvecSonImage()
+    {
+       
+        $crawler = $this->client->request('GET', '/product');
+        
+        $imagePathRaw = $crawler->filter("[onclick*=\"deleteProduct('test',\"] + img")->attr("src");
+        $match_pattern = "/uploads/images/";
+        $imagePath = substr($imagePathRaw, 0, strlen($match_pattern));
+        
+        $this->assertEquals($match_pattern, $imagePath, "Le produit ne "
+                . "s'affiche pas avec son image.");
+    }
+
+    /**
+     * @Given je cree le produit sans image
+     */
+    public function jeCreeLeProduitSansImage()
+    {
+        $this->createProductFromScratch("test");
+    }
+
+    /**
+     * @Then le produit s'affiche avec l'image par défaut
+     */
+    public function leProduitSafficheAvecLimageParDefaut()
+    {
+        $crawler = $this->client->request('GET', '/product');
+        
+        $imagePath = $crawler->filter("[onclick*=\"deleteProduct('test',\"] + img")->attr("src");
+        
+        $this->assertEquals("images/placeholder.png", $imagePath, "Le produit ne"
+                . "s'affiche pas avec l'image par default.");
+    }
+    
+    
+    // Product Feature ---------------------------------------------------------
+
+    // Basket category Feature -------------------------------------------------
+    
     /**
      * @Given il n'y a aucune catégorie de panier dans l'application
      */
@@ -290,14 +337,110 @@ class FeatureContext extends WebTestCase implements Context
 	$this->assertEquals(1, $basket_category_count, "Basket category '". $basketCate ."' count is incorrect");
     }
     
+    // Basket category Feature -------------------------------------------------
+    
+    // Utils functions ---------------------------------------------------------
+    
+    /**
+     * 
+     * @param type $crawler The crawler with the HTML DOM from the page we want loaded.
+     * @param type $label Count the occurrences for the item with the given label
+     * @return type The number of item with the given name that appears on the page 
+     */
+    public function getItemCardCount($crawler, $label)
+    {
+        return $crawler->filter('.card-image-label')->reduce(
+                function ($node, $i) use($label) {
+                    // If the item text match the given text, keep it in the node list.
+                    if (strcmp(trim($node->text()), $label) == 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+        // return the number of item in the list.
+        )->count();
+    }        
+    
+    public function getItemCardId($crawler, $filter)
+    {
+       // DEBUG echo "Filter = ".$filter;
+       // On the js function, we can find the item ID.
+       $node_attribute = $crawler->filter($filter)->attr("onclick");
+       // DEBUG echo "Node attribute = ".$node_attribute;
+       // The product ID is located in the 4th index.
+        $itemID = explode("'", $node_attribute)[3];
+        return $itemID;
+
+    }
+
+    public function createProductFromScratch($product)
+    {
+        // First I create a category.
+        $this->createProductCategory("test");
+        
+        // Then I create a product.
+        $this->createProduct($product);
+    }
+    
+     public function createProductFromScratchWithImage($product, $productImage)
+    {
+        // First I create a category.
+        $this->createProductCategory("test");
+        
+        // Then I create a product.
+        $this->createProductWithImage($product, $productImage);
+    }
+    
+    public function createProductCategory($category)
+    {
+      $crawler = $this->client->request('GET', '/category');
+      
+      $form = $crawler->selectButton('Valider')->form();
+      // Set the task values
+      $form->setValues(array('appbundle_category[name]' => $category));
+      // submit the form
+      $this->client->submit($form);
+    }
+    
+    public function createProduct($product)
+    {
+      $crawler = $this->client->request('GET', '/product');
+      
+      $form = $crawler->selectButton('Valider')->form();
+      // Set the task values
+      $form->setValues(array('appbundle_product[name]' => $product));
+      // submit the form
+      $this->client->submit($form);
+    }
+    
+    public function createProductWithImage($product, $imagePath)
+    {
+      $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
+      $crawler = $this->client->request('GET', '/product');
+      
+      $form = $crawler->selectButton('Valider')->form();
+      // Set the task values
+      $form->setValues(array('appbundle_product[name]' => $product));
+      $form->setValues(array('appbundle_product[imagePath]' => $image));
+      // submit the form
+      $this->client->submit($form);
+    }
+    
+    
+    // Utils functions ---------------------------------------------------------
+            
+
+   // Clean up
+    
     /** @AfterScenario */
     public function after(AfterScenarioScope $scope)
     {
         // Clean all the categories hence all the products.
-       $this->client->request('GET', '/category/clean');  
-    }
-    
-    
-    
+       $this->client->request('GET', '/category/clean');
+       
+       // Clean all the basket categories.
+       $this->client->request('GET', '/basket_category/clean');  
+    }  
     
 }
