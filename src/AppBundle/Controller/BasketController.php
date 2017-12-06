@@ -21,7 +21,7 @@ class BasketController extends Controller
     
     
     /**
-     * @Route("/basket/delete/{id}", requirements={"id" = "\d+"})
+     * @Route("/basket/{id}", requirements={"id" = "\d+"})
      * @Method({"DELETE"})
      * Deletes the basket with the given id from the database.  
      */
