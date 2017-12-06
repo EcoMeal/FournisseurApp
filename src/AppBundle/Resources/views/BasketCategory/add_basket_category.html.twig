@@ -95,7 +95,14 @@
         }
         function deleteCategory(name, id) {
             if (confirm("Voulez-vous vraiment supprimer la catégorie : " + name)) {
-                document.location.href = "/basket_category/delete/" + id
+                $.ajax( {
+                    url : "/basket_category/" + id,
+                    type : 'DELETE' // Le type de la requête HTTP.
+                }).done(function(error) {
+                    alert( "success " + error);
+                }).fail(function(error) {
+                    alert( "error " + error);
+                });
             }
         }
     </script>

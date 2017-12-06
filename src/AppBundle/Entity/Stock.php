@@ -22,7 +22,7 @@ class Stock
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;

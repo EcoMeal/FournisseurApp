@@ -133,7 +133,14 @@
 
 		function deleteProduct(name,id){
 			if(confirm("Voulez-vous vraiment supprimer le produit : " + name)){
-				document.location.href="/product/delete/" + id
+				$.ajax( {
+                    url : "/product/" + id,
+                    type : 'DELETE' // Le type de la requête HTTP.
+                }).done(function(error) {
+                    alert( "success " + error);
+                }).fail(function(error) {
+                    alert( "error " + error);
+                });
 			}
 		}
 	</script>
