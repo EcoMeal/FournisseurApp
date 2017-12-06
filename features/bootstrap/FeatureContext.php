@@ -16,7 +16,7 @@ class FeatureContext extends WebTestCase implements Context
     private $client = null;
     
     /*
-     * Objet contenant les messages de retour des appels aux contrôleurs
+     * Objet contenant les messages de retour des appels aux contrï¿½leurs
      * quand ceux-ci renvoient du JSON
      */
     private $jsonMessage;
@@ -137,7 +137,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jeCreeLaCategorieAvecUneImage()
     {
-        $this->createProductCategoryWithImage("test", "placeholder.png");
+        $this->createProductCategory("test", "placeholder.png");
     }
 
     /**
@@ -289,7 +289,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jeCreeLeProduitAvecUneImage()
     {
-       $this->createProductFromScratchWithImage("test", "placeholder.png");
+       $this->createProductFromScratch("test", "placeholder.png");
     }
 
     /**
@@ -491,93 +491,79 @@ class FeatureContext extends WebTestCase implements Context
 
     }
     
-    public function createBasketFromScratch($basket) {
+    public function createBasketFromScratch($basket_name,
+            $basket_category_name = "testBasketCategory", $product_name = "testProduct",
+            $product_category_name = "testProductCategory") {
         
         //product category
-        $this->createProductCategory("test_product_category");
+        $this->createProductCategory($product_category_name);
         
         //product
-        $this->createProduct("test_product");
+        $this->createProduct($product_name);
         
         //basket category
-        $this->createBasketCategory("test_basket_category");
+        $this->createBasketCategory($basket_category_name);
         
         //basket
-        $this->createBasket($basket);
+        $this->createBasket($basket_name);
         
     }
 
-    public function createProductFromScratch($product)
+    public function createProductFromScratch($product_name, $imagePath = NULL,
+            $product_category_name = "testProductCategory")
     {
         // First I create a category.
-        $this->createProductCategory("test");
+        $this->createProductCategory($product_category_name);
         
         // Then I create a product.
-        $this->createProduct($product);
+        $this->createProduct($product_name, $imagePath);
     }
     
-     public function createProductFromScratchWithImage($product, $productImage)
-    {
-        // First I create a category.
-        $this->createProductCategory("test");
-        
-        // Then I create a product.
-        $this->createProductWithImage($product, $productImage);
-    }
-    
-    public function createProductCategory($category)
+   
+    public function createProductCategory($category, $imagePath = NULL)
     {
       $crawler = $this->client->request('GET', '/category');
       
       $form = $crawler->selectButton('Valider')->form();
       // Set the task values
       $form->setValues(array('appbundle_category[name]' => $category));
+      
+      if($imagePath != NULL){
+          $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
+          $form->setValues(array('appbundle_category[imagePath]' => $image));
+      }
       // submit the form
       $this->client->submit($form);
     }
-    
-    public function createProductCategoryWithImage($category, $imagePath)
-    {
-        $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
-        $crawler = $this->client->request('GET', '/category');
-
-        $form = $crawler->selectButton('Valider')->form();
-        // Set the task values
-        $form->setValues(array('appbundle_category[name]' => $category));
-        $form->setValues(array('appbundle_category[imagePath]' => $image));
-        // submit the form
-        $this->client->submit($form);
-    }
-    
-    public function createProduct($product)
+ 
+    public function createProduct($product, $imagePath = NULL)
     {
       $crawler = $this->client->request('GET', '/product');
       
       $form = $crawler->selectButton('Valider')->form();
       // Set the task values
       $form->setValues(array('appbundle_product[name]' => $product));
-      // submit the form
-      $this->client->submit($form);
-    }
-    
-    public function createProductWithImage($product, $imagePath)
-    {
-      $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
-      $crawler = $this->client->request('GET', '/product');
       
-      $form = $crawler->selectButton('Valider')->form();
-      // Set the task values
-      $form->setValues(array('appbundle_product[name]' => $product));
-      $form->setValues(array('appbundle_product[imagePath]' => $image));
+      if($imagePath != NULL){
+          $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
+          $form->setValues(array('appbundle_product[imagePath]' => $image));
+      }
+      
       // submit the form
       $this->client->submit($form);
     }
     
-    public function createBasketCategory($basketCategory) {
+    public function createBasketCategory($basketCategory, $imagePath = NULL) {
         $crawler = $this->client->request('GET', '/basket_category');
         $form = $crawler->selectButton('Valider')->form();
         // Set the task values
         $form->setValues(array('appbundle_basketcategory[name]' => $basketCategory));
+        
+        if($imagePath != NULL){
+          $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
+          $form->setValues(array('appbundle_basketcategory[imagePath]' => $image));
+        }
+      
         // submit the form
         $this->client->submit($form);
     }
