@@ -1,11 +1,9 @@
 <?php
 // To avoid the kernel exception due to WebtestCase...
 $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
-use PHPUnit_Framework_Assert as Assert;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -16,7 +14,7 @@ class FeatureContext extends WebTestCase implements Context
     private $client = null;
     
     /*
-     * Objet contenant les messages de retour des appels aux contrôleurs
+     * Objet contenant les messages de retour des appels aux contrï¿½leurs
      * quand ceux-ci renvoient du JSON
      */
     private $jsonMessage;

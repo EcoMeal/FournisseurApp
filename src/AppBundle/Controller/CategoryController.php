@@ -55,7 +55,7 @@ class CategoryController extends Controller
 
 	// If the form is being processed and if it is valid
         if ($form->isSubmitted() && $form->isValid()) {	
-            $error = $categoryService->saveCategory($category);
+        	$error = $categoryService->saveCategory($category);
         }
 
         // Retrieves all the categories from the database
