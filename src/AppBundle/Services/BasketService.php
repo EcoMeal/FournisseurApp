@@ -13,8 +13,6 @@ class BasketService
     
     public function deleteBasket($id)
     {
-        $this->em = $this->getDoctrine()->getManager(); 
-
         $basket = $this->em->getRepository("AppBundle:Basket")->findOneById($id);    
         $this->em->remove($basket);          
         $this->em->flush();
