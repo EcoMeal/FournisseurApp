@@ -4,15 +4,17 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-
+use AppBundle\Services\BasketCategoryService;
 use AppBundle\Entity\BasketCategory;
 use AppBundle\Form\BasketCategoryType;
+use AppBundle\Services\BasketCategoryService;
 
 class BasketCategoryController extends Controller
 {
     
-     /**
+    /**
      * @Route("/basket_category/clean")
      * 
      * Deletes all the basket categories from the database. 
@@ -36,77 +38,39 @@ class BasketCategoryController extends Controller
     
     
     /**
-     * @Route("/basket_category/delete/{id}", requirements={"id" = "\d+"})
-     * 
+     * @Route("/basket_category/{id}", requirements={"id" = "\d+"})
+     * @Method({"DELETE"})
      * Deletes the basket category with the given id from the database.  
      */
-    public function deleteBasketCategoryAction($id)
+    public function deleteBasketCategoryAction($id,
+            BasketCategoryService $basketCategoryService)
     {
-        $em = $this->getDoctrine()->getManager(); 
-
-        $basket_category = $em->getRepository("AppBundle:BasketCategory")->findOneById($id);    
-        $em->remove($basket_category);          
-        $em->flush();
-        return $this->redirect('/basket_category');
+        $error = $basketCategoryService->deleteBasketCategory($id);
+        return $this->json(array('error' => $error));
     }
     
       
     /**
      * @Route("/basket_category")
      */
-    public function saveBasketCategoryAction(Request $request)
+    public function saveBasketCategoryAction(Request $request,
+            BasketCategoryService $basketCategoryService)
     {
 		
         $basketCategory = new BasketCategory();
         $form = $this->createForm(BasketCategoryType::class, $basketCategory);
         $form->handleRequest($request);
 
-        // Doctrine manager
-        $doct = $this->getDoctrine()->getManager();
-
         // Error flag
         $error = null;
 
 	// If the form is being processed and if it is valid
         if ($form->isSubmitted() && $form->isValid()) {
-		
-            // Checks if the category already exists
-            $basketCategoryWithSameName = $doct->getRepository("AppBundle:BasketCategory")->findOneByName($basketCategory->getName());
-
-            if(!is_null($basketCategoryWithSameName)) {
-                $error = "La catégorie existe déjà";
-            } else {
-			
-                // Save the category image if it exists
-                if(!is_null($basketCategory->getImagePath())) {
-
-                    // Get the file
-                    $file = $basketCategory->getImagePath();
-
-                    // Generate a unique name for the file before saving it
-                    $fileName = md5(uniqid()).'.'.$file->guessExtension();
-
-                    // Move the file to the directory where images are stored
-                    $file->move(
-                            $this->getParameter('image_directory'),
-                            $fileName
-                    );
-
-                    // Update imagePath in the category entity
-                    $basketCategory->setImagePath($fileName);
-
-                }
-
-                // Save the category in database
-                $doct->persist($basketCategory);
-                $doct->flush();
-
-            }
-
+	    $error = $basketCategoryService->saveBasketCategory($basketCategory);
         }
 
         // Retrieves all the categories from the database
-        $categories = $doct->getRepository("AppBundle:BasketCategory")->findBy([], ['name' => 'ASC']);
+        $categories = $basketCategoryService->getAllBasketCategoryOrderedByName();
         
         // Displays the form, the categories and the errors if there are any
         return $this->render('AppBundle:BasketCategory:add_basket_category.html.twig', array(

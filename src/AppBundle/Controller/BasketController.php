@@ -4,9 +4,11 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Services\BasketService;
+use AppBundle\Services\ProductService;
 
 use AppBundle\Entity\Basket;
 use AppBundle\Form\BasketType;
@@ -20,17 +22,13 @@ class BasketController extends Controller
     
     /**
      * @Route("/basket/delete/{id}", requirements={"id" = "\d+"})
-     * 
+     * @Method({"DELETE"})
      * Deletes the basket with the given id from the database.  
      */
-    public function deleteBasketAction($id)
+    public function deleteBasketAction($id, BasketService $basketService)
     {
-        $em = $this->getDoctrine()->getManager(); 
-
-        $basket = $em->getRepository("AppBundle:Basket")->findOneById($id);    
-        $em->remove($basket);          
-        $em->flush();
-        return $this->redirect('/basket');
+        $error = $basketService->deleteBasket($id);
+        return $this->json(array('error' => $error));
     }
     
     /**
@@ -47,38 +45,27 @@ class BasketController extends Controller
     
     /**
      * @Route("/basket")
+     * 
      */
-    public function basketAction(Request $request) {
+    public function saveBasketAction(Request $request, BasketService $basketService,
+            ProductService $productService) {
         
         $basket = new Basket();
         $form = $this->createForm(BasketType::class, $basket);
         $form->handleRequest($request);
-        
-        //Doctrine manager
-	$em = $this->getDoctrine()->getManager();
-        
+              
         $error = null;
 	
-        if($form->isSubmitted() && $form->isValid()) {
-            
-            //On vérifie qu'il n'y a pas déjà un panier avec le même nom
-            $basketWithSameName = $em->getRepository("AppBundle:Basket")->findOneByName($basket->getName());
-            
-            if(!is_null($basketWithSameName)) {
-                $error = "Le panier existe déjà";
-            } else {
-                // On enregistre le panier
-                $em->persist($basket);
-                $em->flush();
-            }
-            
+        if($form->isSubmitted() && $form->isValid()) {         
+            $error = $basketService->saveBasket($basket);     
         }
         
         //Get the existing products
-         $product_list = $em->getRepository("AppBundle:Product")->findBy([], ['name' => 'ASC']);
+         $product_list = $productService->getAllProductOrderedByName();
 
         //Get the existing baskets
-         $baskets = $em->getRepository("AppBundle:Basket")->findBy([], ['name' => 'ASC']);
+         $baskets = $basketService->getAllBasketOrderedByName();
+                 
         
         // Displays the basket
         return $this->render('AppBundle:Basket:add_basket.html.twig', array(
