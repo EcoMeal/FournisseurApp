@@ -12,6 +12,28 @@ use AppBundle\Form\BasketCategoryType;
 class BasketCategoryController extends Controller
 {
     
+     /**
+     * @Route("/basket_category/clean")
+     * 
+     * Deletes all the basket categories from the database. 
+     * Used for functional testing only.
+     * Should be removed or updated later as it is not secured.
+     * 
+     */
+    public function cleanAllBasketCategoryAction()
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $basket_category_list = $em->getRepository("AppBundle:BasketCategory")->findAll();
+        
+        for($i = 0; $i < count($basket_category_list); $i++){
+             $em->remove($basket_category_list[$i]);
+        }
+           
+        $em->flush();
+        return $this->redirect('/basket_category');
+    }
+    
     
     /**
      * @Route("/basket_category/delete/{id}", requirements={"id" = "\d+"})

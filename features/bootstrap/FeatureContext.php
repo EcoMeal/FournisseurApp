@@ -45,13 +45,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jajouteLaCategorieDansLapplication($cate)
     {
-      $crawler = $this->client->request('GET', '/category');
-      
-      $form = $crawler->selectButton('Valider')->form();
-      // Set the task values
-      $form->setValues(array('appbundle_category[name]' => $cate));
-      // submit the form
-      $this->client->submit($form);
+        $this->createProductCategory($cate);
     }
     
     /**
@@ -72,14 +66,8 @@ class FeatureContext extends WebTestCase implements Context
      * @Given il existe la categorie :cate dans l'application
      */
     public function ilExisteLaCategorieDansLapplication($cate)
-    {
-      $crawler = $this->client->request('GET', '/category');
-      
-      $form = $crawler->selectButton('Valider')->form();
-      // Set the task values
-      $form->setValues(array('appbundle_category[name]' => $cate));
-      // submit the form
-      $this->client->submit($form);
+    {  
+      $this->createProductCategory($cate);  
     }
 
     /**
@@ -102,16 +90,46 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function laCategorieNestPlusAfficheeDansLapplication($cate)
     {
-         $crawler = $this->client->request('GET', '/category');
+        $crawler = $this->client->request('GET', '/category');
 	
         // By default there is already one card for the category creation 
         // which has the same class
         $category_count = $this->getItemCardCount($crawler, $cate);  
         
 	$this->assertEquals(0, $category_count, "Category '". $cate ."' count is incorrect");
-    }   
+    }
+    
+    /**
+     * @Given il existe la categorie test
+     */
+    public function ilExisteLaCategorieTest()
+    {
+     $this->createProductCategory("test");
+    }
+
+    
+    /**
+     * @When je crée une category test dans l'application
+     */
+    public function jeCreeUneCategoryTestDansLapplication()
+    {
+      $this->createProductCategory("test");
+    }
+
+    /**
+     * @Then la categorie test n'est pas crée car elle existe deja
+     */
+    public function laCategorieTestNestPasCreeCarElleExisteDeja()
+    {
+      $cate = "test";    
+      $crawler = $this->client->request('GET', '/category');
+	
+      $category_count = $this->getItemCardCount($crawler, $cate);  
+      $this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
+    }
 
     // Category Feature --------------------------------------------------------
+
     
     // Product Feature ---------------------------------------------------------
     
@@ -132,13 +150,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilExisteUneCategorieDansLapplication()
     {
-        $crawler = $this->client->request('GET', '/category');
-      
-        $form = $crawler->selectButton('Valider')->form();
-        // Set the category values
-        $form->setValues(array('appbundle_category[name]' => "testCategory"));
-        // submit the form
-        $this->client->submit($form);              
+       $this->createProductCategory("test");       
     }
     
     /**
@@ -146,14 +158,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function jajouteLeProduitDansLapplication($product)
     {
-        $crawler = $this->client->request('GET', '/product');
-      
-        $form = $crawler->selectButton('Valider')->form();
-        // Set the product values
-        $form->setValues(array('appbundle_product[name]' => $product));
-        // submit the form
-        $this->client->submit($form);
-        
+       $this->createProduct($product);
     }
 
     /**
@@ -173,24 +178,7 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilExisteLeProduitDansLapplication($product)
     {
-        // First I create a category.
-        $crawler = $this->client->request('GET', '/category');
-      
-        $form = $crawler->selectButton('Valider')->form();
-        // Set the category values
-        $form->setValues(array('appbundle_category[name]' => "testCategory"));
-        // submit the form
-        $this->client->submit($form);     
-        
-        // Then I create a product.
-        $crawler2 = $this->client->request('GET', '/product');
-      
-        $form2 = $crawler2->selectButton('Valider')->form();
-        // Set the product values
-        $form2->setValues(array('appbundle_product[name]' => $product));
-        // submit the form
-        $this->client->submit($form2);  
-        
+       $this->createProductFromScratch($product);      
     }
 
     /**
@@ -219,6 +207,35 @@ class FeatureContext extends WebTestCase implements Context
         
 	$this->assertEquals(0, $product_count, "The product '". $product."' count is incorrect.");    
     }
+    
+    /**
+     * @Given il existe le produit test
+     */
+    public function ilExisteLeProduitTest()
+    {
+        $this->createProductFromScratch("test");
+    }
+
+    /**
+     * @When je crée un produit test dans l'application
+     */
+    public function jeCreeUnProduitTestDansLapplication()
+    {
+         $this->createProductFromScratch("test");
+    }
+
+    /**
+     * @Then le produit test n'est pas crée car il existe deja
+     */
+    public function leProduitTestNestPasCreeCarIlExisteDeja()
+    {
+        $crawler = $this->client->request('GET', '/product');
+        
+        $product_count = $this->getItemCardCount($crawler, "test");     
+        
+	$this->assertEquals(1, $product_count, "The product 'test' count is incorrect.");
+    }
+
     
     // Product Feature ---------------------------------------------------------
 
@@ -300,6 +317,38 @@ class FeatureContext extends WebTestCase implements Context
         return $itemID;
 
     }
+
+    public function createProductFromScratch($product)
+    {
+        // First I create a category.
+        $this->createProductCategory("test");
+        
+        // Then I create a product.
+        $this->createProduct($product);
+    }
+    
+    public function createProductCategory($category)
+    {
+      $crawler = $this->client->request('GET', '/category');
+      
+      $form = $crawler->selectButton('Valider')->form();
+      // Set the task values
+      $form->setValues(array('appbundle_category[name]' => $category));
+      // submit the form
+      $this->client->submit($form);
+    }
+    
+    public function createProduct($product)
+    {
+      $crawler = $this->client->request('GET', '/product');
+      
+      $form = $crawler->selectButton('Valider')->form();
+      // Set the task values
+      $form->setValues(array('appbundle_product[name]' => $product));
+      // submit the form
+      $this->client->submit($form);
+    }
+    
     
     // Utils functions ---------------------------------------------------------
             
@@ -310,7 +359,10 @@ class FeatureContext extends WebTestCase implements Context
     public function after(AfterScenarioScope $scope)
     {
         // Clean all the categories hence all the products.
-       $this->client->request('GET', '/category/clean');  
+       $this->client->request('GET', '/category/clean');
+       
+       // Clean all the basket categories.
+       $this->client->request('GET', '/basket_category/clean');  
     }  
     
 }
