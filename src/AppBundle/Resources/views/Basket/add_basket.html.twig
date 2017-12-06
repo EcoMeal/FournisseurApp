@@ -110,7 +110,7 @@
 			{% for basket in basket_list %}
 			
 
-				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+				<div id="basket{{ basket.id }}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteBasket('{{ basket.name }}', '{{ basket.id }}')"></span>
 					{% if basket.category.imagePath != null %}
 						<img class="card-image" src="{{ asset('uploads/images/' ~ basket.category.imagePath) }}"/>
@@ -194,8 +194,15 @@
 
 		function deleteProduct(name,id){
 			if(confirm("Voulez-vous vraiment supprimer le panier : " + name)){
-				document.location.href="/basket/delete/" + id
-			}
+				$.ajax( {
+                    url : "/category/" + id,
+                    type : 'DELETE' // Le type de la requête HTTP.
+                }).done(function(error) {
+                	if(!error){
+                		$("basket"+id).hide();
+                	}
+                })		
+            }
 		}
 
 		function filterProduct(){
