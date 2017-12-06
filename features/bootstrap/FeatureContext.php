@@ -124,6 +124,50 @@ class FeatureContext extends WebTestCase implements Context
       $category_count = $this->getItemCardCount($crawler, $cate);  
       $this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
     }
+    
+     /**
+     * @Given je cree la categorie avec une image
+     */
+    public function jeCreeLaCategorieAvecUneImage()
+    {
+        $this->createProductCategoryWithImage("test", "placeholder.png");
+    }
+
+    /**
+     * @Then la categorie s'affiche avec son image
+     */
+    public function laCategorieSafficheAvecSonImage()
+    {
+        $crawler = $this->client->request('GET', '/category');
+        
+        $imagePathRaw = $crawler->filter("[onclick*=\"deleteCategory('test',\"] + img")->attr("src");
+        $match_pattern = "/uploads/images/";
+        $imagePath = substr($imagePathRaw, 0, strlen($match_pattern));
+        
+        $this->assertEquals($match_pattern, $imagePath, "La catégorie ne "
+                . "s'affiche pas avec son image.");
+    }
+
+    /**
+     * @Given je cree la categorie sans image
+     */
+    public function jeCreeLaCategorieSansImage()
+    {
+        $this->createProductCategory("test");
+    }
+
+    /**
+     * @Then la categorie s'affiche avec l'image par défaut
+     */
+    public function laCategorieSafficheAvecLimageParDefaut()
+    {
+        $crawler = $this->client->request('GET', '/category');
+        
+        $imagePath = $crawler->filter("[onclick*=\"deleteCategory('test',\"] + img")->attr("src");
+        
+        $this->assertEquals("images/placeholder.png", $imagePath, "La catégorie ne"
+                . "s'affiche pas avec l'image par default.");
+    }
 
     // Category Feature --------------------------------------------------------
 
@@ -447,6 +491,19 @@ class FeatureContext extends WebTestCase implements Context
       $form->setValues(array('appbundle_category[name]' => $category));
       // submit the form
       $this->client->submit($form);
+    }
+    
+    public function createProductCategoryWithImage($category, $imagePath)
+    {
+        $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
+        $crawler = $this->client->request('GET', '/category');
+
+        $form = $crawler->selectButton('Valider')->form();
+        // Set the task values
+        $form->setValues(array('appbundle_category[name]' => $category));
+        $form->setValues(array('appbundle_category[imagePath]' => $image));
+        // submit the form
+        $this->client->submit($form);
     }
     
     public function createProduct($product)

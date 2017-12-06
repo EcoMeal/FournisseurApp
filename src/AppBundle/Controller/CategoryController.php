@@ -49,10 +49,7 @@ class CategoryController extends Controller
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
-
-        // Doctrine manager
-        $doct = $this->getDoctrine()->getManager();
-
+        
         // Error flag
         $error = null;
 

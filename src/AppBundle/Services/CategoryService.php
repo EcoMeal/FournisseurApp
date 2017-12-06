@@ -3,13 +3,17 @@
 namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CategoryService
 {
     private $em;
+    
+    private $container;
             
-    public function __construct(EntityManager $entityManager){
+    public function __construct(EntityManager $entityManager, ContainerInterface $serviceContainer){
         $this->em = $entityManager;
+        $this->container = $serviceContainer;
     }
     
     public function deleteCategory($id)
@@ -64,7 +68,7 @@ class CategoryService
 
                     // Move the file to the directory where images are stored
                     $file->move(
-                            $this->getParameter('image_directory'),
+                            $this->container->getParameter('image_directory'),
                             $fileName
                     );
 

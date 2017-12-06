@@ -33,3 +33,4 @@ services:
     AppBundle\Services\CategoryService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container'

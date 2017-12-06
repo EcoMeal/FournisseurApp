@@ -2,13 +2,17 @@
 namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BasketCategoryService
 {
     private $em;
+    
+    private $container;
             
-    public function __construct(EntityManager $entityManager){
+    public function __construct(EntityManager $entityManager, ContainerInterface $serviceContainer){
         $this->em = $entityManager;
+        $this->container = $serviceContainer;
     }
     
     public function deleteBasketCategory($id)
@@ -53,7 +57,7 @@ class BasketCategoryService
 
                     // Move the file to the directory where images are stored
                     $file->move(
-                            $this->getParameter('image_directory'),
+                            $this->container->getParameter('image_directory'),
                             $fileName
                     );
 
