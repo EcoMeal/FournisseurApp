@@ -18,9 +18,9 @@
 					
 				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 					<div class="card-quantity-top">
-						<span class="col-xs-4 glyphicon glyphicon-minus" style="margin-top:5px" cursor:="pointer" onclick="minusProduct({{product.id}},{{product.quantity}})"> </span>
+						<span class="col-xs-4 glyphicon glyphicon-minus" style="margin-top:5px" onclick="minusProduct({{product.id}},{{product.quantity}})"> </span>
 						<div class="col-xs-4"> <input type="number" id="product{{product.id}}" class="form-control center" value="{{product.quantity}}" onchange="changeQuantity({{product.id}},{{product.quantity}})"></input></div>
-						<span class="col-xs-4 	glyphicon glyphicon-plus" style="margin-top:5px" cursor:="pointer" onclick="plusProduct({{product.id}},{{product.quantity}})"> </span>
+						<span class="col-xs-4 	glyphicon glyphicon-plus" style="margin-top:5px" onclick="plusProduct({{product.id}},{{product.quantity}})"> </span>
 					</div>
 					{% if product.product.imagePath != null %}
 						<img class="card-image" src="{{ asset('uploads/images/' ~ product.product.imagePath) }}"/>
@@ -53,21 +53,15 @@
 		}
 
 		function updateProduct(){
-			var ids  = "";
-			var quantities = "";
-			for (var [id, quantity] of Object.entries(saveTab)){
-			  ids += id + '-'
-			  quantities += quantity + '-';
-			}
-			ids = ids.substr(0,ids.length-1);
-			quantities = quantities.substr(0,quantities.length-1);
 		  $.ajax( {
-				url : "/stock/"+ ids + "/" + quantities,
-				type : 'POST' // Le type de la requête HTTP.
-  			}).done(function() {
-		    	alert( "success " );
-		    }).fail(function() {
-		    	alert( "error " );
+				url : "/stock",
+				type : 'POST', // Le type de la requête HTTP.
+				data: saveTab,
+                contentType: "application/json; charset=utf-8",
+                dataType:'json',  
+  				success: function() {
+		    		alert( "success " );
+		    	}	
 		    });
 		 	saveTab = {};
 		}
