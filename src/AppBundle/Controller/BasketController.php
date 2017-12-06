@@ -19,6 +19,28 @@ use AppBundle\Services\JsonFactory;
 class BasketController extends Controller
 {
     
+    /**
+     * @Route("/basket/clean")
+     * 
+     * Deletes all the basket categories from the database. 
+     * Used for functional testing only.
+     * Should be removed or updated later as it is not secured.
+     * 
+     */
+    public function cleanAllBasketAction()
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $basket_list = $em->getRepository("AppBundle:Basket")->findAll();
+        
+        for($i = 0; $i < count($basket_list); $i++){
+             $em->remove($basket_list[$i]);
+        }
+           
+        $em->flush();
+        return $this->redirect('/basket');
+    }
+    
     
     /**
      * @Route("/basket/{id}", requirements={"id" = "\d+"})

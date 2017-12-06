@@ -56,8 +56,6 @@ class FeatureContext extends WebTestCase implements Context
     {
         $crawler = $this->client->request('GET', '/category');
 	
-        // By default there is already one card for the category creation 
-        // which has the same class
         $category_count = $this->getItemCardCount($crawler, $cate); 
         
 	$this->assertEquals(1, $category_count, "Category '". $cate ."' count is incorrect");
@@ -83,7 +81,7 @@ class FeatureContext extends WebTestCase implements Context
         $categoryID =  $this->getItemCardId($crawler, $filter);             
        
         // With the category ID we can now delete it.
-        $this->client->request('GET', '/category/delete/'.$categoryID);
+        $this->client->request('DELETE', '/category/'.$categoryID);
     }
 
     /**
@@ -93,8 +91,6 @@ class FeatureContext extends WebTestCase implements Context
     {
         $crawler = $this->client->request('GET', '/category');
 	
-        // By default there is already one card for the category creation 
-        // which has the same class
         $category_count = $this->getItemCardCount($crawler, $cate);  
         
 	$this->assertEquals(0, $category_count, "Category '". $cate ."' count is incorrect");
@@ -194,7 +190,7 @@ class FeatureContext extends WebTestCase implements Context
         $productID = $this->getItemCardId($crawler, $filter);
        
         // With the product ID we can now delete it.
-        $this->client->request('GET', '/product/delete/'.$productID);
+        $this->client->request('DELETE', '/product/'.$productID);
     }
 
     /**
@@ -330,14 +326,48 @@ class FeatureContext extends WebTestCase implements Context
     {
         $crawler = $this->client->request('GET', '/basket_category');
 	
-        // By default there is already one card for the category creation 
-        // which has the same class
         $basket_category_count = $this->getItemCardCount($crawler, $basketCate); 
         
 	$this->assertEquals(1, $basket_category_count, "Basket category '". $basketCate ."' count is incorrect");
     }
     
     // Basket category Feature -------------------------------------------------
+    
+    // Basket Feature ----------------------------------------------------------
+    
+     /**
+     * @Given il n’y a aucun panier dans l'application
+     */
+    public function ilNyAAucunPanierDansLapplication()
+    {
+        $crawler = $this->client->request('GET', '/basket');
+        // By default there is already one card for the basket creation 
+        // which has the same class
+	$this->assertEquals(1, $crawler->filter('.card-image-label')->count(),
+                "There is already a basket in the application before the test run.");
+    }
+
+    /**
+     * @When je crée un panier :basket dans l'application
+     */
+    public function jeCreeUnPanierDansLapplication($basket)
+    {
+        $this->createBasketFromScratch($basket);
+    }
+
+    /**
+     * @Then le panier :basket est affiché
+     */
+    public function lePanierEstAffiche($basket)
+    {
+        $crawler = $this->client->request('GET', '/basket');
+	
+        $basket_count = $this->getItemCardCount($crawler, $basket); 
+        
+	$this->assertEquals(1, $basket_count, "Basket '". $basket ."' count is incorrect");
+    }
+    
+    // Basket Feature ----------------------------------------------------------
     
     // Utils functions ---------------------------------------------------------
     
@@ -372,6 +402,22 @@ class FeatureContext extends WebTestCase implements Context
         $itemID = explode("'", $node_attribute)[3];
         return $itemID;
 
+    }
+    
+    public function createBasketFromScratch($basket) {
+        
+        //product category
+        $this->createProductCategory("test_product_category");
+        
+        //product
+        $this->createProduct("test_product");
+        
+        //basket category
+        $this->createBasketCategory("test_basket_category");
+        
+        //basket
+        $this->createBasket($basket);
+        
     }
 
     public function createProductFromScratch($product)
@@ -427,6 +473,25 @@ class FeatureContext extends WebTestCase implements Context
       $this->client->submit($form);
     }
     
+    public function createBasketCategory($basketCategory) {
+        $crawler = $this->client->request('GET', '/basket_category');
+        $form = $crawler->selectButton('Valider')->form();
+        // Set the task values
+        $form->setValues(array('appbundle_basketcategory[name]' => $basketCategory));
+        // submit the form
+        $this->client->submit($form);
+    }
+    
+    public function createBasket($basket) {
+        $crawler = $this->client->request('GET', '/basket');
+        $form = $crawler->selectButton('Valider')->form();
+        // Set the task values
+        $form->setValues(array('appbundle_basket[name]' => $basket));
+        $form->setValues(array('appbundle_basket[price]' => 10));
+        // submit the form
+        $this->client->submit($form);
+    }
+    
     
     // Utils functions ---------------------------------------------------------
             
@@ -442,8 +507,12 @@ class FeatureContext extends WebTestCase implements Context
        // Clean all the categories.
        $this->client->request('GET', '/category/clean');
        
+       // Clean all the baskets
+       $this->client->request('GET', '/basket/clean');
+       
        // Clean all the basket categories.
        $this->client->request('GET', '/basket_category/clean');  
+       
     }  
     
 }
