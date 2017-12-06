@@ -25,6 +25,8 @@ class FeatureContext extends WebTestCase implements Context
       $this->client = static::createClient();
     }
     
+    // Category Feature --------------------------------------------------------
+    
     /**
      * @Given il n'y a aucune categorie dans l'application
      */
@@ -109,6 +111,9 @@ class FeatureContext extends WebTestCase implements Context
 	$this->assertEquals(0, $category_count, "Category '". $cate ."' count is incorrect");
     }   
 
+    // Category Feature --------------------------------------------------------
+    
+    // Product Feature ---------------------------------------------------------
     
     /**
      * @Given il n'y a aucun produit dans l'application
@@ -214,42 +219,11 @@ class FeatureContext extends WebTestCase implements Context
         
 	$this->assertEquals(0, $product_count, "The product '". $product."' count is incorrect.");    
     }
-
-    /**
-     * 
-     * @param type $crawler The crawler with the HTML DOM from the page we want loaded.
-     * @param type $label Count the occurrences for the item with the given label
-     * @return type The number of item with the given name that appears on the page 
-     */
-    public function getItemCardCount($crawler, $label)
-    {
-        return $crawler->filter('.card-image-label')->reduce(
-                function ($node, $i) use($label) {
-                    // If the item text match the given text, keep it in the node list.
-                    if (strcmp(trim($node->text()), $label) == 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-        // return the number of item in the list.
-        )->count();
-    }        
     
-    public function getItemCardId($crawler, $filter)
-    {
-       // DEBUG echo "Filter = ".$filter;
-       // On the js function, we can find the item ID.
-       $node_attribute = $crawler->filter($filter)->attr("onclick");
-       // DEBUG echo "Node attribute = ".$node_attribute;
-       // The product ID is located in the 4th index.
-        $itemID = explode("'", $node_attribute)[3];
-        return $itemID;
+    // Product Feature ---------------------------------------------------------
 
-    }
-            
-            
-
+    // Basket category Feature -------------------------------------------------
+    
     /**
      * @Given il n'y a aucune catégorie de panier dans l'application
      */
@@ -290,14 +264,53 @@ class FeatureContext extends WebTestCase implements Context
 	$this->assertEquals(1, $basket_category_count, "Basket category '". $basketCate ."' count is incorrect");
     }
     
+    // Basket category Feature -------------------------------------------------
+    
+    // Utils functions ---------------------------------------------------------
+    
+    /**
+     * 
+     * @param type $crawler The crawler with the HTML DOM from the page we want loaded.
+     * @param type $label Count the occurrences for the item with the given label
+     * @return type The number of item with the given name that appears on the page 
+     */
+    public function getItemCardCount($crawler, $label)
+    {
+        return $crawler->filter('.card-image-label')->reduce(
+                function ($node, $i) use($label) {
+                    // If the item text match the given text, keep it in the node list.
+                    if (strcmp(trim($node->text()), $label) == 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+        // return the number of item in the list.
+        )->count();
+    }        
+    
+    public function getItemCardId($crawler, $filter)
+    {
+       // DEBUG echo "Filter = ".$filter;
+       // On the js function, we can find the item ID.
+       $node_attribute = $crawler->filter($filter)->attr("onclick");
+       // DEBUG echo "Node attribute = ".$node_attribute;
+       // The product ID is located in the 4th index.
+        $itemID = explode("'", $node_attribute)[3];
+        return $itemID;
+
+    }
+    
+    // Utils functions ---------------------------------------------------------
+            
+
+   // Clean up
+    
     /** @AfterScenario */
     public function after(AfterScenarioScope $scope)
     {
         // Clean all the categories hence all the products.
        $this->client->request('GET', '/category/clean');  
-    }
-    
-    
-    
+    }  
     
 }
