@@ -154,7 +154,7 @@ class CategoryServiceTest extends TestCase {
 		->willReturn(array($this->product));
 		
 		$error = $this->categoryService->deleteCategory($category_id);
-		$this->assertEquals("Deletion impossible, the category is used by a product", $error);
+		$this->assertEquals("Deletion impossible, the category is affected to a product", $error);
 	}
 	
 	public function testCleanAllCategoriesWhenThereIsNoneDoesntDoAnything() {
