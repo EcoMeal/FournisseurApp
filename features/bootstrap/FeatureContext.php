@@ -7,6 +7,7 @@ use PHPUnit_Framework_Assert as Assert;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use AppBundle\Entity\Product;
 
 /**
  * Defines application features from the specific context.
@@ -174,6 +175,31 @@ class FeatureContext extends WebTestCase implements Context
         $this->assertEquals("images/placeholder.png", $imagePath, "La catégorie ne"
                 . "s'affiche pas avec l'image par default.");
     }
+
+    /**
+     * @Given il existe une categorie :product_category_name utilisé par un produit
+     */
+    public function ilExisteUneCategorieUtiliseParUnProduit($product_category_name)
+    {
+        $this->createProductFromScratch("test", NULL, $product_category_name);
+    }
+
+    /**
+     * @When j'essaie de supprimer la categorie :category_name
+     */
+    public function jessaieDeSupprimerLaCategorie($category_name)
+    {
+        $crawler = $this->client->request('GET', '/category');
+        // Filter to find the correct onclick attribute for the product.
+        $filter = "[onclick*=\"deleteCategory('". $category_name ."',\"]";
+       
+        $categoryID = $this->getItemCardId($crawler, $filter);
+       
+        // With the category  ID we can now delete it.
+        $this->client->request('DELETE', '/category/'.$categoryID);
+        $this->jsonMessage = json_decode($this->client->getResponse()->getContent(), true); 
+    }
+
 
     // Category Feature --------------------------------------------------------
 
@@ -344,9 +370,16 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilExisteUnProduitUtiliseDansUnPanier($product_name)
     {
-        $this->createProductFromScratch($product_name);
+        // Need to find out how to add the product list to the basket...
+        throw new PendingException();
+        
+       /* $this->createProductFromScratch($product_name);
         $this->createBasketCategory("test_basket_category");
-        $this->createBasket("test_basket");
+        
+        //$product = new Product();
+       
+        $this->createBasket("test_basket", $product_list);*/
+        
     }
 
     /**
@@ -367,11 +400,11 @@ class FeatureContext extends WebTestCase implements Context
     }
     
     /**
-     * @Then l'application renvoie un message d'erreur :arg1
+     * @Then l'application renvoie un message d'erreur :errorMessage
      */
     public function lapplicationRenvoieUnMessageDerreur($errorMessage)
     {
-        $this->assertEquals($errorMessage, json_encode($this->jsonMessage));
+        $this->assertEquals($errorMessage, $this->jsonMessage['error']);
     }
     
     
@@ -567,12 +600,15 @@ class FeatureContext extends WebTestCase implements Context
         $this->client->submit($form);
     }
     
-    public function createBasket($basket) {
+    public function createBasket($basket, $product_list = NULL) {
         $crawler = $this->client->request('GET', '/basket');
         $form = $crawler->selectButton('Valider')->form();
         // Set the task values
         $form->setValues(array('appbundle_basket[name]' => $basket));
         $form->setValues(array('appbundle_basket[price]' => 10));
+        if($product_list != NULL){
+            $form->setValues(array('appbundle_basket[product_list]' => $product_list));
+        }
         // submit the form
         $this->client->submit($form);
     }

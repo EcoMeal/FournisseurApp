@@ -7,25 +7,25 @@ Feature: Ajouter une categorie
 	Règles :
 	- Les noms des catégories sont uniques
 
-        @category
+        @add_category
         Scenario: Ajouter une categorie avec un nom deja existant
                   Given il existe la categorie "test"
                   When je crée une category "test" dans l'application
                   Then la categorie "test" n'est pas crée car elle existe deja
 
-        @category
+        @add_category
         Scenario: Ajouter une categorie avec une image
                   Given je cree la categorie "test" avec une image
                   When void
                   Then la categorie "test" s'affiche avec son image
 
-        @category
+        @add_category
         Scenario: Ajouter une categorie sans image
                   Given je cree la categorie "test" sans image
                   When void
                   Then la categorie "test" s'affiche avec l'image par défaut
 
-        @category
+        @add_category
 	Scenario Outline: Ajouter une categorie
 		Given il n'y a aucune categorie dans l'application
 		When j'ajoute la categorie <nom_categorie> dans l'application

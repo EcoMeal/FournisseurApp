@@ -22,7 +22,7 @@ class CategoryService
         $product_list = $this->em->getRepository("AppBundle:Product")->findAll();
         foreach($product_list as $product){
             if($product->getCategory()->getId() == $id){
-                return "Deletion impossible, the category is used by a product";
+                return "Deletion impossible, the category is affected to a product";
             }
         }
         
