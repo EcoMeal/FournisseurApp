@@ -14,6 +14,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class FeatureContext extends WebTestCase implements Context
 {
     private $client = null;
+    
+    /*
+     * Objet contenant les messages de retour des appels aux contrôleurs
+     * quand ceux-ci renvoient du JSON
+     */
+    private $jsonMessage;
+    
     /**
      * Initializes context.
      *
@@ -330,6 +337,42 @@ class FeatureContext extends WebTestCase implements Context
         
         $this->assertEquals("images/placeholder.png", $imagePath, "Le produit ne"
                 . "s'affiche pas avec l'image par default.");
+    }
+    
+    
+    /**
+     * @Given il existe un produit :test utilisÃ© dans un panier
+     */
+    public function ilExisteUnProduitUtiliseDansUnPanier($product)
+    {
+        $this->createProductFromScratch($product);
+        $this->createBasketCategory("test_basket_category");
+        $this->createBasket("test_basket");
+    }
+
+    /**
+     * @When j'essaie de supprimer le produit :product
+     */
+    public function jessaieDeSupprimerLeProduit($product)
+    {
+        $crawler = $this->client->request('GET', '/product');
+        // Filter to find the correct onclick attribute for the product.
+        $filter = "[onclick*=\"deleteProduct('". $product ."',\"]";
+       
+        $productID = $this->getItemCardId($crawler, $filter);
+       
+        // With the product ID we can now delete it.
+        $this->client->request('DELETE', '/product/'.$productID);
+        $this->jsonMessage = json_decode($this->client->getResponse()->getContent(), true); 
+                
+    }
+    
+    /**
+     * @Then l'application renvoie un message d'erreur :arg1
+     */
+    public function lapplicationRenvoieUnMessageDerreur($errorMessage)
+    {
+        $this->assertEquals($errorMessage, json_encode($this->jsonMessage));
     }
     
     
