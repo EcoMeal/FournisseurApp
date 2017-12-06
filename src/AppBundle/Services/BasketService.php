@@ -1,4 +1,7 @@
 <?php
+namespace AppBundle\Services;
+
+use Doctrine\ORM\EntityManager;
 
 class BasketService
 {

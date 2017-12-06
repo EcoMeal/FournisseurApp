@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Services;
+
 use Doctrine\ORM\EntityManager;
 
 class CategoryService
@@ -13,6 +14,7 @@ class CategoryService
     
     public function deleteCategory($id)
     {
+      
         $product_list = $this->em->getRepository("AppBundle:Product")->findAll();
         foreach($product_list as $product){
             if($product->getCategory()->getId() == $id){

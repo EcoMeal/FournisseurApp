@@ -1,6 +1,9 @@
 <?php
+namespace AppBundle\Services;
 
-class BasketService
+use Doctrine\ORM\EntityManager;
+
+class BasketCategoryService
 {
     private $em;
             
@@ -14,7 +17,7 @@ class BasketService
         $basket_list = $this->em->getRepository("AppBundle:Basket")->findAll();
         foreach($basket_list as $basket){
             if($basket->getCategory()->getId() == $id){
-                return "Deletion impossible, the basket category is used by a product";
+                return "Deletion impossible, the basket category is used by a basket";
             }
         }
         

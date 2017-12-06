@@ -1,6 +1,9 @@
 <?php
+namespace AppBundle\Services;
 
-class CategoryService
+use Doctrine\ORM\EntityManager;
+
+class ProductService
 {
     private $em;
             
@@ -11,14 +14,15 @@ class CategoryService
   
     public function deleteProduct($id)
     {
-       
+        
         $basket_list = $this->em->getRepository("AppBundle:Basket")->findAll();
-        foreach($basket_list->getProductList() as $product){
-            if($product->getId() == $id){
-                return "Deletion impossible, the product is used by a basket";
+        foreach($basket_list as $basket){
+            foreach($basket->getProductList() as $product){
+                if($product->getId() == $id){
+                    return "Deletion impossible, the product is used in a basket";
+                }
             }
         }
-       
         $product = $this->em->getRepository("AppBundle:Product")->findOneById($id);    
         $this->em->remove($product);          
         $this->em->flush();
