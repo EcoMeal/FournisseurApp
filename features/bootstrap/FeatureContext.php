@@ -370,15 +370,18 @@ class FeatureContext extends WebTestCase implements Context
      */
     public function ilExisteUnProduitUtiliseDansUnPanier($product_name)
     {
-        // Need to find out how to add the product list to the basket...
-        throw new PendingException();
         
-       /* $this->createProductFromScratch($product_name);
+        $this->createProductFromScratch($product_name);
         $this->createBasketCategory("test_basket_category");
         
-        //$product = new Product();
+        $crawler = $this->client->request('GET', '/product');
+        // Filter to find the correct onclick attribute for the given product.
+        $filter = "[onclick*=\"deleteProduct('". $product_name ."',\"]";
        
-        $this->createBasket("test_basket", $product_list);*/
+        $productID = $this->getItemCardId($crawler, $filter);
+        
+       
+        $this->createBasket("test_basket", array($productID));
         
     }
 
