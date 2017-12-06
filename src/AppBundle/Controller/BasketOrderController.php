@@ -4,61 +4,32 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use AppBundle\Services\DeliveryService;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use \Datetime;
 
-class BasketOrderController extends Controller
-{
-    private $em ;
-    private $basketOrderRepository;
-    private $time_interval;
-    
-    function __construct($em = NULL, $basketOrderRepository = NULL) {
-         $this->$time_interval = new DateInterval('P2M');
-         if (!is_null($em)){
-            $this->$em = $em;
-         }else{
-            $this->$em = $this->getDoctrine()->getManager();
-         }
-         if (!is_null($basketOrderRepository)){
-            $this->$basketOrderRepository = $basketOrderRepository;
-         }else{
-            $this->$basketOrderRepository = $em->getRepository("AppBundle:BasketOrder");
-         }
-         
-    }
-    
-     /**
+class BasketOrderController extends Controller {
+
+    /**
      * Returns a delivery time in the time slot encoded in JSON
      * 
      * QueryParameter(start_time)
      * QueryParameter(end_time)
-     * @Route("/api/deliveryTime_calculation")
-     * @Method({"POST"})
+     * @Route("/api/dtime_calculation")
+     * @Method({"GET"})
      * 
      */
-    public function returnDeliveryTime($request) {
-        $start = $request->findByAllParameter('start_time');
-        $end = $this->getRequest()->request->get('end_time')
-        $delivery_time = $this->deliveryTimeCalculation($start,$end);
-        return json_encode($delivery_time);
+    public function returnDeliveryTime(Request $request, DeliveryService $deliveryService) {
+        $start = $request->query->get('start_time');
+        $start_time = $date = new DateTime();
+        $start_time->setTimestamp($start);
+        $end = $request->query->get('end_time');
+        $end_time = $date = new DateTime();
+        $end_time->setTimestamp($end);
+        $delivery_time = $deliveryService->deliveryTimeCalculation($start_time, $end_time);
+        return new JsonResponse($delivery_time->getTimestamp());
     }
 
-    /**
-     * Calculate a free delivery time between $start and $end
-     * @param dateTime $start
-     * @param dateTime $end
-     * @return dateTime the free delivery time or NULL if no free delivery time is available
-     */
-    public function deliveryTimeCalculation($start,$end){
-        $taken_delivery_times = $basketOrderRepository->getOrdersBetween($start,$end); // The delivery_times already taken by other customers
-        $delivery_time = $start;
-        while ($delivery_time <= $end) {
-            // The $delivery_time isn't contained in $taken_delivery_time
-            if (!in_array($delivery_time,$taken_delivery_times)){
-                return delivery_time;
-            }else{
-                $delivery_time->add($this->$time_interval);
-            }
-        }
-        return NULL;
-    }
 }

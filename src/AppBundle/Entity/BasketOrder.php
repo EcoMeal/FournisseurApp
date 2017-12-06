@@ -31,7 +31,7 @@ class BasketOrder
 
     /**
      * Contains the content of a BasketOrder (An array of Baskets)
-     * @ORM\ManytoMany(targetEntity="AppBundle\Entity\Basket", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Basket", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $order_content;
