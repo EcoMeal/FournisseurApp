@@ -12,6 +12,16 @@ Feature: Ajouter un produit
                   When je crée un produit test dans l'application
                   Then le produit test n'est pas crée car il existe deja
 
+        Scenario: Ajouter un produit avec une image
+                  Given je cree le produit avec une image
+                  When void
+                  Then le produit s'affiche avec son image
+
+        Scenario: Ajouter un produit sans image
+                  Given je cree le produit sans image
+                  When void
+                  Then le produit s'affiche avec l'image par défaut
+
 	Scenario Outline: Ajouter un produit
 		Given il n'y a aucun produit dans l'application
                 And il existe une catégorie dans l'application.

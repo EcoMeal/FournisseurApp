@@ -6,6 +6,7 @@ use Behat\Behat\Context\Context;
 use PHPUnit_Framework_Assert as Assert;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Defines application features from the specific context.
@@ -236,6 +237,61 @@ class FeatureContext extends WebTestCase implements Context
 	$this->assertEquals(1, $product_count, "The product 'test' count is incorrect.");
     }
 
+    /**
+     * @Given je cree le produit avec une image
+     */
+    public function jeCreeLeProduitAvecUneImage()
+    {
+       $this->createProductFromScratchWithImage("test", "placeholder.png");
+    }
+
+    /**
+     * Placeholder function when no actions can be assigned. To keep the flow:
+     * Given, When, Then.
+     * @When void
+     */
+    public function void()
+    {
+      
+    }
+
+    /**
+     * @Then le produit s'affiche avec son image
+     */
+    public function leProduitSafficheAvecSonImage()
+    {
+       
+        $crawler = $this->client->request('GET', '/product');
+        
+        $imagePathRaw = $crawler->filter("[onclick*=\"deleteProduct('test',\"] + img")->attr("src");
+        $match_pattern = "/uploads/images/";
+        $imagePath = substr($imagePathRaw, 0, strlen($match_pattern));
+        
+        $this->assertEquals($match_pattern, $imagePath, "Le produit ne "
+                . "s'affiche pas avec son image.");
+    }
+
+    /**
+     * @Given je cree le produit sans image
+     */
+    public function jeCreeLeProduitSansImage()
+    {
+        $this->createProductFromScratch("test");
+    }
+
+    /**
+     * @Then le produit s'affiche avec l'image par défaut
+     */
+    public function leProduitSafficheAvecLimageParDefaut()
+    {
+        $crawler = $this->client->request('GET', '/product');
+        
+        $imagePath = $crawler->filter("[onclick*=\"deleteProduct('test',\"] + img")->attr("src");
+        
+        $this->assertEquals("images/placeholder.png", $imagePath, "Le produit ne"
+                . "s'affiche pas avec l'image par default.");
+    }
+    
     
     // Product Feature ---------------------------------------------------------
 
@@ -327,6 +383,15 @@ class FeatureContext extends WebTestCase implements Context
         $this->createProduct($product);
     }
     
+     public function createProductFromScratchWithImage($product, $productImage)
+    {
+        // First I create a category.
+        $this->createProductCategory("test");
+        
+        // Then I create a product.
+        $this->createProductWithImage($product, $productImage);
+    }
+    
     public function createProductCategory($category)
     {
       $crawler = $this->client->request('GET', '/category');
@@ -345,6 +410,19 @@ class FeatureContext extends WebTestCase implements Context
       $form = $crawler->selectButton('Valider')->form();
       // Set the task values
       $form->setValues(array('appbundle_product[name]' => $product));
+      // submit the form
+      $this->client->submit($form);
+    }
+    
+    public function createProductWithImage($product, $imagePath)
+    {
+      $image = new UploadedFile("web/images/".$imagePath, "test.png", "image/png");
+      $crawler = $this->client->request('GET', '/product');
+      
+      $form = $crawler->selectButton('Valider')->form();
+      // Set the task values
+      $form->setValues(array('appbundle_product[name]' => $product));
+      $form->setValues(array('appbundle_product[imagePath]' => $image));
       // submit the form
       $this->client->submit($form);
     }
