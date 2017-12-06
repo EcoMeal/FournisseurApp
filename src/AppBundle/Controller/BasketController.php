@@ -17,6 +17,22 @@ use AppBundle\Services\JsonFactory;
 class BasketController extends Controller
 {
     
+    
+    /**
+     * @Route("/basket/delete/{id}", requirements={"id" = "\d+"})
+     * 
+     * Deletes the basket with the given id from the database.  
+     */
+    public function deleteBasketAction($id)
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $basket = $em->getRepository("AppBundle:Basket")->findOneById($id);    
+        $em->remove($basket);          
+        $em->flush();
+        return $this->redirect('/basket');
+    }
+    
     /**
      * Returns all the baskets stored in the database as JSON.
      * 
