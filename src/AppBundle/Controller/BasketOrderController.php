@@ -21,13 +21,11 @@ class BasketOrderController extends Controller {
      * 
      */
     public function returnDeliveryTime(Request $request, DeliveryService $deliveryService) {
-        $start = $request->query->get('start_time');
-        $start_time = $date = new DateTime();
-        $start_time->setTimestamp($start);
-        $end = $request->query->get('end_time');
-        $end_time = $date = new DateTime();
-        $end_time->setTimestamp($end);
-        $delivery_time = $deliveryService->deliveryTimeCalculation($start_time, $end_time);
+        $start_time = new DateTime();
+        $start_time->setTimestamp($request->query->get('start_time')); // Récupère la variable start_time en GET
+        $end_time = new DateTime();
+        $end_time->setTimestamp($request->query->get('end_time')); // Récupère la variable end_time en GET
+        $delivery_time = $deliveryService->deliveryTimeCalculation($start_time, $end_time); // Calcule un horaire pour la commande compris dans la plage horaire donnée
         if ($delivery_time == null) {
             return new JsonResponse(NULL);
         } else {
