@@ -3,7 +3,6 @@
 {% block css %}
 
 	{{ parent() }}
-	<link rel="stylesheet" href="css/category/category.css">
 
 {% endblock %}
 
@@ -91,7 +90,7 @@
 <script>
 	function scrollCreate(){
 		$("#createCategory").show();
-	        $("#createCategory").get(0).scrollTop();
+		$("#createCategory").scrollTop();
 	}
 	function deleteCategory(name,id){
 		if(confirm("Voulez-vous vraiment supprimer la Category : " + name)){

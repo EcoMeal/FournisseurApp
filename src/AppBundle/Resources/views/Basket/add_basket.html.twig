@@ -9,18 +9,11 @@
 {% block title %}Ajout de paniers{% endblock %}
 
 {% block body %}
-    
-    {% if error is defined %}
-	
-	<p> {{error}} </p>
-	
-    {% endif %}
-
 
 	{% if error is defined %}
-	
+
 		<p> {{error}} </p>
-	
+
 	{% endif %}
 
 	<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
@@ -133,9 +126,8 @@
 		{% endif %}
 	</div>
 	<script>
-        var $list_product;
-        var $basket_product;
-	var listProductBasket = [];
+		var $basket_product, $list_product;
+		var listProductBasket = [];
 		$(document).ready(function(){
 
             $list_product = $( "#list_product" );
@@ -170,9 +162,18 @@
 		        removeProduct( ui.draggable );
 		      }
    			 });
-
 		});
 
+		function addProduct( $item ) {
+	      $item.fadeOut(function() {
+	        $item.appendTo( $basket_product ).fadeIn(function() {
+	          $item.animate({ width: "80px" });
+	        });
+	      });
+
+	      listProductBasket.push($item[0].attributes.value.value);
+		  $("#listProductForm > select").val(listProductBasket);
+	    }
  
 	    function removeProduct( $item ) {
 	      $item.fadeOut(function() {
@@ -187,7 +188,7 @@
 
 		function scrollCreate(){
 			$("#createBasket").show();
-			$("#createBasket").get(0).scrollTop();
+			$("#createBasket").scrollTop();
 		}
 
 		function deleteBasket(name,id){
