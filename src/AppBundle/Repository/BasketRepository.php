@@ -10,4 +10,14 @@ namespace AppBundle\Repository;
  */
 class BasketRepository extends \Doctrine\ORM\EntityRepository
 {
+    
+    public function getAllBasketWithProductList()
+    {
+         $qb = $this->createQueryBuilder('b')
+                    ->leftJoin('b.category ', "cate")
+                    ->addSelect('cate')
+                    ->leftJoin('b.product_list ', "product")
+                    ->addSelect('product');
+        return $qb->getQuery()->getArrayResult();
+    }
 }

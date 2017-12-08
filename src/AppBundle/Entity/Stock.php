@@ -23,7 +23,7 @@ class Stock
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $product;
 
