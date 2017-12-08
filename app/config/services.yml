@@ -34,3 +34,6 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $serviceContainer: '@service_container'
+#    AppBundle\Services\DeliveryService:
+#         arguments:
+#            $entityManager: "@doctrine.orm.entity_manager"
