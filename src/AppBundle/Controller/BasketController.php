@@ -90,6 +90,7 @@ class BasketController extends Controller
                  
         
         // Displays the basket
+        //return $this->render('AppBundle:Command:view_command.html.twig', array(
         return $this->render('AppBundle:Basket:add_basket.html.twig', array(
             "form" => $form->createView(),
             "basket_list" => $baskets, 

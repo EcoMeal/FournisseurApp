@@ -10,11 +10,6 @@
 
 {% block body %}
 
-	{% if error is defined %}
-
-		<p> {{error}} </p>
-
-	{% endif %}
 
 	<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
 		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -91,6 +86,76 @@
 	
 	</div>
 
+	<!--div  id="updateBasket" class="row col-md-offset-1 col-md-10 card hidden" style="display: none;">
+		<h2 class="card-title">Créer un panier</h2>
+        {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+		<div class="form-horizontal">
+
+			<div class="form-group">
+                {{ form_label(form.name, "Nom du panier", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+				<div class="col-sm-6">
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+				</div>
+			</div>
+
+			<div class="form-group">
+                {{ form_label(form.price, "Prix", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+				<div class="col-sm-6">
+                    {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+				</div>
+
+			</div>
+
+			<div class="form-group">
+                {{ form_label(form.category, "Catégorie", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+				<div class="col-sm-6">
+                    {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+				</div>
+			</div>
+
+			<product_list>
+			<ul id="list_product" class="col-md-offset-1 col-md-6 zone-panier">
+                {% if product_list is defined %}
+					<input type="text" id="filterInput" onkeyup="filterProduct()" placeholder="chercher un produit...">
+                    {% for product in product_list %}
+
+						<div value="{{ product.id }}" class="card-container draggable draggable-product ui-widget-content ui-corner-tr">
+                            {% if product.imagePath != null %}
+								<img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}" />
+                            {% else %}
+								<img class="card-image" src="images/placeholder.png"/>
+                            {% endif %}
+							<div class="card-image-label card-small-label">
+                                {{ product.name }}
+							</div>
+						</div>
+
+                    {% endfor %}
+
+                {% endif %}
+			</ul>
+
+			<ul id="basket_product" class="col-md-offset-1 col-md-3 ui-widget-content ui-state-default zone-panier">
+				<span class="mdi mdi-basket icon-corner-basket" ></span>
+			</ul>
+
+
+			<div id="listProductForm" class="hidden">
+                {{ form_widget(form.product_list, {'attr': {'class': 'form-control'}}) }}
+			</div>
+
+			<div class="form-group">
+				<button type="submit" class="btn btn-default col-xs-offset-8">Valider</button>
+			</div>
+
+		</div>
+
+        {{ form_end(form) }}
+	</div-->
+
 	<div id="listpaniers" class="row col-xs-12">
 		<h2>Paniers :  <input type="text" id="filterInputPanier" onkeyup="filterBasket()" placeholder="chercher un panier..."> </h2>
 
@@ -106,7 +171,6 @@
 		{% if basket_list is defined %}
 	
 			{% for basket in basket_list %}
-			
 
 				<div id="basket{{ basket.id }}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteBasket('{{ basket.name }}', '{{ basket.id }}')"></span>
@@ -118,15 +182,8 @@
 					<div class="card-image-label">
 						{{ basket.name }}
 					</div>
-
-
 				</div>
-                               
-                                {% for product in basket.product_list %}
-                                <div>
-                                    <p>Product name = {{ product.name }} </p>
-                                </div>     
-                                {% endfor %}
+
 			{% endfor %}
 
 		{% endif %}
@@ -235,6 +292,22 @@
 				list[i].style.display = (listName.eq(i).text().trim().match(regexp) ? "" : "none");
 			}
 		}
+
+        function filterBasket(){
+            var filter = $("#filterInputPanier").val();
+            var list = $("#listpaniers > .card-container");
+            var listNameBasket = $("#listpaniers > .card-container > .card-image-label");
+            var listNameCategory = $("#listpaniers > .card-container > [name='nameCategoryProduct']");
+            var regexp = new RegExp(filter, 'i');
+
+            for(var i=0;i<list.length;i++){
+                listNameBasket.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
+                if(listNameCategory.eq(i).text().trim().match(regexp)){
+                    list.eq(i).show();
+                }
+
+            }
+        }
 	</script>
 
 
