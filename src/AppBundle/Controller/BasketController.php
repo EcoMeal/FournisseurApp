@@ -86,7 +86,7 @@ class BasketController extends Controller
          $product_list = $productService->getAllProductOrderedByName();
 
         //Get the existing baskets
-         $baskets = $basketService->getAllBasketOrderedByName();
+         $baskets = $basketService->getAllBasketWithProductListOrderedByName();
                  
         
         // Displays the basket

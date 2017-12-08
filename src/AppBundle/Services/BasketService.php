@@ -23,6 +23,11 @@ class BasketService
         return $this->em->getRepository("AppBundle:Basket")->findBy([], ['name' => 'ASC']);
     }
     
+    public function getAllBasketWithProductListOrderedByName()
+    {
+        return $this->em->getRepository("AppBundle:Basket")->getAllBasketWithProductList();
+    }
+    
     public function saveBasket($basket)
     { 
         //On vérifie qu'il n'y a pas déjà un panier avec le même nom

@@ -123,6 +123,12 @@
 
 
 				</div>
+                               
+                                {% for product in basket.product_list %}
+                                <div>
+                                    <p>Product name = {{ product.name }} </p>
+                                </div>     
+                                {% endfor %}
 			{% endfor %}
 
 		{% endif %}
