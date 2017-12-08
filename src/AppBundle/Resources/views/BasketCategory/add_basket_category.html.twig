@@ -17,8 +17,11 @@
 
     {% endif %}
 
+    <div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    </div>
 
-    <div  id="createCategory"  class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card ">
+    <div  id="createCategory"  class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card " style="display: none;">
         <h2 class="card-title">Ajouter une catégorie de produits</h2>
         {{ form_start(form) }}
 
@@ -52,7 +55,7 @@
 
 
     <div id="listCategories" class="row col-xs-12">
-        <h2>Catégories de paniers : </h2>
+        <h2>Catégories de paniers :  <input type="text" id="filterInput" onkeyup="filterCategories()" placeholder="chercher une catégorie..."></h2>
 
         <div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
             <img class="card-image" src="images/add_element.ico" onclick="scrollCreate();"/>
@@ -86,12 +89,9 @@
     </div>
 
     <script>
-        $(document).ready(function () {
-            $("#createCategory").hide();
-        });
         function scrollCreate() {
             $("#createCategory").show();
-            $("#createCategory").get(0).scrollTop();
+            $("#createCategory").scrollTop();
         }
         function deleteCategory(name, id) {
             if (confirm("Voulez-vous vraiment supprimer la catégorie : " + name)) {
@@ -101,8 +101,22 @@
                 }).done(function(error) {
                     if(!error.error){
                         $("#basket_category"+id).hide();
+                    }else{
+                        $(".alert-danger").append(error.error);
+                        $(".alert-danger").show();
                     }
                 });
+            }
+        }
+
+        function filterCategories(){
+            var filter = $("#filterInput").val();
+            var list = $("#listCategories > .card-container");
+            var listName = $("#listCategories > .card-container > .card-image-label");
+            var regexp = new RegExp(filter, 'i');
+
+            for(var i=0;i<list.length;i++){
+                list[i].style.display = (listName.eq(i).text().trim().match(regexp) ? "" : "none");
             }
         }
     </script>

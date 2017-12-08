@@ -22,7 +22,12 @@
 		<p> {{error}} </p>
 	
 	{% endif %}
-	<div  id="createBasket" class="row col-md-offset-1 col-md-10 card">
+
+	<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	</div>
+
+	<div  id="createBasket" class="row col-md-offset-1 col-md-10 card" style="display: none;">
 		<h2 class="card-title">Créer un panier</h2>
 		{{ form_start(form) }}
 	
@@ -94,7 +99,7 @@
 	</div>
 
 	<div id="listpaniers" class="row col-xs-12">
-		<h2>Paniers : </h2>
+		<h2>Paniers :  <input type="text" id="filterInputPanier" onkeyup="filterBasket()" placeholder="chercher un panier..."> </h2>
 
 		<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 			<img class="card-image" src="images/add_element.ico" onclick="scrollCreate()"/>
@@ -128,10 +133,12 @@
 		{% endif %}
 	</div>
 	<script>
-	var $trash, $gallery;
+        var $list_product;
+        var $basket_product;
 	var listProductBasket = [];
 		$(document).ready(function(){
-			$list_product = $( "#list_product" );
+
+            $list_product = $( "#list_product" );
      		$basket_product = $( "#basket_product" );
 
 			$( "div", $list_product ).draggable({
@@ -163,18 +170,9 @@
 		        removeProduct( ui.draggable );
 		      }
    			 });
+
 		});
 
-		function addProduct( $item ) {
-	      $item.fadeOut(function() {	 
-	        $item.appendTo( $basket_product ).fadeIn(function() {
-	          $item.animate({ width: "80px" });
-	        });
-	      });
-	      
-	      listProductBasket.push($item[0].attributes.value.value);
-		  $("#listProductForm > select").val(listProductBasket);
-	    }
  
 	    function removeProduct( $item ) {
 	      $item.fadeOut(function() {
@@ -201,7 +199,10 @@
                 	console.log(error);
                 	if(!error.error){
                 		$("#basket"+id).hide();
-                	}
+                	}else{
+                        $(".alert-danger").append(error.error);
+                        $(".alert-danger").show();
+                    }
                 });		
             }
 		}
@@ -210,6 +211,17 @@
 			var filter = $("#filterInput").val();
 			var list = $("#list_product > .draggable");
 			var listName = $("#list_product > .draggable > .card-image-label");
+			var regexp = new RegExp(filter, 'i');
+
+			for(var i=0;i<list.length;i++){
+				list[i].style.display = (listName.eq(i).text().trim().match(regexp) ? "" : "none");
+			}
+		}
+
+		function filterBasket(){
+			var filter = $("#filterInputPanier").val();
+			var list = $("#listpaniers > .card-container");
+			var listName = $("#listpaniers > .card-container > .card-image-label");
 			var regexp = new RegExp(filter, 'i');
 
 			for(var i=0;i<list.length;i++){

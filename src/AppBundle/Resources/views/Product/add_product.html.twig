@@ -13,11 +13,16 @@
 
 
 	{% if error is defined %}
-	
+
 		<p> {{error}} </p>
-	
+
 	{% endif %}
-	<div  id="createProduct" class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card">
+
+	<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	</div>
+
+	<div  id="createProduct" class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card" style="display: none;">
 		<h2 class="card-title">Ajouter un produit</h2>
 		{{ form_start(form) }}
 	
@@ -87,7 +92,7 @@
 		</div>
 	</div-->
 	<div id="listproducts" class="row col-xs-12">
-		<h2>Produits: </h2>
+		<h2>Produits: <input type="text" id="filterInput" onkeyup="filterProduct()" placeholder="chercher un produit..."></h2>
 
 		<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 			<img class="card-image" src="images/add_element.ico" onclick="scrollCreate()"/>
@@ -123,12 +128,9 @@
 		{% endif %}
 	</div>
 	<script>
-		$(document).ready(function(){
-			$("#createProduct").hide();
-		});
 		function scrollCreate(){
 			$("#createProduct").show();
-			$("#createProduct").get(0).scrollTop();
+			$("#createProduct").scrollTop();
 		}
 
 		function deleteProduct(name,id){
@@ -139,10 +141,24 @@
                 }).done(function(error) {
                 	if(!error.error){
                 		$("#product"+id).hide();
-                	}
+                	}else{
+                        $(".alert-danger").append(error.error);
+                        $(".alert-danger").show();
+					}
                 });
 			}
 		}
+
+        function filterProduct(){
+            var filter = $("#filterInput").val();
+            var list = $("#listproducts > .card-container");
+            var listName = $("#listproducts > .card-container > .card-image-label");
+            var regexp = new RegExp(filter, 'i');
+
+            for(var i=0;i<list.length;i++){
+                list[i].style.display = (listName.eq(i).text().trim().match(regexp) ? "" : "none");
+            }
+        }
 	</script>
 
 
