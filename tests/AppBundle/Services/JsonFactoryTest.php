@@ -43,7 +43,7 @@ class JsonFactoryTest extends TestCase
         $basket->setProductList(null);
         $baskets = array($basket);
         $basketsAsJson = $this->jsonFactory->getBaskets($baskets);
-        $expectedJson = "[{\"name\":\"Panier vide\",\"price\":10,\"category\":\"Arnaque\",\"category_image\":null,\"products\":[]}]";
+        $expectedJson = "[{\"id\":null,\"name\":\"Panier vide\",\"price\":10,\"category\":\"Arnaque\",\"category_image\":null,\"products\":[]}]";
         $this->assertEquals($expectedJson, json_encode($basketsAsJson));
         
     }
