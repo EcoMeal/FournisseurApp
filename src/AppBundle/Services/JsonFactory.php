@@ -27,7 +27,7 @@ class JsonFactory
             
             //General informations of the basket
             array_push($data, array(
-            	"id" => $basket-getId(),
+            	"id" => $basket->getId(),
                 "name" => $basket->getName(),
                 "price" => $basket->getPrice(),
                 "category" => $basket->getCategory()->getName(),
