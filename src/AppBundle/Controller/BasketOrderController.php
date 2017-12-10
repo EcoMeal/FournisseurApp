@@ -30,7 +30,7 @@ class BasketOrderController extends Controller {
         if ($delivery_time == null) {
             return new JsonResponse(NULL);
         } else {
-            return new JsonResponse(array("deleviryTime" => $delivery_time->getTimestamp()));
+            return new JsonResponse(array("deliveryTime" => $delivery_time->getTimestamp()));
         }
     }
 
