@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Services\DeliveryService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use DateTime;
 
 class BasketOrderController extends Controller {
 
@@ -29,7 +30,7 @@ class BasketOrderController extends Controller {
         if ($delivery_time == null) {
             return new JsonResponse(NULL);
         } else {
-            return new JsonResponse($delivery_time->getTimestamp());
+            return new JsonResponse(array("deleviryTime" => $delivery_time->getTimestamp()));
         }
     }
 
