@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Services\DeliveryService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use DateTime;
+use AppBundle\Services\BasketOrderService;
 
 class BasketOrderController extends Controller {
 
@@ -30,8 +30,32 @@ class BasketOrderController extends Controller {
         if ($delivery_time == null) {
             return new JsonResponse(NULL);
         } else {
-            return new JsonResponse(array("deliveryTime" => $delivery_time->getTimestamp()));
+            return new JsonResponse($delivery_time->getTimestamp());
         }
+    }
+    
+    /**
+     * Saves an order in the database and returns it's id in JSON format.
+     * 
+     * @Route("/api/basket_order")
+     * @Method({"POST"})
+     */
+    public function saveBasketOrder(Request $request, BasketOrderService $basketOrderService) {
+    	
+    	// Retrieve the content of the request
+    	$content = $request->getContent();
+    	
+    	// Check if the content is not empty
+    	if(!is_null($content)) {
+    		$order = json_decode($content);
+    		//check if the JSON is well formed
+    		if(!is_null($order) && !empty($order)) {
+    			//save the order
+    			$order_id = $basketOrderService->saveOrder($order);
+	    		return new JsonResponse(array( "order_id" => $order_id), 200);
+    		}
+    	}
+    	return new JsonResponse(null, 400);
     }
 
 }

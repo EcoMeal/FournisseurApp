@@ -69,6 +69,15 @@ class BasketOrder
     {
         return $this->deliveryTime;
     }
+    
+    public function getOrderContent() {
+    	return $this->order_content;
+    }
+    
+    public function setOrderContent($order_content) {
+    	$this->order_content = $order_content;
+    	return $this;
+    }
 
 }
 
