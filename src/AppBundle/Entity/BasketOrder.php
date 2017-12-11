@@ -65,9 +65,9 @@ class BasketOrder
      *
      * @return \DateTime
      */
-    public function getDeliveryTime()
+    public function getDeliveryTimeFormated()
     {
-        return $this->deliveryTime;
+        return $this->deliveryTime->format('H:i');
     }
     
     public function getOrderContent() {

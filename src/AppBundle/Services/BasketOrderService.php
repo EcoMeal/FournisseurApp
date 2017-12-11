@@ -82,6 +82,11 @@ class BasketOrderService {
 			return null;
 		}
 	}
+        
+        public function getAllOrdersWithBasketListOrderedByTime()
+    {
+        return $this->em->getRepository("AppBundle:BasketOrder")->findBy([], ['deliveryTime' => 'ASC']);
+    }
 	
 	
 }

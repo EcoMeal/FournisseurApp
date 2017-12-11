@@ -17,4 +17,5 @@ class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
         $qb->setParameter(':end', $end);
         return $qb->getQuery()->getArrayResult();
     }
+
 }

@@ -59,5 +59,22 @@ class BasketOrderController extends Controller {
     	}
     	return new JsonResponse(null, 400);
     }
+    
+     /**
+     * @Route("/orders")
+     * 
+     */
+    public function orders_display(Request $request, BasketOrderService $basketOrderService) {
+
+        //Get the existing orders with their baskets
+        $orders = $basketOrderService->getAllOrdersWithBasketListOrderedByTime();
+
+        // Displays the basket
+        //return $this->render('AppBundle:Command:view_command.html.twig', array(
+        return $this->render('AppBundle:BasketOrder:view_command.html.twig', array(
+                    "order_list" => $orders,
+                    "test" => count($orders[0]->getOrderContent())
+        ));
+    }
 
 }
