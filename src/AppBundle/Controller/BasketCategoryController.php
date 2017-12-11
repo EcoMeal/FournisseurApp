@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\BasketCategory;
 use AppBundle\Form\BasketCategoryType;
 use AppBundle\Services\BasketCategoryService;
+use AppBundle\Services\JsonFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BasketCategoryController extends Controller
 {
@@ -33,6 +35,18 @@ class BasketCategoryController extends Controller
            
         $em->flush();
         return $this->redirect('/basket_category');
+    }
+    
+    /**
+     * Returns all the baskets categories of the application as JSON
+     * 
+     * @Route("/api/basket_category")
+     * @Method({"GET"})
+     */
+    public function getAllBasketCategories(JsonFactory $jsonFactory) {
+    	$em = $this->getDoctrine()->getManager();
+    	$basketCategories = $em->getRepository("AppBundle:BasketCategory")->findAll();
+    	return new JsonResponse($jsonFactory->getBasketCategories($basketCategories));
     }
     
     

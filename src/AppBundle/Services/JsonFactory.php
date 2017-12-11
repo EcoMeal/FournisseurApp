@@ -74,4 +74,25 @@ class JsonFactory
         
     }
     
+    public function getBasketCategories($basketCategories) {
+    	
+    	if(is_null($basketCategories)) {
+    		return [];
+    	}
+    	
+    	//An array which will store all the basket categories
+    	$data = [];
+    	
+    	foreach ($basketCategories as $basketCategory){
+    		array_push($data, array(
+    				"id" => $basketCategory->getId(),
+    				"name" => $basketCategory->getName(),
+    				"image" => $basketCategory->getImagePath()
+    		));
+    	}
+    	
+    	return $data;
+    	
+    }
+    
 }
