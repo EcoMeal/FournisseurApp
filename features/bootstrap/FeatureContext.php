@@ -623,6 +623,9 @@ class FeatureContext extends WebTestCase implements Context
     /** @AfterScenario */
     public function after(AfterScenarioScope $scope)
     {
+       // Clear the json message
+       $this->jsonMessage = null;
+       
        // Clean all the products. 
         $this->client->request('GET', '/product/clean');
         
