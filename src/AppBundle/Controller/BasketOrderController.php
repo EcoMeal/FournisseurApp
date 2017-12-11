@@ -16,12 +16,12 @@ class BasketOrderController extends Controller {
 
     /**
      * Returns a delivery time in the time slot encoded in JSON
-     * 
+     *
      * QueryParameter(start_time)
      * QueryParameter(end_time)
      * @Route("/api/dtime_calculation")
      * @Method({"GET"})
-     * 
+     *
      */
     public function returnDeliveryTime(Request $request, DeliveryService $deliveryService) {
         $start_time = new DateTime();
@@ -30,23 +30,23 @@ class BasketOrderController extends Controller {
         $end_time->setTimestamp($request->query->get('end_time')); // Récupère la variable end_time en GET
         $delivery_time = $deliveryService->deliveryTimeCalculation($start_time, $end_time); // Calcule un horaire pour la commande compris dans la plage horaire donnée
         if ($delivery_time == null) {
-            return new JsonResponse(NULL);
+            return new JsonResponse(array("deliveryTime" => 0));
         } else {
             return new JsonResponse(array("deliveryTime" => $delivery_time->getTimestamp()));
         }
     }
-    
+
     /**
      * Saves an order in the database and returns it's id in JSON format.
-     * 
+     *
      * @Route("/api/basket_order")
      * @Method({"POST"})
      */
     public function saveBasketOrder(Request $request, BasketOrderService $basketOrderService) {
-    	
+
     	// Retrieve the content of the request
     	$content = $request->getContent();
-    	
+
     	// Check if the content is not empty
     	if(!is_null($content)) {
     		$order = json_decode($content);
