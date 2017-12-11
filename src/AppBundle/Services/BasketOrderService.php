@@ -78,16 +78,14 @@ class BasketOrderService {
            
             // Checks that there is enough of each product
             foreach($stockNeeded as $product_id => $amount) {
-                $stocks = $this->em->getRepository("AppBundle:Stock")
+                $stock = $this->em->getRepository("AppBundle:Stock")
                         ->findCurrentStockFor($product_id);
-                $stock = $stocks[0];
-                $amountAvailable = $stock['quantity'];
-                if($amountAvailable[0] < $amount) {
+                $amountAvailable = $stock->getQuantity();
+               	if($amountAvailable < $amount) {
                     return (object) array("valid" => false, 
                         "errorMessage" => "Not enough stock for product ".$product_id);
                 }
             }
-            echo $stockNeeded;
             return (object) array("valid" => true);
             
         }
@@ -112,6 +110,13 @@ class BasketOrderService {
 			//Get all the baskets from database
 			foreach($order->content as $basket_id) {
 				$basket = $basketRepository->find($basket_id);
+				foreach($basket->getProductList() as $product) {
+					$stock = $this->em->getRepository("AppBundle:Stock")
+						->findCurrentStockFor($product->getId());
+					$stock->setQuantity($stock->getQuantity()-1);
+					$this->em->persist($stock);
+					$this->em->flush($stock);
+				}
 				array_push($baskets, $basket);
 			}
 			

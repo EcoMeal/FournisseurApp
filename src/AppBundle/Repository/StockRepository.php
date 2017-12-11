@@ -17,8 +17,12 @@ class StockRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('s')
                     ->where("s.product = ".$product_id);
-                   
-        return $qb->getQuery()->getArrayResult();    
+        $stocks = $qb->getQuery()->getResult();
+        if(!is_null($stocks)) {
+	        return $stocks[0];
+        } else {
+        	return null;
+        }
     }
     
 }
