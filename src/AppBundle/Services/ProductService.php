@@ -4,6 +4,7 @@ namespace AppBundle\Services;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AppBundle\Entity\Stock;
+use DateTime;
 
 class ProductService
 {
@@ -66,20 +67,16 @@ class ProductService
 
                 // On enregistre le produit
                 $this->em->persist($product);
-                $this->em->flush();
                 
-                // Not working yet...
-                
-               /* $product2 = $this->em->getRepository("AppBundle:Product")->findOneById($product->getId());
-                        
-                echo "Product field = ".$product2->getId();
+                $dt = new DateTime();
+                $dt->setTimestamp(time());
                 // On enregistre un stock de base pour ce produit.
                 $stock = new Stock();
-                $stock->setProduct($product2);
+                $stock->setProduct($product);
                 $stock->setQuantity(0);
-                $stock->setDate(date("Y-m-d H:i:s"));
+                $stock->setDate($dt);
                 $this->em->persist($stock);
-                $this->em->flush();*/
+                $this->em->flush();
             }
     }
     
