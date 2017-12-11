@@ -10,6 +10,12 @@ namespace AppBundle\Repository;
  */
 class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
 
+    /**
+     * Returns the orders between two dates
+     * @param dateTime $start
+     * @param dateTime $end
+     * @return Array<Basket>
+     */
     public function getOrdersBetween($start, $end) {
         $qb = $this->createQueryBuilder('p')
                 ->where('p.deliveryTime BETWEEN :start AND :end');

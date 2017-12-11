@@ -70,10 +70,20 @@ class BasketOrder
         return $this->deliveryTime->format('H:i');
     }
     
+    /**
+     * Returns the baskets contained in the order
+     * @return Array<Basket> 
+     * 
+     */
     public function getOrderContent() {
     	return $this->order_content;
     }
     
+    /**
+     * Set the basket contained in the order
+     * @param Array<Basket> $order_content
+     * @return $this
+     */
     public function setOrderContent($order_content) {
     	$this->order_content = $order_content;
     	return $this;
