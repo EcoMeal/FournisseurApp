@@ -10,4 +10,15 @@ namespace AppBundle\Repository;
  */
 class StockRepository extends \Doctrine\ORM\EntityRepository
 {
+    
+    
+    
+    public function findCurrentStockFor($product_id)
+    {
+        $qb = $this->createQueryBuilder('s')
+                    ->where("s.product = ".$product_id);
+                   
+        return $qb->getQuery()->getArrayResult();    
+    }
+    
 }

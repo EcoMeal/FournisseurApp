@@ -35,22 +35,66 @@ class BasketOrderService {
 		$order_content = $order->content;
 		//Check that there is at list one basket in the order
 		if(empty($order_content)) {
-			return false;
+			return (object) array("valid" => false, "errorMessage" => "No basket in the order");
 		}
-		 
-		//Check the integrity of all the baskets
+		
+                $baskets = array();
+                
+		// Check the integrity of all the baskets
 		foreach($order_content as $basket_id) {
 			$basket = $this->em->getRepository("AppBundle:Basket")->find($basket_id);
+                        array_push($baskets, $basket);
 			//If the basket can't be found, returns false
 			if(is_null($basket)) {
-				return false;
+				return (object) array("valid" => false,
+                                    "errorMessage" => "Invalid basket for id ".$basket_id);
 			}
 		}
-		 
-		return true;
-	}
-	
-	/**
+                  
+                return $this->checkOrderStock($baskets);
+                
+        }
+        
+        
+        public function checkOrderStock($baskets)
+        {
+            //A map which will contain the required stock for each product in the basket list
+            $stockNeeded = array();
+            
+            foreach($baskets as $basket) {
+                
+                foreach($basket->getProductList() as $product) {
+                   
+                    // If the product is already in the array, we increase the amount
+                    if(in_array($product->getId(), $stockNeeded)) {
+                        $stockNeeded[$product->getId()] += 1;
+                    } else { //Otherwise we set it to 1
+                        $stockNeeded[$product->getId()] = 1;
+                    }
+                   
+               }
+                  
+            }
+           
+            // Checks that there is enough of each product
+            foreach($stockNeeded as $product_id => $amount) {
+                $stocks = $this->em->getRepository("AppBundle:Stock")
+                        ->findCurrentStockFor($product_id);
+                $stock = $stocks[0];
+                $amountAvailable = $stock['quantity'];
+                if($amountAvailable[0] < $amount) {
+                    return (object) array("valid" => false, 
+                        "errorMessage" => "Not enough stock for product ".$product_id);
+                }
+            }
+            echo $stockNeeded;
+            return (object) array("valid" => true);
+            
+        }
+        
+
+
+        /**
 	 * Saves an order in the database.
 	 *
 	 * @param $order the order in a JSON format

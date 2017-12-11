@@ -50,9 +50,15 @@ class BasketOrderController extends Controller {
     		$order = json_decode($content);
     		//check if the JSON is well formed
     		if(!is_null($order) && !empty($order)) {
-    			//save the order
+    			
+                    $result = $basketOrderService->checkOrder($order);
+                    if($result->valid){
+                        //save the order
     			$order_id = $basketOrderService->saveOrder($order);
 	    		return new JsonResponse(array( "order_id" => $order_id), 200);
+                    } else {
+                       return new JsonResponse($result, 400); 
+                    }
     		}
     	}
     	return new JsonResponse(null, 400);
