@@ -9,6 +9,8 @@ use AppBundle\Services\DeliveryService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Services\BasketOrderService;
+use DateTime;
+
 
 class BasketOrderController extends Controller {
 
@@ -30,7 +32,7 @@ class BasketOrderController extends Controller {
         if ($delivery_time == null) {
             return new JsonResponse(NULL);
         } else {
-            return new JsonResponse($delivery_time->getTimestamp());
+            return new JsonResponse(array("deliveryTime" => $delivery_time->getTimestamp()));
         }
     }
     
