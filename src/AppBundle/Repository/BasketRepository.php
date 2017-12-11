@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Basket;
+
 /**
  * BasketRepository
  *
@@ -19,5 +21,12 @@ class BasketRepository extends \Doctrine\ORM\EntityRepository
                     ->leftJoin('b.product_list ', "product")
                     ->addSelect('product');
         return $qb->getQuery()->getArrayResult();
+    }
+    
+    public function findByCategoryId($id_category) {
+    	$query = $this->getEntityManager()
+    		->createQuery("SELECT b FROM AppBundle:Basket b JOIN b.category c WHERE c.id = :id_category")
+    		->setParameter("id_category", $id_category);
+    	return $query->getResult();
     }
 }

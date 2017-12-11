@@ -66,6 +66,18 @@ class BasketController extends Controller
     }
     
     /**
+     * Returns all the baskets with the category name/id
+     * 
+     * @Route("/api/basket/category/{id_category}")
+     * @Method({"GET"})
+     */
+    public function findBasketByCategory($id_category, JsonFactory $jsonFactory) {
+    	$em = $this->getDoctrine()->getManager();
+    	$baskets = $em->getRepository("AppBundle:Basket")->findByCategoryId($id_category);
+    	return new JsonResponse($jsonFactory->getBaskets($baskets));
+    }
+    
+    /**
      * @Route("/basket")
      * 
      */
