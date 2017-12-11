@@ -3,13 +3,19 @@
 {% block css %}
 
     {{ parent() }}
-    <link rel="stylesheet" href="css/category/category.css">
 
 {% endblock %}
 
 {% block title %}Ajout de catégories de paniers{% endblock %}
 
 {% block body %}
+
+    {% if error is defined %}
+        <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{error}}
+        </div>
+    {% endif %}
 
     <div class="alert alert-danger alert-dismissable fade in" style="display: none;">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

@@ -10,6 +10,14 @@
 
 {% block body %}
 
+</br>
+
+	{% if error is defined %}
+		<div class="alert alert-danger alert-dismissable fade in">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			{{error}}
+		</div>
+	{% endif %}
 
 	<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
 		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
