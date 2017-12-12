@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Stock;
+
 /**
  * StockRepository
  *
@@ -30,13 +32,9 @@ class StockRepository extends \Doctrine\ORM\EntityRepository
     public function getCurrentStock()
     {
         $qb = $this->createQueryBuilder('s')
-                    ->orderBy('s.date', 'ASC')
-                    ->leftJoin('s.product ', 'prod')
-                    ->addSelect('prod')
-                    ;//->groupBy('s.product', 'prod');
-                    //->distinct();
-        
-        return $qb->getQuery()->getArrayResult();
+        			->where('s.date = (select max(s2.date) from AppBundle:Stock s2 where s.product = s2.product)')
+                    ->groupBy('s.product');
+        return $qb->getQuery()->getResult();
     }
     
 }

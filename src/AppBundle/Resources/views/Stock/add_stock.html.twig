@@ -33,6 +33,7 @@
 				{% endif %}
 				<div class="card-image-label">
 					{{ product.product.name }}
+					{{ product.date|date("d/m/Y") }}
 				</div>
 			</div>
 		{% endfor %}
