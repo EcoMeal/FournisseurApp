@@ -96,7 +96,7 @@ class BasketOrderService {
      * @return BasketOrder
      */
     public function getOrder($id) {
-        return $this->em->getRepository("AppBundle:BasketOrder")->find($id);
+        return $this->em->getRepository("AppBundle:BasketOrder")->getOrderWithBasketList($id);
     }
 
 }
