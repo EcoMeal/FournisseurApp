@@ -91,4 +91,12 @@ class BasketOrderService {
         return $this->em->getRepository("AppBundle:BasketOrder")->findBy([], ['deliveryTime' => 'ASC']);
     }
 
+    /**
+     * Returns the order corresponding to the $id with the content of the order 
+     * @return BasketOrder
+     */
+    public function getOrder($id) {
+        return $this->em->getRepository("AppBundle:BasketOrder")->find($id);
+    }
+
 }

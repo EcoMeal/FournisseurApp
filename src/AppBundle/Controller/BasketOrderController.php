@@ -26,7 +26,9 @@ class BasketOrderController extends Controller {
         $start_time = new DateTime();
         $start_time->setTimestamp($request->query->get('start_time')); // Récupère la variable start_time en GET
         $end_time = new DateTime();
+
         $end_time->setTimestamp($request->query->get('end_time')); // Récupère la variable end_time en GET
+
         $delivery_time = $deliveryService->deliveryTimeCalculation($start_time, $end_time); // Calcule un horaire pour la commande compris dans la plage horaire donnée
         if ($delivery_time == null) {
             return new JsonResponse(array("deliveryTime" => 0));
@@ -69,11 +71,26 @@ class BasketOrderController extends Controller {
         //Get the existing orders with their baskets
         $orders = $basketOrderService->getAllOrdersWithBasketListOrderedByTime();
 
-        // Displays the basket
-        //return $this->render('AppBundle:Command:view_command.html.twig', array(
-        return $this->render('AppBundle:BasketOrder:view_command.html.twig', array(
-                    "order_list" => $orders,
-                    "test" => count($orders[0]->getOrderContent())
+        // Displays the orders with their baskets
+        return $this->render('AppBundle:BasketOrder:view_order.html.twig', array(
+                    "order_list" => $orders
+        ));
+    }
+
+    /**
+     * Show the order corresponding to the $id in GET with its content
+     * QueryParameter($id_order)
+     * @Route("/order")
+     * @Method({"GET"})
+     */
+    public function order_summary(Request $request, BasketOrderService $basketOrderService) {
+        $id = $request->query->get('id_order'); // Get the $id_order GET variable
+        //Get the order with its baskets
+        $order = $basketOrderService->getOrder($id);
+
+        // Display the order and its content
+        return $this->render('AppBundle:BasketOrder:recap_order.html.twig', array(
+                    "order" => $order
         ));
     }
 
