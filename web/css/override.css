@@ -33,7 +33,11 @@
 	color : white;
 	padding : 8px;
 	text-align: center;
-	    font-size: 20px;
+font-size: 20px;
+
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-quantity-top{
@@ -111,9 +115,13 @@
     right: 40px;
 }
 .card-title-block{
-	padding: 0px;
 	color:white;
 	text-align:center;
+}
+
+.card-title-command{
+	padding-top:5px;
+	padding-bottom:5px;
 }
 
 .bg-danger{
@@ -149,7 +157,7 @@
 	overflow: hidden;
 	margin-top: 20px;
 	margin-bottom: 20px;
-	border-radius: 4px;
+	border-radius:0px;
 }
 
 .breadcrumb>li {
