@@ -70,10 +70,12 @@ class BasketOrderController extends Controller {
 
         //Get the existing orders with their baskets
         $orders = $basketOrderService->getAllOrdersWithBasketListOrderedByTime();
+        $baskets = $basketService->getAllBasketOrderedByName();
 
         // Displays the orders with their baskets
         return $this->render('AppBundle:BasketOrder:view_order.html.twig', array(
-                    "order_list" => $orders
+                    "order_list" => $orders,
+                    "basket_list" => $baskets
         ));
     }
 
@@ -87,10 +89,12 @@ class BasketOrderController extends Controller {
         $id = $request->query->get('id_order'); // Get the $id_order GET variable
         //Get the order with its baskets
         $order = $basketOrderService->getOrder($id);
+        $baskets = $basketService->getAllBasketOrderedByName();
 
         // Display the order and its content
         return $this->render('AppBundle:BasketOrder:recap_order.html.twig', array(
-                    "order" => $order
+                    "order" => $order,
+                    "basket_list" => $baskets
         ));
     }
 

@@ -34,7 +34,7 @@ class BasketOrder
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Basket", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $order_content;
+    private $orderContent;
     
     /**
      * Get id
@@ -76,7 +76,7 @@ class BasketOrder
      * 
      */
     public function getOrderContent() {
-    	return $this->order_content;
+    	return $this->orderContent;
     }
     
     /**
@@ -84,8 +84,8 @@ class BasketOrder
      * @param Array<Basket> $order_content
      * @return $this
      */
-    public function setOrderContent($order_content) {
-    	$this->order_content = $order_content;
+    public function setOrderContent($orderContent) {
+    	$this->orderContent = $orderContent;
     	return $this;
     }
 
