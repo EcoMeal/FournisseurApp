@@ -9,14 +9,8 @@
 {% block title %}Commande{% endblock %}
 
 {% block body %}
+    
 
-
-
-    {% if error is defined %}
-
-        <p> {{error}} </p>
-
-    {% endif %}
 
     <div class="alert alert-danger alert-dismissable fade in" style="display: none;">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -26,19 +20,26 @@
         <h2>Commande:  </h2>
      {% for order in order_list %}
             <div id="basket{{order.id}}" class="col-xs-12 col-sm-6 col-md-4">
-                <div class="card col-xs-12 bg-warning" style="padding: 0px;">
+                <div class="card col-xs-12 bg-warning-light" style="padding: 0px;">
                     <div class="col-xs-12  bg-dark" style=";font-weight: bold;">
-
+                        <span class="col-xs-9 card-title-block" >Commande numéro {{ order.id }}</span>
+                        <span class="col-xs-3 card-title-block" >{{order.getDeliveryTimeFormated()}}</span>
                        
+                        {% set price_basket = 0 %}
                         {% for basket in order.orderContent %}
-                            <span class="col-xs-2 card-title-block" >{{ basket.price }} €</span>
-                            <span class="col-xs-8 card-title-block" >{{ basket.name }}</span>
+                            <span class="col-xs-9 card-title-block bg-dark-light" >{{ basket.name }}</span>
+                            <span class="col-xs-3 card-title-block bg-dark-light" >{{ basket.price }} €</span>
+                            {% set price_basket = price_basket + basket.price %}
                         {% endfor %}
 
-                        <span class="col-xs-2 card-title-block" >{{order.getDeliveryTimeFormated()}}</span>
+                        <span class="col-xs-9 card-title-block bg-dark-light" style="border-top: 1px solid #343a40;"> Total </span>
+                        <span class="col-xs-3 card-title-block bg-dark-light" style="border-top: 1px solid #343a40;">{{ price_basket }} €</span>
+                        
                     </div>
 
                     {% for basket in order.orderContent %}
+
+{{ dump(basket) }}
                         {% if basket.product_list is defined %}
                             {% for product in basket.product_list %}
                                 <div value="{{ product.id }}" class="card-container image-product ui-widget-content ui-corner-tr">

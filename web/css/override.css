@@ -124,12 +124,22 @@
 	background-color: #ffc107;
 }
 
+.bg-warning-light{
+		background-color: #ffc107;
+
+	 filter: saturate(85%);
+}
+
 .bg-success{
 	background-color: #28a745;
 }
 
 .bg-dark{
 	background-color: #343a40;
+}
+
+.bg-dark-light{
+	background-color: #575c62;
 }
 
 .breadcrumb {
