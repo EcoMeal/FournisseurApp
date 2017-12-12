@@ -24,12 +24,33 @@ class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
         return $qb->getQuery()->getArrayResult();
     }
 
+    /**
+     * Returns all the Orders with the content of the baskets and the product of these baskets
+     * @return Array<BasketOrder>
+     */
     public function getAllOrdersWithBasketListOrderedByTime() {
         $qb = $this->createQueryBuilder('o')
                 ->leftJoin('o.orderContent ', "basket")
                 ->addSelect('basket')
                 ->leftJoin('basket.product_list ', "product")
-                ->addSelect('product');
+                ->addSelect('product')
+                ->orderBy('o.deliveryTime');
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Returns the order and its content corresponding to the $id
+     * @param integer $id
+     * @return BasketOrder
+     */
+    public function getOrderWithBasketList($id) {
+        $qb = $this->createQueryBuilder('o')
+                ->leftJoin('o.orderContent ', "basket")
+                ->addSelect('basket')
+                ->leftJoin('basket.product_list ', "product")
+                ->addSelect('product')
+                ->where('o.id = :id');
+        $qb->setParameter(':id', $id);
         return $qb->getQuery()->getArrayResult();
     }
 
