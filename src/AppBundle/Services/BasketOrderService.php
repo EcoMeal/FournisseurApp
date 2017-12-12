@@ -92,6 +92,13 @@ class BasketOrderService {
         }
         
 
+    /**
+     * Returns the orders with their basket list ordered by Time 
+     * @return Array<Basket>
+     */
+    public function getAllOrdersWithBasketListOrderedByTime() {
+        return $this->em->getRepository("AppBundle:BasketOrder")->getAllOrdersWithBasketListOrderedByTime();
+    }
 
         /**
 	 * Saves an order in the database.
@@ -146,5 +153,12 @@ class BasketOrderService {
 		return $this->em->getRepository("AppBundle:BasketOrder")->findBy([], ['deliveryTime' => 'ASC']);
 	}
 	
+ /**
+     * Returns the order corresponding to the $id with the content of the order 
+     * @return BasketOrder
+     */
+    public function getOrder($id) {
+        return $this->em->getRepository("AppBundle:BasketOrder")->getOrderWithBasketList($id);
+    }
 	
 }

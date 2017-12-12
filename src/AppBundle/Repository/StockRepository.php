@@ -26,5 +26,17 @@ class StockRepository extends \Doctrine\ORM\EntityRepository
         	return null;
         }
     }
+
+    public function getCurrentStock()
+    {
+        $qb = $this->createQueryBuilder('s')
+                    ->orderBy('s.date', 'ASC')
+                    ->leftJoin('s.product ', 'prod')
+                    ->addSelect('prod')
+                    ;//->groupBy('s.product', 'prod');
+                    //->distinct();
+        
+        return $qb->getQuery()->getArrayResult();
+    }
     
 }

@@ -9,6 +9,7 @@ use AppBundle\Services\DeliveryService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Services\BasketOrderService;
+use DateTime;
 
 class BasketOrderController extends Controller {
 
@@ -33,10 +34,10 @@ class BasketOrderController extends Controller {
             return new JsonResponse(array("deliveryTime" => $delivery_time->getTimestamp()));
         }
     }
-    
+
     /**
      * Saves an order in the database and returns it's id in JSON format.
-     * 
+     *
      * @Route("/api/basket_order")
      * @Method({"POST"})
      */
@@ -65,23 +66,38 @@ class BasketOrderController extends Controller {
     	
     	return new JsonResponse(null, 400);
     }
-    
+
     /**
      * Show the orders of the Application with their content
      * @Route("/orders")
-     *
+     * 
      */
     public function orders_display(Request $request, BasketOrderService $basketOrderService) {
-    
-    	//Get the existing orders with their baskets
-    	$orders = $basketOrderService->getAllOrdersWithBasketListOrderedByTime();
-    
-    	// Displays the basket
-    	//return $this->render('AppBundle:Command:view_command.html.twig', array(
-    	return $this->render('AppBundle:BasketOrder:view_command.html.twig', array(
-    			"order_list" => $orders,
-    			"test" => count($orders[0]->getOrderContent())
-    	));
+
+        //Get the existing orders with their baskets
+        $orders = $basketOrderService->getAllOrdersWithBasketListOrderedByTime();
+
+        // Displays the orders with their baskets
+        return $this->render('AppBundle:BasketOrder:view_order.html.twig', array(
+                    "order_list" => $orders
+        ));
+    }
+
+    /**
+     * Show the order corresponding to the $id in GET with its content
+     * QueryParameter($id_order)
+     * @Route("/order")
+     * @Method({"GET"})
+     */
+    public function order_summary(Request $request, BasketOrderService $basketOrderService) {
+        $id = $request->query->get('id_order'); // Get the $id_order GET variable
+        //Get the order with its baskets
+        $order = $basketOrderService->getOrder($id);
+        
+        // Display the order and its content
+        return $this->render('AppBundle:BasketOrder:recap_order.html.twig', array(
+                    "order" => $order
+        ));
     }
 
 }

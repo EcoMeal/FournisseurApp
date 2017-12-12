@@ -24,13 +24,13 @@
 
     <div id="listCommand" class="row col-xs-12">
         <h2>Commande:  </h2>
-     {% for order in order_list %}
             <div id="basket{{order.id}}" class="col-xs-12 col-sm-6 col-md-4">
                 <div class="card col-xs-12 bg-warning" style="padding: 0px;">
                     <div class="col-xs-12  bg-dark" style=";font-weight: bold;">
 
                        
                         {% for basket in order.orderContent %}
+                            COUCOU
                             <span class="col-xs-2 card-title-block" >{{ basket.price }} €</span>
                             <span class="col-xs-8 card-title-block" >{{ basket.name }}</span>
                         {% endfor %}
@@ -62,7 +62,6 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
 
     </div>
     <script>
