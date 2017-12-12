@@ -87,7 +87,7 @@ class BasketOrderController extends Controller {
         $id = $request->query->get('id_order'); // Get the $id_order GET variable
         //Get the order with its baskets
         $order = $basketOrderService->getOrder($id);
-
+        
         // Display the order and its content
         return $this->render('AppBundle:BasketOrder:recap_order.html.twig', array(
                     "order" => $order
