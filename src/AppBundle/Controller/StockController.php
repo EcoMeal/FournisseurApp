@@ -11,7 +11,18 @@ use AppBundle\Entity\Stock;
 use AppBundle\Form\StockType;
 use AppBundle\Services\StockService;
 
-class StockController extends Controller {
+class StockController extends Controller
+{
+    
+    
+    /**
+     * @Route("/stock")
+     */
+    public function saveStockAction(Request $request, StockService $stockService)
+    {
+        
+	// Doctrine manager
+	$em = $this->getDoctrine()->getManager();
 	
 	/**
 	 * @Route("/stock")
