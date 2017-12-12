@@ -49,8 +49,7 @@ class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
                 ->addSelect('basket')
                 ->leftJoin('basket.product_list ', "product")
                 ->addSelect('product')
-                ->where('o.id = :id')
-                ->orderBy('o.deliveryTime');
+                ->where('o.id = :id');
         $qb->setParameter(':id', $id);
         return $qb->getQuery()->getArrayResult();
     }
