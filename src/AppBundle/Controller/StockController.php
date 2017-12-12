@@ -23,11 +23,34 @@ class StockController extends Controller
         
 	// Doctrine manager
 	$em = $this->getDoctrine()->getManager();
-	
-	// Error
-	//$error = $stockService->updateProductStock($productID, $newStock);
-        $error = NULL;
+	$error = NULL;
         
+        $rawData = $request->getContent();
+        //4=78&5=45
+        /*
+        if(!empty($rawData)){
+            if(strstr($rawData, "&")){
+                $itemUpdateList = explode("&", $rawData);
+            } else {
+                $itemUpdateList = $rawData;
+            }
+            echo("item update list = ");
+            var_dump($itemUpdateList);
+            $size = count($itemUpdateList);
+            
+            for($i = 0; $i < $size; $i++){
+                
+                $data = explode("=", $itemUpdateList);
+                 echo("data= ");
+                var_dump($data);
+                $productID = $data[0];
+                $newStock = $data[1];
+                $error = $stockService->updateProductStock($productID, $newStock);
+            
+            }
+        }
+        */
+
         $stock_history = $em->getRepository("AppBundle:Stock")->getCurrentStock();
 			
         
