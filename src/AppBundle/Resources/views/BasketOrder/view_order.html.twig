@@ -16,11 +16,11 @@
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     </div>
 
-    <div id="listCommand" class="row col-xs-12">
-        <h2>Commande:  </h2>
+    <div id="listCommand" style="display:inline-block;text-align:center;">
+        <h2>Commandes :</h2>
      {% for order in order_list %}
-            <div id="basket{{order.id}}" class="col-xs-12 col-sm-6 col-md-4" style="vertical-align:middle;">
-                <div class="card col-xs-12" style="padding: 0px;">
+            <div id="basket{{order.id}}" style="display:inline-block; width:540px; max-width:100%; vertical-align:top;margin:5px;">
+                <div class="card col-xs-12 bg-dark-light" style="padding: 0px;">
                     <div class="col-xs-12 card-title-command bg-dark" style=";font-weight: bold;">
                         <span class="col-xs-9 card-title-block" >Commande numéro {{ order.id }}</span>
                         <span class="col-xs-3 card-title-block" >{{ order.deliveryTime|date('H:i') }}</span>
@@ -55,7 +55,7 @@
                         <span class="col-xs-9"> Total </span>
                         <span class="col-xs-3">{{ price_basket }}€</span>
                     </div>
-                    <div class="col-xs-12 breadcrumb" style=";font-weight: bold;margin: 0px;">
+                    <div class="col-xs-12 breadcrumb" style="font-weight: bold;margin: 0px;">
                         <li><a href="javascript:void(0);">Préparation</a></li>
                         <li><a href="javascript:void(0);">Paiement</a></li>
                         <li><a href="javascript:void(0);">Finalisé</a></li>

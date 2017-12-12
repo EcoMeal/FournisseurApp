@@ -11,7 +11,7 @@
 {% block body %}
 </br>
 
-<div class="alert alert-danger alert-dismissable fade in">
+<div class="alert alert-danger alert-dismissable fade in"  style="display: none;">
 	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 </div>
 
@@ -19,20 +19,20 @@
 	<h2>Stock : <input type="text" id="filterInput" onkeyup="filterProduct()" placeholder="chercher un produit..."></h2>
 
     {% if stock_history is defined %}
-		{% for product in stock_history %}
+		{% for stock in stock_history %}
 			<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 				<div class="card-quantity-top">
-					<span class="col-xs-4 glyphicon glyphicon-minus" style="margin-top:5px" onclick="minusProduct({{product.id}},{{product.quantity}})"> </span>
-					<div class="col-xs-4"> <input id="product{{product.id}}" class="form-control center" value="{{product.quantity}}" onchange="changeQuantity({{product.id}},{{product.quantity}})"></div>
-					<span class="col-xs-4 glyphicon glyphicon-plus" style="margin-top:5px" onclick="plusProduct({{product.id}},{{product.quantity}})"> </span>
+					<span class="col-xs-4 glyphicon glyphicon-minus" style="margin-top:5px" onclick="minusProduct({{stock.id}},{{stock.quantity}})"> </span>
+					<div class="col-xs-4"> <input id="product{{stock.id}}" class="form-control center" value="{{stock.quantity}}" onchange="changeQuantity({{stock.id}},{{stock.quantity}})"></div>
+					<span class="col-xs-4 glyphicon glyphicon-plus" style="margin-top:5px" onclick="plusProduct({{stock.id}},{{stock.quantity}})"> </span>
 				</div>
-				{% if product.product.imagePath != null %}
-					<img class="card-image" src="{{ asset('uploads/images/' ~ product.product.imagePath) }}"/>
+				{% if stock.product.imagePath != null %}
+					<img class="card-image" src="{{ asset('uploads/images/' ~ stock.product.imagePath) }}"/>
 				{% else %}
 					<img class="card-image" src="images/placeholder.png"/>
 				{% endif %}
 				<div class="card-image-label">
-					{{ product.product.name }}
+					{{ stock.product.name }}
 				</div>
 			</div>
 		{% endfor %}
