@@ -9,18 +9,17 @@ use AppBundle\Services\DeliveryService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Services\BasketOrderService;
-use DateTime;
 
 class BasketOrderController extends Controller {
 
     /**
      * Returns a delivery time in the time slot encoded in JSON
-     *
+     * 
      * QueryParameter(start_time)
      * QueryParameter(end_time)
      * @Route("/api/dtime_calculation")
      * @Method({"GET"})
-     *
+     * 
      */
     public function returnDeliveryTime(Request $request, DeliveryService $deliveryService) {
         $start_time = new DateTime();
@@ -34,47 +33,55 @@ class BasketOrderController extends Controller {
             return new JsonResponse(array("deliveryTime" => $delivery_time->getTimestamp()));
         }
     }
-
+    
     /**
      * Saves an order in the database and returns it's id in JSON format.
-     *
+     * 
      * @Route("/api/basket_order")
      * @Method({"POST"})
      */
     public function saveBasketOrder(Request $request, BasketOrderService $basketOrderService) {
-
-        // Retrieve the content of the request
-        $content = $request->getContent();
-
-        // Check if the content is not empty
-        if (!is_null($content)) {
-            $order = json_decode($content);
-            //check if the JSON is well formed
-            if (!is_null($order) && !empty($order)) {
-                //save the order
-                $order_id = $basketOrderService->saveOrder($order);
-                return new JsonResponse(array("order_id" => $order_id), 200);
-            }
-        }
-        return new JsonResponse(null, 400);
+    	
+    	// Retrieve the content of the request
+    	$content = $request->getContent();
+    	
+    	// Check if the content is not empty
+    	if(!is_null($content)) {
+    		$order = json_decode($content);
+    		//check if the JSON is well formed
+    		if(!is_null($order) && !empty($order)) {
+    			
+            	$result = $basketOrderService->checkOrder($order);
+                if($result->valid){
+                	//save the order
+    				$order_id = $basketOrderService->saveOrder($order);
+	    			return new JsonResponse(array( "order_id" => $order_id), 200);
+                } else {
+                	return new JsonResponse($result, 400); 
+                }
+                
+    		}
+    	}
+    	
+    	return new JsonResponse(null, 400);
     }
-
+    
     /**
      * Show the orders of the Application with their content
      * @Route("/orders")
-     * 
+     *
      */
     public function orders_display(Request $request, BasketOrderService $basketOrderService) {
-
-        //Get the existing orders with their baskets
-        $orders = $basketOrderService->getAllOrdersWithBasketListOrderedByTime();
-
-        // Displays the basket
-        //return $this->render('AppBundle:Command:view_command.html.twig', array(
-        return $this->render('AppBundle:BasketOrder:view_command.html.twig', array(
-                    "order_list" => $orders,
-                    "test" => count($orders[0]->getOrderContent())
-        ));
+    
+    	//Get the existing orders with their baskets
+    	$orders = $basketOrderService->getAllOrdersWithBasketListOrderedByTime();
+    
+    	// Displays the basket
+    	//return $this->render('AppBundle:Command:view_command.html.twig', array(
+    	return $this->render('AppBundle:BasketOrder:view_command.html.twig', array(
+    			"order_list" => $orders,
+    			"test" => count($orders[0]->getOrderContent())
+    	));
     }
 
 }

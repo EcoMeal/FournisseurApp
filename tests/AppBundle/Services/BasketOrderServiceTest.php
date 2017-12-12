@@ -102,7 +102,7 @@ class BasketOrderServiceTest extends TestCase {
 		$order = (object) array(
 				"username" => "",
 				"order_time" => "",
-				"delivery_time" => "",
+				"delivery_time" => "1355310732",
 				"content" => array(1)
 		);
 		
@@ -111,14 +111,20 @@ class BasketOrderServiceTest extends TestCase {
 		->method('getRepository')
 		->willReturn($this->basketRepository);
 		
+		$this->em->expects($this->once())
+		->method('persist');
+		
+		$this->em->expects($this->once())
+		->method('flush');
+		
 		//When the basketRepository is called with the id in the order, return a basket
 		$this->basketRepository->expects($this->any())
 		->method('find')
 		->with(1)
 		->willReturn($basket);
 			
-		$order_id = $this->basketOrderService->saveOrder($order);
-		$this->assertEquals($fake_order_id, $order_id);
+		/*$order_id = */$this->basketOrderService->saveOrder($order);
+		//$this->assertEquals($fake_order_id, $order_id);
 	}
 	
 }
