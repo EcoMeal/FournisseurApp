@@ -11,6 +11,22 @@ namespace AppBundle\Repository;
 class StockRepository extends \Doctrine\ORM\EntityRepository
 {
     
+    
+    
+    public function findCurrentStockFor($product_id)
+    {
+        $qb = $this->createQueryBuilder('s')
+                    ->where("s.product = :product_id order by s.id desc");
+        $qb->setParameter("product_id", $product_id);
+        $qb->setMaxResults(1);
+        $stocks = $qb->getQuery()->getResult();
+        if(!is_null($stocks)) {
+	        return $stocks[0];
+        } else {
+        	return null;
+        }
+    }
+
     public function getCurrentStock()
     {
         $qb = $this->createQueryBuilder('s')
@@ -22,5 +38,5 @@ class StockRepository extends \Doctrine\ORM\EntityRepository
         
         return $qb->getQuery()->getArrayResult();
     }
-       
+    
 }
