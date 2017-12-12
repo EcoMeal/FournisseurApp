@@ -3,7 +3,6 @@
 {% block css %}
 
 	{{ parent() }}
-	<link rel="stylesheet" href="css/category/category.css">
 
 {% endblock %}
 
@@ -11,14 +10,19 @@
 
 {% block body %}
 
-
-
-	{% if error is defined %}
-	
-		<p> {{error}} </p>
-	
+</br>
+	{% if error is not empty %}
+		<div class="alert alert-danger alert-dismissable fade in">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			{{error}}
+		</div>
 	{% endif %}
-	<div  id="createCategory"  class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card ">
+
+	<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	</div>
+
+	<div  id="createCategory"  class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card " style="display: none;">
 		<h2 class="card-title">Ajouter une catégorie de produits</h2>
 		{{ form_start(form) }}
 	
@@ -51,13 +55,13 @@
 	</div>
 
 	<div id="listCategories" class="row col-xs-12">
-		<h2>Catégories : </h2>
+		<h2>Catégories produit:  <input type="text" id="filterInput" onkeyup="filterCategories()" placeholder="chercher une catégorie..."> </h2>
 
 		<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 			<img class="card-image" src="images/add_element.ico" onclick="scrollCreate()"/>
 
 			<div class="card-image-label">
-				ajouter une categorie
+				Ajouter une categorie
 			</div>
 
 		</div>
@@ -67,8 +71,8 @@
 			{% for category in categories %}
 			
 
-				<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
-					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteCategory('{{ category.name }}')"></span>					
+				<div id="category{{category.id}}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+					<span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteCategory('{{ category.name }}','{{category.id}}')"></span>					
 					{% if category.imagePath != null %}
 						<img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
 					{% else %}
@@ -84,18 +88,37 @@
 		{% endif %}
 	</div>
 <script>
-	$(document).ready(function(){
-		$("#createCategory").hide();
-	});
 	function scrollCreate(){
 		$("#createCategory").show();
-	        $("#createCategory").get(0).scrollTop();
+		$("#createCategory").scrollTop();
 	}
-	function deleteCategory(name){
+	function deleteCategory(name,id){
 		if(confirm("Voulez-vous vraiment supprimer la Category : " + name)){
-			// link delete	
+			$.ajax( {
+                    url : "/category/" + id,
+                    type : 'DELETE' // Le type de la requête HTTP.
+                }).done(function(error) {
+                	if(!error.error){
+                		$("#category"+id).hide();
+                	}else{
+						$(".alert-danger").append(error.error);
+						$(".alert-danger").show();
+					}
+                });
 		}
 	}
+
+    function filterCategories(){
+        var filter = $("#filterInput").val();
+        var list = $("#listCategories > .card-container");
+        var listNameCategory = $("#listCategories > .card-container > .card-image-label");
+
+        var regexp = new RegExp(filter, 'i');
+
+        for(var i=0;i<list.length;i++){
+            listNameCategory.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
+        }
+    }
 </script>
 	
 {% endblock %}

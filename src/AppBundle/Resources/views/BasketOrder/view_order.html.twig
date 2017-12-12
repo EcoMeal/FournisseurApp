@@ -1,0 +1,84 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block title %}Commande{% endblock %}
+
+{% block body %}
+
+
+
+    {% if error is defined %}
+
+        <p> {{error}} </p>
+
+    {% endif %}
+
+    <div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    </div>
+
+    <div id="listCommand" class="row col-xs-12">
+        <h2>Commande:  </h2>
+     {% for order in order_list %}
+            <div id="basket{{order.id}}" class="col-xs-12 col-sm-6 col-md-4">
+                <div class="card col-xs-12 bg-warning" style="padding: 0px;">
+                    <div class="col-xs-12  bg-dark" style=";font-weight: bold;">
+
+                       
+                        {% for basket in order.orderContent %}
+                            <span class="col-xs-2 card-title-block" >{{ basket.price }} €</span>
+                            <span class="col-xs-8 card-title-block" >{{ basket.name }}</span>
+                        {% endfor %}
+
+                        <span class="col-xs-2 card-title-block" >{{order.getDeliveryTimeFormated()}}</span>
+                    </div>
+
+                    {% for basket in order.orderContent %}
+                        {% if basket.product_list is defined %}
+                            {% for product in basket.product_list %}
+                                <div value="{{ product.id }}" class="card-container image-product ui-widget-content ui-corner-tr">
+                                    {% if product.imagePath != null %}
+                                        <img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}" />
+                                    {% else %}
+                                        <img class="card-image" src="images/placeholder.png"/>
+                                    {% endif %}
+                                    <div class="card-image-label card-small-label">
+                                        {{ product.name }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="col-xs-12 breadcrumb" style=";font-weight: bold;margin: 0px;">
+                        <li class="completed"><a href="javascript:void(0);">En préparation</a></li>
+                        <li><a href="javascript:void(0);">En payment</a></li>
+                        <li><a href="javascript:void(0);">Finalisé</a></li>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    <script>
+        $(".breadcrumb a").click(validStep);
+
+        $(".breadcrumb > .completed a").click(cancelStep);
+
+        function validStep() {
+            $(this).parent().addClass("completed");
+            $(this).click(cancelStep);
+        }
+
+        function cancelStep() {
+            $(this).parent().removeClass("completed");
+            $(this).click(validStep);
+        }
+    </script>
+
+{% endblock %}

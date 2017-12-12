@@ -1,0 +1,125 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block title %}Ajout de catégories de paniers{% endblock %}
+
+{% block body %}
+
+    </br>
+    {% if error is not empty %}
+        <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{error}}
+        </div>
+    {% endif %}
+
+    <div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    </div>
+
+    <div  id="createCategory"  class="row col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6 card " style="display: none;">
+        <h2 class="card-title">Ajouter une catégorie de produits</h2>
+        {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                {{ form_label(form.name, "Nom de la catégorie de panier", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                <div class="col-sm-6">
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.imagePath, "Image", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                <div class="col-sm-6">
+                    {{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group"> 
+                <button type="submit" class="btn btn-default col-xs-offset-8">Valider</button>
+            </div>
+
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+
+
+    <div id="listCategories" class="row col-xs-12">
+        <h2>Catégories de paniers :  <input type="text" id="filterInput" onkeyup="filterCategories()" placeholder="chercher une catégorie..."></h2>
+
+        <div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+            <img class="card-image" src="images/add_element.ico" onclick="scrollCreate();"/>
+
+            <div class="card-image-label">
+                Ajouter une categorie
+            </div>
+
+        </div>
+
+        {% if categories is defined %}
+
+            {% for category in categories %}
+
+
+                <div id="basket_category{{category.id}}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                    <span class="mdi mdi-close btn-clickable" style="position: absolute;right: 15px;top: 0px;font-size:20px" onclick="deleteCategory('{{ category.name }}', '{{category.id}}')"></span>				
+                    {% if category.imagePath != null %}
+                        <img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
+                    {% else %}
+                        <img class="card-image" src="images/placeholder.png"/>
+                    {% endif %}
+                    <div class="card-image-label">
+                        {{ category.name }}
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        {% endif %}
+    </div>
+
+    <script>
+        function scrollCreate() {
+            $("#createCategory").show();
+            $("#createCategory").scrollTop();
+        }
+        function deleteCategory(name, id) {
+            if (confirm("Voulez-vous vraiment supprimer la catégorie : " + name)) {
+                $.ajax( {
+                    url : "/basket_category/" + id,
+                    type : 'DELETE' // Le type de la requête HTTP.
+                }).done(function(error) {
+                    if(!error.error){
+                        $("#basket_category"+id).hide();
+                    }else{
+                        $(".alert-danger").append(error.error);
+                        $(".alert-danger").show();
+                    }
+                });
+            }
+        }
+
+        function filterCategories(){
+            var filter = $("#filterInput").val();
+            var list = $("#listCategories > .card-container");
+            var listNameCategory = $("#listCategories > .card-container > .card-image-label");
+            var regexp = new RegExp(filter, 'i');
+
+            for(var i=0;i<list.length;i++){
+                listNameCategory.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
+            }
+        }
+    </script>
+
+{% endblock %}

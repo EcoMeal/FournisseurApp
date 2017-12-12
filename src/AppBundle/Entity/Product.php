@@ -93,7 +93,7 @@ class Product
     /**
      * Get category
      *
-     * @return string
+     * @return Category
      */
     public function getCategory()
     {

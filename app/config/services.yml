@@ -30,6 +30,10 @@ services:
         tags: ['controller.service_arguments']
 
     # add more services, or override services that need manual wiring
-    # AppBundle\Service\ExampleService:
-    #     arguments:
-    #         $someArgument: 'some_value'
+    AppBundle\Services\CategoryService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container'
+#    AppBundle\Services\DeliveryService:
+#         arguments:
+#            $entityManager: "@doctrine.orm.entity_manager"
