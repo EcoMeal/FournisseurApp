@@ -29,6 +29,13 @@ class Basket
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="imagePath", type="text", nullable=true)
+     */
+    private $imagePath;
+    
+    /**
      * @var float
      *
      * @ORM\Column(name="price", type="float")
@@ -81,6 +88,30 @@ class Basket
         return $this->name;
     }
 
+    /**
+     * Set imagePath
+     *
+     * @param string $imagePath
+     *
+     * @return BasketCategory
+     */
+    public function setImagePath($imagePath)
+    {
+        $this->imagePath = $imagePath;
+
+        return $this;
+    }
+
+    /**
+     * Get imagePath
+     *
+     * @return string
+     */
+    public function getImagePath()
+    {
+        return $this->imagePath;
+    }
+    
     /**
      * Set price
      *
