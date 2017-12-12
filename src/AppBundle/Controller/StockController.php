@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Stock;
 use AppBundle\Form\StockType;
+use AppBundle\Services\StockService;
 
 class StockController extends Controller
 {
@@ -17,32 +18,21 @@ class StockController extends Controller
     /**
      * @Route("/stock")
      */
-    public function saveStockAction(Request $request)
+    public function saveStockAction(Request $request, StockService $stockService)
     {
-		
-	$stock = new Stock();
-	$form = $this->createForm(StockType::class, $stock);
-	$form->handleRequest($request);
-		
-	//Doctrine manager
-	$doct = $this->getDoctrine()->getManager();
-		
-	//Error
-	$error = null;
-
-	//En cas de formulaire valide
-        if ($form->isValid()) { 
-
-                // On enregistre le produit
-                $doct->persist($stock);
-                $doct->flush();
-		
-	}
         
-        $stock_history = $doct->getRepository("AppBundle:Stock")->findBy([], ['date' => 'ASC']);
+	// Doctrine manager
+	$em = $this->getDoctrine()->getManager();
+	
+	// Error
+	//$error = $stockService->updateProductStock($productID, $newStock);
+        $error = NULL;
+        
+        $stock_history = $em->getRepository("AppBundle:Stock")->getCurrentStock();
 			
+        
 	return $this->render('AppBundle:Stock:add_stock.html.twig',
-                array("form" => $form->createView(), "stock_history" => $stock_history,
+                array("stock_history" => $stock_history,
                     "error" => $error
 	));
 		
