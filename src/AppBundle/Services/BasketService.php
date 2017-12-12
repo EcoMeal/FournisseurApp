@@ -39,13 +39,4 @@ class BasketService {
         }
     }
 
-    /**
-     * Returns the basket corresponding to the $id
-     * @param integer $id
-     * @return Basket
-     */
-    public function getBasket($id) {
-        return $this->em->getRepository("AppBundle:Basket")->find($id);
-    }
-
 }

@@ -28,7 +28,7 @@ class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
         $qb = $this->createQueryBuilder('o')
                 ->leftJoin('o.orderContent ', "basket")
                 ->addSelect('basket')
-                ->leftJoin('b.product_list ', "product")
+                ->leftJoin('o.orderContent.product_list ', "product")
                 ->addSelect('product');
         return $qb->getQuery()->getArrayResult();
     }
