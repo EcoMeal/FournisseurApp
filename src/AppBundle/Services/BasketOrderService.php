@@ -4,6 +4,7 @@ namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\BasketOrder;
+use AppBundle\Entity\Stock;
 use DateTime;
 
 class BasketOrderService {
@@ -113,15 +114,20 @@ class BasketOrderService {
 				foreach($basket->getProductList() as $product) {
 					$stock = $this->em->getRepository("AppBundle:Stock")
 						->findCurrentStockFor($product->getId());
-					$stock->setQuantity($stock->getQuantity()-1);
-					$this->em->persist($stock);
-					$this->em->flush($stock);
+					$newStock = new Stock();
+					$newStock->setProduct($product);
+					$currentDate = new DateTime();
+					$currentDate->setTimestamp(time());
+					$newStock->setDate($currentDate);
+					$newStock->setQuantity($stock->getQuantity()-1);
+					$this->em->persist($newStock);
+					$this->em->flush($newStock);
 				}
 				array_push($baskets, $basket);
 			}
 			
 			$basketOrder->setOrderContent($baskets);
-			$date = new \DateTime();
+			$date = new DateTime();
 			$date->setTimestamp($order->delivery_time);
 			$basketOrder->setDeliveryTime($date);
 			$this->em->persist($basketOrder);
