@@ -52,10 +52,14 @@ class BasketOrderController extends Controller {
             $order = json_decode($content);
             //check if the JSON is well formed
             if (!is_null($order) && !empty($order)) {
+            		
+                	$order->content = str_replace("\"", "", $order->content);
+                	$order->content = str_replace("'", "", $order->content);
+                	$order->content = json_decode($order->content);
 
                 $result = $basketOrderService->checkOrder($order);
                 if ($result->valid) {
-                    //save the order
+                	//save the order
                     $order_id = $basketOrderService->saveOrder($order);
                     return new JsonResponse(array("order_id" => $order_id), 200);
                 } else {
