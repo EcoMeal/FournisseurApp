@@ -23,7 +23,7 @@
                 <div class="card col-xs-12 bg-dark-light" style="padding: 0px;">
                     <div class="col-xs-12 card-title-command bg-dark" style=";font-weight: bold;">
                         <span class="col-xs-9 card-title-block" >Commande numéro {{ order.id }}</span>
-                        <span class="col-xs-3 card-title-block" >{{ order.deliveryTime|date('H:i') }}</span>
+                        <span class="col-xs-3 card-title-block" >{{ order.deliveryTime|date_modify("-1 hours")|date('H:i') }}</span>
                         
                     </div>
                     {% set price_basket = 0 %}
