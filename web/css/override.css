@@ -236,3 +236,8 @@ font-size: 20px;
 	left: 100%;
 	z-index: 2;
 }
+
+.input-stock{
+	padding: 0px;
+	min-width: 40px;
+}
