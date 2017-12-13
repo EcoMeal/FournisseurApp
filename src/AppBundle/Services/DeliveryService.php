@@ -35,7 +35,7 @@ class DeliveryService {
      * @return boolean TRUE if the value is contained in the $tab
      */
     private function contains($tab, $delivery_time) {
-        foreach ($tab as &$time) {
+        foreach ($tab as $time) {
             if ($time->getTimestamp() == $delivery_time->getTimestamp()) {
                 return True;
             }

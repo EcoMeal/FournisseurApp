@@ -115,8 +115,8 @@
             var list = $("#listCategories > .card-container");
             var listNameCategory = $("#listCategories > .card-container > .card-image-label");
             var regexp = new RegExp(filter, 'i');
-
-            for(var i=0;i<list.length;i++){
+            !filter ? list.eq(0).show() : list.eq(0).hide();
+            for(var i=1;i<list.length;i++){
                 listNameCategory.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
             }
         }
