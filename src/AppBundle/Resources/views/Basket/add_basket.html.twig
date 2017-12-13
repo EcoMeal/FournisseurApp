@@ -52,6 +52,13 @@
 					</div>
 				</div>	
 
+				<div class="form-group">
+					{{ form_label(form.category, "Image", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+					<div class="col-sm-6">
+						{{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+					</div>
+				</div>	
+
 				<!--product_list -->
 				<ul id="list_product" class="col-md-offset-1 col-md-6 zone-panier">
 				{% if product_list is defined %}
@@ -189,6 +196,10 @@
 					<div class="card-image-label">
 						{{ basket.name }}
 					</div>
+
+					<div name="nameCategoryProduct" class="hidden">
+						{{ basket.category.name }}
+					</div>
 				</div>
 
 			{% endfor %}
@@ -307,9 +318,9 @@
             var listNameCategory = $("#listpaniers > .card-container > [name='nameCategoryProduct']");
             var regexp = new RegExp(filter, 'i');
 
-            for(var i=0;i<list.length;i++){
+            for(var i=1;i<list.length;i++){
                 listNameBasket.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
-                if(listNameCategory.eq(i).text().trim().match(regexp)){
+                if(listNameCategory.eq(i-1).text().trim().match(regexp)){
                     list.eq(i).show();
                 }
 

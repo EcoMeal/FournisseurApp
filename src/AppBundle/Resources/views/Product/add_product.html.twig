@@ -127,9 +127,9 @@
             var listNameCategory = $("#listproducts > .card-container > [name='nameCategoryProduct']");
             var regexp = new RegExp(filter, 'i');
 
-            for(var i=0;i<list.length;i++){
+            for(var i=1;i<list.length;i++){
                 listNameProduct.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
-                if(listNameCategory.eq(i).text().trim().match(regexp)){
+                if(listNameCategory.eq(i-1).text().trim().match(regexp)){
                     list.eq(i).show()
                 }
 
