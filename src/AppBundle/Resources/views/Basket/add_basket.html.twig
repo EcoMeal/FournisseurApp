@@ -317,7 +317,7 @@
             var listNameBasket = $("#listpaniers > .card-container > .card-image-label");
             var listNameCategory = $("#listpaniers > .card-container > [name='nameCategoryProduct']");
             var regexp = new RegExp(filter, 'i');
-
+            !filter ? list.eq(0).show() : list.eq(0).hide();
             for(var i=1;i<list.length;i++){
                 listNameBasket.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
                 if(listNameCategory.eq(i-1).text().trim().match(regexp)){
