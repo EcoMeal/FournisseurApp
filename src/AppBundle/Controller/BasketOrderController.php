@@ -28,7 +28,7 @@ class BasketOrderController extends Controller {
         $end_time = new DateTime();
 
         $end_time->setTimestamp($request->query->get('end_time')); // Récupère la variable end_time en GET
-
+        echo "test";
         $delivery_time = $deliveryService->deliveryTimeCalculation($start_time, $end_time); // Calcule un horaire pour la commande compris dans la plage horaire donnée
         if ($delivery_time == null) {
             return new JsonResponse(array("deliveryTime" => 0));
