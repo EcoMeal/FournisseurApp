@@ -37,7 +37,7 @@ class DeliveryServiceTest extends WebTestCase {
     public function testDeliveryTimeCalculation() {
         $taken_delivery_time = array();
         $this->mockRepository->method('getOrdersBetween')
-                ->willReturn($taken_delivery_time); // Aucun horaire n'est réservé
+                ->willReturn(array('id'=>1,'deliveryTime'=>$taken_delivery_time)); // Aucun horaire n'est réservé
         $res = $this->deliveryService->deliveryTimeCalculation($this->start, $this->end);
 
         $this->assertEquals($this->delivery_time, $res); // 12/12/2012 12:12:12
@@ -47,9 +47,10 @@ class DeliveryServiceTest extends WebTestCase {
      * Verify that the date is the second one of the time slot when the first one is taken
      */
     public function testDeliveryTimeCalculationWithFirstTaken() {
-        $taken_delivery_time = array(clone $this->start);
+        $taken_delivery_time = array(array('id'=>1,'deliveryTime'=>clone $this->start));
         $this->mockRepository->method('getOrdersBetween')
                 ->willReturn($taken_delivery_time); // Le premier horaire est réservé
+        //echo var_dump($taken_delivery_time);
         $this->delivery_time->add($this->deliveryService->getTimeInterval());
         $res = $this->deliveryService->deliveryTimeCalculation($this->start, $this->end);
 
@@ -62,7 +63,7 @@ class DeliveryServiceTest extends WebTestCase {
    public function testDeliveryTimeCalculationFull() {
         $taken_delivery_time = array();
         while ($this->delivery_time <= $this->end) { // Crée un tableau contenant tous les horaires possibles entre la date de début et de fin
-            array_push($taken_delivery_time, clone $this->delivery_time);
+            array_push($taken_delivery_time, array('id'=>1,'deliveryTime'=>clone $this->delivery_time));
             $this->delivery_time->add($this->deliveryService->getTimeInterval());
         }
 
@@ -79,8 +80,8 @@ class DeliveryServiceTest extends WebTestCase {
     public function testDeliveryTimeCalculationFullExceptLast() {
         $taken_delivery_time = array();
         
-        while ($this->delivery_time <= $this->end) { // Crée un tableau contenant tous les horaires possibles entre la date de début et de fin sauf un
-            array_push($taken_delivery_time, clone $this->delivery_time);
+        while ($this->delivery_time <= $this->end) { // Crée un tableau contenant tous les horaires possibles entre la date de début et de fin
+            array_push($taken_delivery_time, array('id'=>1,'deliveryTime'=>clone $this->delivery_time));
             $this->delivery_time->add($this->deliveryService->getTimeInterval());
         }
         array_pop($taken_delivery_time);

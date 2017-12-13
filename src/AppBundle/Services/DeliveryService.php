@@ -52,9 +52,8 @@ class DeliveryService {
     public function deliveryTimeCalculation($start, $end) {
         $taken_delivery_times = $this->basketOrderRepository->getOrdersBetween($start, $end);
         $delivery_time = $start;
-
         while ($delivery_time <= $end) { // Teste chaque delivery_time possible entre $start et $end avec un pas de $time_interval
-            if (!$this->contains($taken_delivery_times, $delivery_time)) {
+            if (!$this->contains(array_column($taken_delivery_times, 'deliveryTime'), $delivery_time)) {
                 return $delivery_time;
             } else {
                 $delivery_time->add($this->getTimeInterval());

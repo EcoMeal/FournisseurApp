@@ -27,6 +27,7 @@ class BasketOrderController extends Controller {
         $start_time->setTimestamp($request->query->get('start_time')); // Récupère la variable start_time en GET
         $end_time = new DateTime();
         $end_time->setTimestamp($request->query->get('end_time')); // Récupère la variable end_time en GET
+
         $delivery_time = $deliveryService->deliveryTimeCalculation($start_time, $end_time); // Calcule un horaire pour la commande compris dans la plage horaire donnée
         if ($delivery_time == null) {
             return new JsonResponse(array("deliveryTime" => 0));
@@ -42,29 +43,28 @@ class BasketOrderController extends Controller {
      * @Method({"POST"})
      */
     public function saveBasketOrder(Request $request, BasketOrderService $basketOrderService) {
-    	
-    	// Retrieve the content of the request
-    	$content = $request->getContent();
-    	
-    	// Check if the content is not empty
-    	if(!is_null($content)) {
-    		$order = json_decode($content);
-    		//check if the JSON is well formed
-    		if(!is_null($order) && !empty($order)) {
-    			
-            	$result = $basketOrderService->checkOrder($order);
-                if($result->valid){
-                	//save the order
-    				$order_id = $basketOrderService->saveOrder($order);
-	    			return new JsonResponse(array( "order_id" => $order_id), 200);
+
+        // Retrieve the content of the request
+        $content = $request->getContent();
+
+        // Check if the content is not empty
+        if (!is_null($content)) {
+            $order = json_decode($content);
+            //check if the JSON is well formed
+            if (!is_null($order) && !empty($order)) {
+
+                $result = $basketOrderService->checkOrder($order);
+                if ($result->valid) {
+                    //save the order
+                    $order_id = $basketOrderService->saveOrder($order);
+                    return new JsonResponse(array("order_id" => $order_id), 200);
                 } else {
-                	return new JsonResponse($result, 400); 
+                    return new JsonResponse($result, 400);
                 }
-                
-    		}
-    	}
-    	
-    	return new JsonResponse(null, 400);
+            }
+        }
+
+        return new JsonResponse(null, 400);
     }
 
     /**
@@ -93,7 +93,7 @@ class BasketOrderController extends Controller {
         $id = $request->query->get('id_order'); // Get the $id_order GET variable
         //Get the order with its baskets
         $order = $basketOrderService->getOrder($id);
-        
+
         // Display the order and its content
         return $this->render('AppBundle:BasketOrder:recap_order.html.twig', array(
                     "order" => $order
