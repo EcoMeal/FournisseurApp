@@ -52,8 +52,7 @@ class BasketOrderController extends Controller {
             $order = json_decode($content);
             //check if the JSON is well formed
             if (!is_null($order) && !empty($order)) {
-            	
-                	print_r($order->content);
+            		
                 	$order->content = str_replace("\"", "", $order->content);
                 	$order->content = str_replace("'", "", $order->content);
                 	$order->content = json_decode($order->content);
