@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class BasketType extends AbstractType
 {
@@ -25,6 +26,8 @@ class BasketType extends AbstractType
                 'class' => 'AppBundle:Product',
                 'choice_label' => 'name',
                 'multiple' => true
+            ))->add('imagePath', FileType::class, array(
+                'required' => false,
             ));
     }
     

@@ -22,13 +22,13 @@ class StockService
         $stock = new Stock();
         
         $product = $this->em->getRepository("AppBundle:Product")->findOneById($productID);
+        
         $stock->setProduct($product);
         $stock->setQuantity($newStock);        
         $dateTime = new DateTime();
         $dateTime->setTimestamp(time());
         $stock->setDate($dateTime);
-                
-        $this->em->perist($stock);
+        $this->em->persist($stock);
         $this->em->flush();
     }
     

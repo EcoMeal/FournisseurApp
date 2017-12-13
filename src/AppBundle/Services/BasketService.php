@@ -3,13 +3,17 @@
 namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BasketService {
 
     private $em;
 
-    public function __construct(EntityManager $entityManager) {
+    private $container;
+
+    public function __construct(EntityManager $entityManager, ContainerInterface $serviceContainer) {
         $this->em = $entityManager;
+        $this->container = $serviceContainer;
     }
 
     public function deleteBasket($id) {
@@ -33,6 +37,24 @@ class BasketService {
         if (!is_null($basketWithSameName)) {
             return "Le panier existe déjà";
         } else {
+            
+            if(!is_null($basket->getImagePath())) {
+                
+                        // On enregistre le fichier
+                        $file = $basket->getImagePath();
+
+                        // Generate a unique name for the file before saving it
+                        $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+                        // Move the file to the directory where brochures are stored
+                        $file->move(
+                                $this->container->getParameter('image_directory'),
+                                $fileName
+                        );
+
+                        $basket->setImagePath($fileName);
+            }
+            
             // On enregistre le panier
             $this->em->persist($basket);
             $this->em->flush();

@@ -16,49 +16,48 @@
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     </div>
 
-    <div id="listCommand" class="row col-xs-12">
-        <h2>Commande:  </h2>
+    <div id="listCommand" style="display:inline-block;text-align:center;">
+        <h2>Commandes :</h2>
      {% for order in order_list %}
-            <div id="basket{{order.id}}" class="col-xs-12 col-sm-6 col-md-4">
-                <div class="card col-xs-12 bg-warning-light" style="padding: 0px;">
-                    <div class="col-xs-12  bg-dark" style=";font-weight: bold;">
+            <div id="basket{{order.id}}" style="display:inline-block; width:540px; max-width:100%; vertical-align:top;margin:5px;">
+                <div class="card col-xs-12 bg-dark-light" style="padding: 0px;">
+                    <div class="col-xs-12 card-title-command bg-dark" style=";font-weight: bold;">
                         <span class="col-xs-9 card-title-block" >Commande numéro {{ order.id }}</span>
-                        <span class="col-xs-3 card-title-block" >{{order.getDeliveryTimeFormated()}}</span>
-                       
-                        {% set price_basket = 0 %}
-                        {% for basket in order.orderContent %}
-                            <span class="col-xs-9 card-title-block bg-dark-light" >{{ basket.name }}</span>
-                            <span class="col-xs-3 card-title-block bg-dark-light" >{{ basket.price }} €</span>
-                            {% set price_basket = price_basket + basket.price %}
-                        {% endfor %}
-
-                        <span class="col-xs-9 card-title-block bg-dark-light" style="border-top: 1px solid #343a40;"> Total </span>
-                        <span class="col-xs-3 card-title-block bg-dark-light" style="border-top: 1px solid #343a40;">{{ price_basket }} €</span>
+                        <span class="col-xs-3 card-title-block" >{{ order.deliveryTime|date('H:i') }}</span>
                         
                     </div>
+                    {% set price_basket = 0 %}
 
                     {% for basket in order.orderContent %}
-
-{{ dump(basket) }}
-                        {% if basket.product_list is defined %}
-                            {% for product in basket.product_list %}
-                                <div value="{{ product.id }}" class="card-container image-product ui-widget-content ui-corner-tr">
-                                    {% if product.imagePath != null %}
-                                        <img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}" />
-                                    {% else %}
-                                        <img class="card-image" src="images/placeholder.png"/>
-                                    {% endif %}
-                                    <div class="card-image-label card-small-label">
-                                        {{ product.name }}
+                        {% set price_basket = price_basket + basket.price %}
+                        <div class="col-xs-12 card-title-block bg-dark-light">
+                            <span class="col-xs-9" >{{ basket.name }}</span>
+                            <span class="col-xs-3" >{{ basket.price }}€</span>
+                       </div>
+                        <span class="col-xs-12" style="background-color : #DDD;">
+                            {% if basket.product_list is defined %}
+                                {% for product in basket.product_list %}
+                                    <div value="{{ product.id }}" class="card-container image-product ui-widget-content ui-corner-tr">
+                                        {% if product.imagePath != null %}
+                                            <img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}" />
+                                        {% else %}
+                                            <img class="card-image" src="images/placeholder.png"/>
+                                        {% endif %}
+                                        <div class="card-image-label card-small-label">
+                                            {{ product.name }}
+                                        </div>
                                     </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </span>
                     {% endfor %}
-
-                    <div class="col-xs-12 breadcrumb" style=";font-weight: bold;margin: 0px;">
-                        <li class="completed"><a href="javascript:void(0);">En préparation</a></li>
-                        <li><a href="javascript:void(0);">En payment</a></li>
+                    <div class="col-xs-12 card-title-block bg-dark-light">
+                        <span class="col-xs-9"> Total </span>
+                        <span class="col-xs-3">{{ price_basket }}€</span>
+                    </div>
+                    <div class="col-xs-12 breadcrumb" style="font-weight: bold;margin: 0px;">
+                        <li><a href="javascript:void(0);">Préparation</a></li>
+                        <li><a href="javascript:void(0);">Paiement</a></li>
                         <li><a href="javascript:void(0);">Finalisé</a></li>
                     </div>
                 </div>
