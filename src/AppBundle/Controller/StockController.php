@@ -50,7 +50,7 @@ class StockController extends Controller
 		
 		$stock_history = $em->getRepository("AppBundle:Stock")->getCurrentStock();
 		
-		return $this->render('AppBundle:Stock:add_stock.html.twig', array(
+		return $this->render('AppBundle:Stock:history_stock.html.twig', array(
 				"stock_history" => $stock_history,
 				"error" => $error 
 		));
