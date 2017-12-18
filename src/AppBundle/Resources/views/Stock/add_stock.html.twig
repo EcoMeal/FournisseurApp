@@ -23,7 +23,7 @@
 			<div class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 				<div class="card-quantity-top">
 					<span class="col-xs-4 glyphicon glyphicon-minus" style="margin-top:5px" onclick="minusProduct({{stock.product.id}},{{stock.quantity}})"> </span>
-					<div class="col-xs-4"> <input id="product{{stock.product.id}}" class="form-control center" value="{{stock.quantity}}" onchange="changeQuantity({{stock.product.id}},{{stock.quantity}})"></div>
+					<div class="col-xs-4"> <input id="product{{stock.product.id}}" class="form-control center input-stock" value="{{stock.quantity}}" onchange="changeQuantity({{stock.product.id}},{{stock.quantity}})"></div>
 					<span class="col-xs-4 glyphicon glyphicon-plus" style="margin-top:5px" onclick="plusProduct({{stock.product.id}},{{stock.quantity}})"> </span>
 				</div>
 				{% if stock.product.imagePath != null %}

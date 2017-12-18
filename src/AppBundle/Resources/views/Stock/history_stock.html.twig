@@ -1,0 +1,203 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+	{{ parent() }}
+
+{% endblock %}
+
+{% block title %}Stock{% endblock %}
+
+{% block body %}
+<div id="listproducts" class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <div class="card" style="margin-left: 10px;margin-right: 10px">
+            <canvas id="stock_by_category"></canvas>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <div class="card" style="margin-left: 10px;margin-right: 10px">
+            <canvas id="evolution_stock"></canvas>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <div class="card" style="margin-left: 10px;margin-right: 10px">
+            <canvas id="top_stock_by_product"></canvas>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <div class="card" style="margin-left: 10px;margin-right: 10px">
+            <canvas id="evolution_product"></canvas>
+              </br>
+            <input type="text" id="filterInput" style="width:98%; margin: 5px" placeholder="produit...">
+
+        </div>
+    </div>
+	<script>
+
+        $(document).ready(function(){
+            var ctx_sbp = document.getElementById("stock_by_category").getContext("2d");
+            var ctx_es = document.getElementById("evolution_stock").getContext("2d");
+            var ctx_tsbp = document.getElementById("top_stock_by_product").getContext("2d");
+            var ctx_ep = document.getElementById("evolution_product").getContext("2d");
+
+            evolution_product(ctx_ep);
+            stock_by_category(ctx_sbp);
+            evolution_stock(ctx_es);
+            top_stock_by_product(ctx_tsbp);
+        });
+
+        function stock_by_category(ctx){
+            var data = {
+                labels: ["fruit","legume","féculent","viande","boisson"],
+                datasets: [{
+                    data: [1, 15, 17, 15, 6],
+                    backgroundColor: [
+                        '#ff4444bb', '#ffbb33bb', '#33b5e5bb', '#00C851bb', '#aa66ccbb'
+                    ]
+                }]
+            };
+
+            var options = {
+                responsive: true,
+                title:{
+                    display:true,
+                    text:'Stock par catégorie'
+                }
+            };
+
+            new Chart(ctx,{
+                type: 'pie',
+                data: data,
+                options: options
+            });
+        }
+
+        function evolution_stock(ctx){
+            var data = {
+
+                labels:  ["8/12", "9/12", "10/12", "11/12", "12/12", "15/12", "16/12"],
+                datasets: [{
+                    borderColor: '#ff4444bb',
+                    label:"fruit",
+                    data: [65,24,30,51,5,5,2]
+                },{
+                    borderColor: '#ffbb33bb',
+                    label:"féculent",
+                    data: [24,24,30,12,9,18,6]
+                },{
+                    label:"legume",
+                    data: [50,25,12,6,3,2,1],
+                    borderColor: '#33b5e5bb'
+                },{
+                    label:"viande",
+                    data: [1,2,3,5,2,2,1],
+                    borderColor: '#00C851bb'
+
+                },{
+                    borderColor: '#aa66ccbb',
+                    label:"boisson",
+                    data: [10,20,30,15,7,0,0]
+                }]
+            };
+            var options = {
+                responsive: true,
+                title:{
+                    display:true,
+                    text:'Evolution du stock'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Jour'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Nombre de Product'
+                        }
+                    }]
+                }
+            };
+
+            new Chart(ctx,{
+                type: 'line',
+                data: data,
+                options: options
+            });
+        }
+
+        function top_stock_by_product(ctx) {
+            var data = {
+                labels:  ["patate", "carotte", "petit pois", "coca cola", "salade"],
+                datasets: [{
+                    backgroundColor: [
+                        '#ff4444bb', '#ffbb33bb', '#33b5e5bb', '#00C851bb', '#aa66ccbb'
+                    ],
+                    data: [10,20,30,15,7,0,0]
+                }]
+            };
+            var options = {
+                responsive: true,
+                title:{
+                    display: true,
+                    text:'Stock produit'
+                },
+                legend: {
+                    display: false
+                }
+            };
+
+            new Chart(ctx,{
+                type: 'bar',
+                data: data,
+                options: options
+            });
+        }
+
+        function evolution_product(ctx){
+            var data = {
+                labels:  ["8/12", "9/12", "10/12", "11/12", "12/12", "15/12", "16/12"],
+                datasets: [{
+                    borderColor: '#ff4444bb',
+                    label:"patate",
+                    data: [65,24,30,51,5,5,2]
+                }]
+            };
+            var options = {
+                responsive: true,
+                title:{
+                    display:true,
+                    text:'Evolution du stock'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Jour'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Nombre de Product'
+                        }
+                    }]
+                }
+            };
+
+            new Chart(ctx,{
+                type: 'line',
+                data: data,
+                options: options
+            });
+        }
+    </script>
+{% endblock %}
