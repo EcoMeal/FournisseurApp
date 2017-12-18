@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="TestJenkins" default="ci" basedir="../../..">
+<project name="TestJenkins" default="ci" basedir=".">
 
 	<property name="source" value="src" />
 	
 	<target name="ci" description="main task" depends="clean,qa" />
 	
 	<target name="clean" description="clean artefacts">
+	
 		<delete dir="${project.basedir}/build/api" />
 		<delete dir="${project.basedir}/build/code-browser" />
 		<delete dir="${project.basedir}/build/coverage" />
 		<delete dir="${project.basedir}/build/logs" />
 		<delete dir="${project.basedir}/build/pdepend" />
+		
 		<mkdir dir="${project.basedir}/build/api" />
 		<mkdir dir="${project.basedir}/build/code-browser" />
 		<mkdir dir="${project.basedir}/build/coverage" />
