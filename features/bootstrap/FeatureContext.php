@@ -20,6 +20,8 @@ class FeatureContext extends WebTestCase implements Context
      */
     private $jsonMessage;
     
+    private $errorMessage;
+    
     /**
      * Initializes context.
      *
@@ -487,6 +489,31 @@ class FeatureContext extends WebTestCase implements Context
 	$this->assertEquals(1, $basket_count, "Basket '". $basket_name ."' count is incorrect");
     }
     
+    /**
+     * @Given j’ai un panier :basket_name disponible
+     */
+    public function jaiUnPanierDisponible($basket_name)
+    {
+        $this->createBasketFromScratch($basket_name);
+    }
+
+    /**
+     * @When j’ajoute un nouveau panier :basket_name
+     */
+    public function jajouteUnNouveauPanier($basket_name)
+    {
+        $crawler = $this->createBasketFromScratch($basket_name);
+        $this->errorMessage = trim($crawler->filter(".alert-danger")->text());
+    }
+
+    /**
+     * @Then j'obtiens une erreur :error
+     */
+    public function jobtiensUneErreur($error)
+    {
+        $this->assertEquals($error, $this->errorMessage, "The error message is incorrect or non existent");
+    }
+    
     // Basket Feature ----------------------------------------------------------
     
     // Utils functions ---------------------------------------------------------
@@ -538,7 +565,7 @@ class FeatureContext extends WebTestCase implements Context
         $this->createBasketCategory($basket_category_name);
         
         //basket
-        $this->createBasket($basket_name);
+        return $this->createBasket($basket_name);
         
     }
 
@@ -549,7 +576,7 @@ class FeatureContext extends WebTestCase implements Context
         $this->createProductCategory($product_category_name);
         
         // Then I create a product.
-        $this->createProduct($product_name, $imagePath);
+        return $this->createProduct($product_name, $imagePath);
     }
     
    
@@ -566,7 +593,7 @@ class FeatureContext extends WebTestCase implements Context
           $form->setValues(array('appbundle_category[imagePath]' => $image));
       }
       // submit the form
-      $this->client->submit($form);
+      return $this->client->submit($form);
     }
  
     public function createProduct($product, $imagePath = NULL)
@@ -583,7 +610,7 @@ class FeatureContext extends WebTestCase implements Context
       }
       
       // submit the form
-      $this->client->submit($form);
+      return $this->client->submit($form);
     }
     
     public function createBasketCategory($basketCategory, $imagePath = NULL) {
@@ -598,7 +625,7 @@ class FeatureContext extends WebTestCase implements Context
         }
       
         // submit the form
-        $this->client->submit($form);
+        return $this->client->submit($form);
     }
     
     public function createBasket($basket, $product_list = NULL) {
@@ -611,10 +638,9 @@ class FeatureContext extends WebTestCase implements Context
             $form->setValues(array('appbundle_basket[product_list]' => $product_list));
         }
         // submit the form
-        $this->client->submit($form);
+        return $this->client->submit($form);
     }
-    
-    
+       
     // Utils functions ---------------------------------------------------------
             
 
@@ -625,6 +651,9 @@ class FeatureContext extends WebTestCase implements Context
     {
        // Clear the json message
        $this->jsonMessage = null;
+       
+       // Clear the error message.
+       $errorMessage = null;
        
        // Clean all the products. 
         $this->client->request('GET', '/product/clean');
