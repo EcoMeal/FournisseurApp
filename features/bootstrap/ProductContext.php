@@ -55,7 +55,7 @@ class ProductContext extends WebTestCase implements Context
      * 
      * Nettoie la BDD après chaque test
      * */
-    public function after(AfterScenarioScope $scope)
+    public function after()
     {
     	// Clean all the products.
 		$this->client->request('GET', '/product/clean');

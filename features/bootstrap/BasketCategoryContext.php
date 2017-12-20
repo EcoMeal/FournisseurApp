@@ -34,7 +34,7 @@ class BasketCategoryContext extends WebTestCase implements Context
 	}
 	
 	/** @AfterScenario */
-	public function after(AfterScenarioScope $scope) {
+	public function after() {
 		// Clean all the basket categories.
 		$this->client->request('GET', '/basket_category/clean');
 	}

@@ -40,7 +40,7 @@ class CategoryContext extends WebTestCase implements Context {
 	 *
 	 * Nettoie la BDD après chaque test.
 	 * */
-	public function after(AfterScenarioScope $scope)
+	public function after()
 	{
 		// Clean all the categories.
 		$this->client->request('GET', '/category/clean');

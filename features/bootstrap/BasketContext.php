@@ -46,7 +46,7 @@ class BasketContext extends WebTestCase implements Context
 	 *
 	 * Nettoie la BDD après chaque test.
 	 * */
-	public function after(AfterScenarioScope $scope)
+	public function after()
 	{
 		// Clear the error message.
 		$errorMessage = null;

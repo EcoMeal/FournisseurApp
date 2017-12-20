@@ -21,7 +21,7 @@ class CommonContext extends WebTestCase implements Context
 	 *
 	 * Nettoie le message après chaque test
 	 * */
-	public function after(AfterScenarioScope $scope)
+	public function after()
 	{
 		// Clear the JSON message
 		$this->commonMessage = null;
