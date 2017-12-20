@@ -6,6 +6,18 @@ Feature: Ajouter une catégorie de panier
 
         Règles: 
         - Les noms de catégories de panier sont uniques
+        
+        @basket_category
+        Scenario: Ajouter une catégorie de panier sans image
+        		Given il n'y a aucune catégorie de panier dans l'application
+        		When j'ajoute la catégorie de panier "test" sans ajouter d'image
+        		Then il y a une seule catégorie de panier "test" avec l'image par défaut
+        		
+        @basket_category
+        Scenario: Ajouter une catégorie de panier avec un nom déjà existant
+        		Given il existe une catégorie de panier "test" dans l'application
+        		When j'ajoute la catégorie de panier "test" dans l'application
+        		Then la catégorie de panier "test" n'est pas crée parce qu'elle existe déjà
 
 		@basket_category
         Scenario Outline: Ajouter une catégorie de panier

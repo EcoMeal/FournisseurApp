@@ -33,13 +33,8 @@ class BasketCategoryContext extends WebTestCase implements Context
 		$this->utilContext = $environment->getContext("UtilContext");
 	}
 	
-	/**
-	 * @AfterScenario
-	 *
-	 * Nettoie la BDD après chaque test.
-	 * */
-	public function after(AfterScenarioScope $scope)
-	{
+	/** @AfterScenario */
+	public function after(AfterScenarioScope $scope) {
 		// Clean all the basket categories.
 		$this->client->request('GET', '/basket_category/clean');
 	}
@@ -49,8 +44,7 @@ class BasketCategoryContext extends WebTestCase implements Context
 	/**
 	 * @Given il n'y a aucune catégorie de panier dans l'application
 	 */
-	public function ilNyAAucuneCategorieDePanierDansLapplication()
-	{
+	public function ilNyAAucuneCategorieDePanierDansLapplication() {
 		$crawler = $this->client->request('GET', '/basket_category');
 		// By default there is already one card for the basket category creation
 		// which has the same class
@@ -61,27 +55,54 @@ class BasketCategoryContext extends WebTestCase implements Context
 	/**
 	 * @When j'ajoute la catégorie de panier :basket_category_name dans l'application
 	 */
-	public function jajouteLaCategorieDePanierDansLapplication($basket_category_name)
-	{
-		$crawler = $this->client->request('GET', '/basket_category');
-	
-		$form = $crawler->selectButton('Valider')->form();
-		// Set the task values
-		$form->setValues(array('appbundle_basketcategory[name]' => $basket_category_name));
-		// submit the form
-		$this->client->submit($form);
+	public function jajouteLaCategorieDePanierDansLapplication($basket_category_name) {
+		$this->entityCreationContext->createBasketCategory($basket_category_name, "placeholder.png");
 	}
 	
 	/**
 	 * @Then il y a une catégorie de panier :basket_category_name dans l'application
 	 */
-	public function ilYAUneCategorieDePanierDansLapplication($basket_category_name)
-	{
+	public function ilYAUneCategorieDePanierDansLapplication($basket_category_name)	{
 		$crawler = $this->client->request('GET', '/basket_category');
-	
 		$basket_category_count = $this->utilContext->getItemCardCount($crawler, $basket_category_name);
-	
 		$this->assertEquals(1, $basket_category_count, "Basket category '". $basket_category_name ."' count is incorrect");
 	}
+	
+	/**
+	 * @When j'ajoute la catégorie de panier :basket_category_name sans ajouter d'image
+	 */
+	public function jajouteLaCategorieDePanierSansAjouterDimage($basket_category_name)
+	{
+		$this->entityCreationContext->createBasketCategory($basket_category_name);
+	}
+	
+	/**
+	 * @Then il y a une seule catégorie de panier :basket_category_name avec l'image par défaut
+	 */
+	public function ilYAUneSeuleCategorieDePanierAvecLimageParDefaut($basket_category_name)
+	{
+		$crawler = $this->client->request('GET', '/basket_category');
+		$imagePath = $crawler->filter('[data-name="'. $basket_category_name .'"] > img')->attr("src");
+		$this->assertEquals("images/placeholder.png", $imagePath, "La catégorie de panier ne s'affiche pas avec l'image par défaut.");
+	}
+	
+	/**
+	 * @Given il existe une catégorie de panier :basket_category_name dans l'application
+	 */
+	public function ilExisteUneCategorieDePanierDansLapplication($basket_category_name)
+	{
+		$this->entityCreationContext->createBasketCategory($basket_category_name);
+	}
+	
+	/**
+	 * @Then la catégorie de panier :basket_category_name n'est pas crée parce qu'elle existe déjà
+	 */
+	public function laCategorieDePanierNestPasCreeParceQuelleExisteDeja($basket_category_name)
+	{
+		$crawler = $this->client->request('GET', '/basket_category');
+		$basket_category_count = $this->utilContext->getItemCardCount($crawler, $basket_category_name);
+		$this->assertEquals(1, $basket_category_count, "Basket category '". $basket_category_name ."' count is incorrect");
+	}
+	
 	
 }
