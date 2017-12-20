@@ -7,6 +7,7 @@ Feature: Ajouter une catégorie de panier
         Règles: 
         - Les noms de catégories de panier sont uniques
 
+		@basket_category
         Scenario Outline: Ajouter une catégorie de panier
                 Given il n'y a aucune catégorie de panier dans l'application
                 When j'ajoute la catégorie de panier <nom_categorie_panier> dans l'application

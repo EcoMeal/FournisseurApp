@@ -26,12 +26,12 @@ Feature: Ajouter une categorie
                   Then la categorie "test" s'affiche avec l'image par défaut
 
         @add_category
-	Scenario Outline: Ajouter une categorie
-		Given il n'y a aucune categorie dans l'application
-		When j'ajoute la categorie <nom_categorie> dans l'application
-		Then il y a une categorie <nom_categorie> dans l'application
+		Scenario Outline: Ajouter une categorie
+			Given il n'y a aucune categorie dans l'application
+			When j'ajoute la categorie <nom_categorie> dans l'application
+			Then il y a une categorie <nom_categorie> dans l'application
 
-	Examples:
-		| nom_categorie	|
-		| "viande"	|
-		| "legumes"	|
+		Examples:
+			| nom_categorie	|
+			| "viande"	|
+			| "legumes"	|
