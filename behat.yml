@@ -1,0 +1,15 @@
+default:
+    suites:
+        default:
+            paths:    
+                - %paths.base%/features
+            contexts:
+                # Contextes contenant les features testées
+                - BasketContext
+                - ProductContext
+                - BasketCategoryContext
+                - CategoryContext
+                # Contextes utilitaires
+                - EntityCreationContext
+                - UtilContext
+                - CommonContext
