@@ -110,6 +110,7 @@ font-size: 20px;
 }
 
 .btn-save-fix {
+	z-index: 50px;
 	position: fixed;
     bottom: 40px;
     right: 40px;

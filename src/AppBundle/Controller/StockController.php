@@ -49,10 +49,22 @@ class StockController extends Controller
 		}
 		
 		$stock_history = $em->getRepository("AppBundle:Stock")->getCurrentStock();
-		
-		return $this->render('AppBundle:Stock:history_stock.html.twig', array(
+		return $this->render('AppBundle:Stock:add_stock.html.twig', array(
 				"stock_history" => $stock_history,
 				"error" => $error 
 		));
 	}
+
+	/**
+	 * @Route("/stats")
+	 */
+	public function statsStockAction(Request $request, StockService $stockService) {
+		$em = $this->getDoctrine()->getManager();
+
+		$top_product = $em->getRepository("AppBundle:Stock")->getCurrentStockLimit(5);
+		return $this->render('AppBundle:Stock:history_stock.html.twig', array(
+				"top_product" => $top_product,
+		));
+	}
+
 }

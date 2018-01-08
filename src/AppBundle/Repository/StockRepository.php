@@ -36,5 +36,14 @@ class StockRepository extends \Doctrine\ORM\EntityRepository
                     ->groupBy('s.product');
         return $qb->getQuery()->getResult();
     }
+
+    public function getCurrentStockLimit($limit)
+    {
+        $qb = $this->createQueryBuilder('s')
+                    ->where('s.date = (select max(s2.date) from AppBundle:Stock s2 where s.product = s2.product)')
+                    ->groupBy('s.product')
+                    ->setMaxResults($limit);
+        return $qb->getQuery()->getResult();
+    }
     
 }
