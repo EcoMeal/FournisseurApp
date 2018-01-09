@@ -46,17 +46,19 @@ class BasketOrderController extends Controller {
 
         // Retrieve the content of the request
         $content = $request->getContent();
-
+        
+        
         // Check if the content is not empty
         if (!is_null($content)) {
             $order = json_decode($content);
-            //check if the JSON is well formed
+        	
+        	//check if the JSON is well formed
             if (!is_null($order) && !empty($order)) {
-            		
-                	$order->content = str_replace("\"", "", $order->content);
-                	$order->content = str_replace("'", "", $order->content);
-                	$order->content = json_decode($order->content);
-
+            	
+             	$order->content = str_replace("\"", "", $order->content);
+                $order->content = str_replace("'", "", $order->content);
+               	$order->content = json_decode($order->content);
+            	
                 $result = $basketOrderService->checkOrder($order);
                 if ($result->valid) {
                 	//save the order

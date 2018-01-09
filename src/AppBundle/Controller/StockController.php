@@ -40,15 +40,13 @@ class StockController extends Controller
 				$productID = $data[0];
 				$newStock = $data[1];
 				
-// 				echo("Product ID = ".$productID);
-// 				echo("Amount = ".$newStock);
-				
 				$error = $stockService->updateProductStock($productID, $newStock);
 				
 			}
 		}
 		
 		$stock_history = $em->getRepository("AppBundle:Stock")->getCurrentStock();
+		
 		return $this->render('AppBundle:Stock:add_stock.html.twig', array(
 				"stock_history" => $stock_history,
 				"error" => $error 

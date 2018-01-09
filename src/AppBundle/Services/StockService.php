@@ -30,6 +30,7 @@ class StockService
         $stock->setDate($dateTime);
         $this->em->persist($stock);
         $this->em->flush();
+        
     }
     
 }

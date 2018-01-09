@@ -9,6 +9,8 @@ default:
                 - ProductContext
                 - BasketCategoryContext
                 - CategoryContext
+                - StockContext
+                - OrderContext
                 # Contextes utilitaires
                 - EntityCreationContext
                 - UtilContext

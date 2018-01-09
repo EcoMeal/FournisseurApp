@@ -107,4 +107,17 @@ class EntityCreationContext extends WebTestCase implements Context
 		return $this->client->submit($form);
 	}
 	
+	public function setProductStock($product, $stock) {
+		$crawler = $this->client->request('GET', '/stock');
+		$id = $crawler->filter('[data-name="'. $product .'"]')->attr("data-id");
+		$modifQuantite = $id."=".$stock;
+		$this->client->request(
+			"POST", //Methode
+			"/stock", //URI
+			array(), //Parametres
+			array(), //Fichiers
+			array("Content-Type" => "application/json"), //Headers
+			$modifQuantite); // Contenu*/
+	}
+	
 }

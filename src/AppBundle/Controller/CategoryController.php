@@ -53,7 +53,7 @@ class CategoryController extends Controller
         // Error flag
         $error = null;
 
-	// If the form is being processed and if it is valid
+		// If the form is being processed and if it is valid
         if ($form->isSubmitted() && $form->isValid()) {	
         	$error = $categoryService->saveCategory($category);
         }
