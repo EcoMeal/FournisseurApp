@@ -13,6 +13,30 @@ use DateTime;
 
 class BasketOrderController extends Controller {
 
+    
+     /**
+     * @Route("/orders/clean")
+     * 
+     * Deletes all the clients orders from the database. 
+     * Used for functional testing only.
+     * Should be removed or updated later as it is not secured.
+     * 
+     */
+    public function cleanAllOrdersAction()
+    {
+        $em = $this->getDoctrine()->getManager(); 
+
+        $order_list = $em->getRepository("AppBundle:BasketOrder")->findAll();
+        
+        for($i = 0; $i < count($order_list); $i++){
+             $em->remove($order_list[$i]);
+        }
+           
+        $em->flush();
+        return $this->redirect('/orders');
+    }
+    
+    
     /**
      * Returns a delivery time in the time slot encoded in JSON
      * 

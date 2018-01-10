@@ -29,6 +29,9 @@ class OrderContext extends WebTestCase implements Context {
 	//L'identifiant de la commande
 	private $order_id;
 	
+        // The crawler to check data within an html page.
+        private $crawler;
+        
 	public function __construct() {
 		$this->client = static::createClient();
 	}
@@ -42,8 +45,21 @@ class OrderContext extends WebTestCase implements Context {
 	
 	/** @AfterScenario */
 	public function after() {
-		//TODO clear orders
-		$this->order_id = null;
+		
+                // Clean all the products.
+		$this->client->request('GET', '/product/clean');
+		// Clean all the categories.
+		$this->client->request('GET', '/category/clean');	
+		// Clean all the baskets
+		$this->client->request('GET', '/basket/clean');		
+		// Clean all the basket categories.
+		$this->client->request('GET', '/basket_category/clean');
+                // Clean all the orders.
+		$this->client->request('GET', '/orders/clean');
+                
+                $this->order_id = null;
+                $this->crawler = null;
+                $this->basket_id = null;
 	}
 	
 	// FEATURES
@@ -76,27 +92,73 @@ class OrderContext extends WebTestCase implements Context {
 	 */
 	public function jeValideMaCommande()
 	{
-		
-		$order = array(
-				"username" => "",
-				"order_time" => "",
-				"delivery_time" => $this->delivery_time,
-				"content" => json_encode(array($this->basket_id))
-		);
-		$this->client->request(
-				"POST", //Methode
-				"/api/basket_order", //URI 
-				array(), //Parametres
-				array(), //Fichiers
-				array("Content-Type" => "application/json"), //Headers
-				json_encode($order)); // Contenu
-		
-		$response = $this->client->getResponse();
-		$data = json_decode($response->getContent());
-		
-		$this->order_id = $data->order_id;
+		$this->order_id = $this->entityCreationContext->createOrder(array($this->basket_id),
+                        $this->delivery_time);
 	}
-	
+	     
+        /**
+         * @Given il existe une commande
+         */
+        public function ilExisteUneCommande()
+        {
+            
+           $productName = "testProduct";
+           // Create the basket that will be ordered.
+           $this->entityCreationContext->createBasketFromScratch("Panier délicieux",
+                   "testBasketCategory", $productName);
+           
+           // Set the stock of the product.
+            $this->entityCreationContext->setProductStock($productName, 1);
+            
+            
+            // Récupérer l'id du panier
+            $this->client->request("GET", "/api/basket");
+            $response = $this->client->getResponse();
+            $baskets = json_decode($response->getContent(), true);
+            $this->basket_id = $baskets[0]['id'];
+            
+            // Create the order.
+            $this->order_id = $this->entityCreationContext->createOrder(array($this->basket_id),"12345");
+                    
+        }
+
+        /**
+         * @When je vais sur la page des commandes
+         */
+        public function jeVaisSurLaPageDesCommandes()
+        {
+            $this->crawler = $this->client->request("GET", "/orders");
+        }
+
+        /**
+         * @Then le système m'affiche la commande
+         */
+        public function leSystemeMafficheLaCommande()
+        {
+            $orderId = $this->order_id;
+            echo "Fooo";
+            echo "Expected order id = ".$orderId."\n";
+            // Find the commmand on the page.
+            $orderCount = $this->crawler->filter(".card-title-command>.card-title-block:first-child")->reduce(
+				function ($node, $i) use ($orderId) {
+                                    // If the item text match the given text, keep it in the node list.
+                                    // Split the string to get the words.
+                                    $text = explode(' ', trim($node->text()));
+                                    // The basket order is the last word from the node text.
+                                    $currentNodeOrderId = array_pop($text);                      
+                
+                                    if (strcmp($currentNodeOrderId, $orderId) == 0) {
+					return true;
+                                    } else {
+					return false;
+                                    }
+				}
+                        // return the number of item in the list.
+			)->count();
+            // There is a card with the command id.
+            $this->assertEquals(1, $orderCount, "The order count is incorrect.");    
+        }
+        
 	/**
 	 * @Then le système me retourne un numéro de commande
 	 */

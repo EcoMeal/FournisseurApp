@@ -106,6 +106,30 @@ class EntityCreationContext extends WebTestCase implements Context
 		// submit the form
 		return $this->client->submit($form);
 	}
+        
+        public function createOrder($basketIdList, $delivery_time){
+            
+            $order = array(
+				"username" => "",
+				"order_time" => "",
+				"delivery_time" => $delivery_time,
+				"content" => json_encode($basketIdList)
+		);
+		
+            $this->client->request(
+				"POST", //Methode
+				"/api/basket_order", //URI 
+				array(), //Parametres
+				array(), //Fichiers
+				array("Content-Type" => "application/json"), //Headers
+				json_encode($order)); // Contenu
+            
+            $response = $this->client->getResponse();
+            $data = json_decode($response->getContent());
+            
+            // Return the order id.
+            return $data->order_id;
+        }
 	
 	public function setProductStock($product, $stock) {
 		$crawler = $this->client->request('GET', '/stock');
