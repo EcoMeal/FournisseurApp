@@ -10,8 +10,4 @@ Feature: Modifier la quantité disponible d'un produit
 		When je met à jour la quantité de "Poulet" à "42"
 		Then la quantité de "Poulet" est de "42"
 
-        @stock
-	Scenario: mettre à jour la quantité d'un produit avec une valeur invalide
-		Given la quantité de "Poulet" est "0"
-		When je met à jour la quantité de "Poulet" à "-1"
-		Then la quantité de "Poulet" est de "0"
+    

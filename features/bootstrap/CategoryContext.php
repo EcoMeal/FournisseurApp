@@ -4,7 +4,6 @@ $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
 use Behat\Behat\Context\Context;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 
 class CategoryContext extends WebTestCase implements Context {
 	
@@ -33,17 +32,6 @@ class CategoryContext extends WebTestCase implements Context {
 		$this->entityCreationContext = $environment->getContext("EntityCreationContext");
 		$this->utilContext = $environment->getContext("UtilContext");
 		$this->commonContext = $environment->getContext("CommonContext");
-	}
-	
-	/**
-	 * @AfterScenario
-	 *
-	 * Nettoie la BDD après chaque test.
-	 * */
-	public function after()
-	{
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');
 	}
 	
 	// FEATURES

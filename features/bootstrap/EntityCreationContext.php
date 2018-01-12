@@ -142,6 +142,8 @@ class EntityCreationContext extends WebTestCase implements Context
 			array(), //Fichiers
 			array("Content-Type" => "application/json"), //Headers
 			$modifQuantite); // Contenu*/
+                
+                return $this->client->getResponse();
 	}
 	
 }

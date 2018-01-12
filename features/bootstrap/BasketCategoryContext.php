@@ -4,7 +4,7 @@ $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
 use Behat\Behat\Context\Context;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
+
 
 /**
  * Defines application features from the specific context.
@@ -31,12 +31,6 @@ class BasketCategoryContext extends WebTestCase implements Context
 		$environment = $scope->getEnvironment();
 		$this->entityCreationContext = $environment->getContext("EntityCreationContext");
 		$this->utilContext = $environment->getContext("UtilContext");
-	}
-	
-	/** @AfterScenario */
-	public function after() {
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
 	}
 	
 	// FEATURES

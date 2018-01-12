@@ -26,12 +26,14 @@ class StockController extends Controller
 		$rawData = $request->getContent();
 		
 		if(!empty($rawData)) {
+                   echo "raw data = ".$rawData."\n";
 			if(strstr($rawData, "&")) {
 				$itemUpdateList = explode("&", $rawData);
 			} else {
 				$itemUpdateList = array($rawData);
 			}
-			
+                        echo "item update list \n";
+			print_r($itemUpdateList);
 			$size = count($itemUpdateList);
 			
 			for($i = 0; $i < $size; $i ++) {
@@ -39,7 +41,8 @@ class StockController extends Controller
 				$data = explode("=", $itemUpdateList[$i]);
 				$productID = $data[0];
 				$newStock = $data[1];
-				
+				echo "Product ID = ".$productID."\n";
+                                echo "New stock = ".$newStock."\n";
 				$error = $stockService->updateProductStock($productID, $newStock);
 				
 			}

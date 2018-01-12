@@ -22,6 +22,10 @@ class StockService
         $stock = new Stock();
         
         $product = $this->em->getRepository("AppBundle:Product")->findOneById($productID);
+        echo "Is Product null ?";
+        echo ($product == NULL) ? "true": "false";
+        //print_r($product);
+        
         
         $stock->setProduct($product);
         $stock->setQuantity($newStock);        
@@ -30,7 +34,7 @@ class StockService
         $stock->setDate($dateTime);
         $this->em->persist($stock);
         $this->em->flush();
-        
+        echo "end";
     }
     
 }

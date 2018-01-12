@@ -2,10 +2,8 @@
 
 // To avoid the kernel exception due to WebtestCase...
 $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
-use AppBundle\Entity\Product;
+
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -23,8 +21,20 @@ class CommonContext extends WebTestCase implements Context
 	 * */
 	public function after()
 	{
-		// Clear the JSON message
-		$this->commonMessage = null;
+             echo "In common context";
+            // Clean all the products.
+            //$this->client->request('GET', '/product/clean');
+            // Clean all the categories.
+            //$this->client->request('GET', '/category/clean');	
+            // Clean all the baskets
+            //$this->client->request('GET', '/basket/clean');		
+            // Clean all the basket categories.
+            //$this->client->request('GET', '/basket_category/clean');
+            // Clean all the orders.
+            //$this->client->request('GET', '/orders/clean');
+            
+            // Clear the JSON message.    
+            $this->commonMessage = null;
 	}
 	
 	
