@@ -61,7 +61,7 @@ class CategoryController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {	
         	$error = $categoryService->saveCategory($category);
         }
-
+           
         // Retrieves all the categories from the database
         $categories =  $categoryService->getAllCategoriesOrdererByName();
                 
@@ -86,22 +86,28 @@ class CategoryController extends Controller
     {
         
         $category = $categoryService->getCategory($id);
-        $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
-        
+       
         // Error flag
         $error = null;
-
-	// If the form is being processed and if it is valid
-        if ($form->isSubmitted() && $form->isValid()) {	
-        	
-                $error = $categoryService->updateCategory($category);
-                
-                if(!$error){
-                    return $this->redirect('/category');
-                }
-        }
         
+        // Wrong category id.
+        if($category == null){
+            $error = "La catégorie à mettre à jour n'existe pas";
+        } else {
+           
+            $form = $this->createForm(CategoryType::class, $category);
+            $form->handleRequest($request);
+
+            // If the form is being processed and if it is valid
+            if ($form->isSubmitted() && $form->isValid()) {	
+
+                    $error = $categoryService->updateCategory($category);
+
+                    if(!$error){
+                        return $this->redirect('/category');
+                    }
+            }
+        }
         // Displays the form, and the errors if there are any.
         return $this->render("AppBundle:Category:update_category.html.twig", array(
                 "form" => $form->createView(), "error" => $error

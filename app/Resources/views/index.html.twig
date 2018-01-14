@@ -30,6 +30,13 @@
 
 {% include 'topbar.html' %}
 
+{% for label, messages in app.flashes(['warning', 'error', "notice"]) %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
   
 <div class="container-fluid" style="margin-top:40px">
     <div class="content-container col-lg-12 col-md-12 col-xs-12">

@@ -108,9 +108,9 @@ class CategoryService
     	// Checks if the category already exists
        	$categoryWithSameName = $this->em->getRepository("AppBundle:Category")->findOneByName($category->getName());
 
-       	// If it do not, returns an error
-        if(is_null($categoryWithSameName)) {
-        	return $error = "La catégorie n'existe pas";
+       	// If it does, returns an error
+        if(!is_null($categoryWithSameName)) {
+        	return $error = "Une catégorie utilise déjà ce nom.";
         } else {
             // Save the category in database
             $this->em->persist($category);
