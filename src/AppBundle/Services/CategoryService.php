@@ -16,6 +16,12 @@ class CategoryService
         $this->container = $serviceContainer;
     }
     
+    
+    public function getCategory($id)
+    {
+        return $this->em->getRepository("AppBundle:Category")->findOneById($id);
+    }
+    
     /**
      * Deletes a product category if it is unused.
      * 
@@ -87,7 +93,29 @@ class CategoryService
             $this->em->persist($category);
             $this->em->flush();
                 
-		}
+        }
+    }
+    
+    /**
+     * Update an already existing category in the application.
+     * 
+     * @param $category the category to update
+     * 
+     * @return an error if the update failed, null otherwise
+     */
+    public function updateCategory($category)
+    {
+    	// Checks if the category already exists
+       	$categoryWithSameName = $this->em->getRepository("AppBundle:Category")->findOneByName($category->getName());
+
+       	// If it do not, returns an error
+        if(is_null($categoryWithSameName)) {
+        	return $error = "La catégorie n'existe pas";
+        } else {
+            // Save the category in database
+            $this->em->persist($category);
+            $this->em->flush();     
+        }
     }
     
     public function registerCategoryImage($category) {

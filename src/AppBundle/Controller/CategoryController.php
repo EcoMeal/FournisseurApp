@@ -42,6 +42,10 @@ class CategoryController extends Controller
 
     /**
      * @Route("/category")
+     * @Method({"POST", "GET"})
+     * 
+     * Show the available categories on the application and save any new category
+     * given in POST.
      */
     public function saveCategoryAction(Request $request, CategoryService $categoryService)
     {
@@ -66,6 +70,40 @@ class CategoryController extends Controller
                 'categories' => $categories, "form" => $form->createView(), "error" => $error
         ));
 		
+    }
+    
+    /**
+     * @Route("/category/{id}", requirements={"id" = "\d+"})
+     * @Method({"PUT"})
+     * 
+     * Update an already existing category.
+     * 
+     */
+    public function updateCategoryAction($id, Request $request, CategoryService $categoryService)
+    {
+        
+        $category = $categoryService->getCategory($id);
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+        
+        // Error flag
+        $error = null;
+
+	// If the form is being processed and if it is valid
+        if ($form->isSubmitted() && $form->isValid()) {	
+        	
+                $error = $categoryService->updateCategory($category);
+                
+                if(!$error){
+                    return $this->redirect('/category');
+                }
+        }
+        
+        // Displays the form, and the errors if there are any.
+        return $this->render("AppBundle:Category:update_category.html.twig", array(
+                "form" => $form->createView(), "error" => $error
+        ));
+
     }
 
 }
