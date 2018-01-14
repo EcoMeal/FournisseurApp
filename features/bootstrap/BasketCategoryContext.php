@@ -35,12 +35,6 @@ class BasketCategoryContext extends WebTestCase implements Context
 		$this->commonContext = $environment->getContext("CommonContext");
 	}
 	
-	/** @AfterScenario */
-	public function after() {
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
-	}
-	
 	// GIVEN
 	
 	/**

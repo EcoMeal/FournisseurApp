@@ -4,7 +4,6 @@
 $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
 use Behat\Behat\Context\Context;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Behat\Behat\Tester\Exception\PendingException;
 
 /**
  * Defines application features from the specific context.
@@ -24,16 +23,36 @@ class CommonContext extends WebTestCase implements Context
 	// Message d'information affiché quand on appelle un formulaire retournant une vue twig
 	private $viewInfoMessage;
 	
+	private $client;
+	
+	public function __construct() {
+		$this->client = static::createClient();
+	}
+	
 	/**
 	 * @AfterScenario
 	 *
 	 * Nettoie le message après chaque test
 	 * */
 	public function after() {
+		
 		$this->jsonErrorMessage = null;
 		$this->jsonInfoMessage = null;
 		$this->viewErrorMessage = null;
 		$this->viewInfoMessage = null;
+		
+		// Clean all the products.
+		$this->client->request('GET', '/product/clean');
+		
+		// Clean all the categories.
+		$this->client->request('GET', '/category/clean');
+			
+		// Clean all the baskets
+		$this->client->request('GET', '/basket/clean');
+			
+		// Clean all the basket categories.
+		$this->client->request('GET', '/basket_category/clean');
+		
 	}
 	
 	//Features

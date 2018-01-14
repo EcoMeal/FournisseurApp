@@ -45,21 +45,9 @@ class OrderContext extends WebTestCase implements Context {
 	
 	/** @AfterScenario */
 	public function after() {
-		
-                // Clean all the products.
-		$this->client->request('GET', '/product/clean');
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');	
-		// Clean all the baskets
-		$this->client->request('GET', '/basket/clean');		
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
-                // Clean all the orders.
-		$this->client->request('GET', '/orders/clean');
-                
-                $this->order_id = null;
-                $this->crawler = null;
-                $this->basket_id = null;
+  	    $this->order_id = null;
+        $this->crawler = null;
+        $this->basket_id = null;
 	}
 	
 	// FEATURES

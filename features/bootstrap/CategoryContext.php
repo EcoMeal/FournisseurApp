@@ -35,17 +35,6 @@ class CategoryContext extends WebTestCase implements Context {
 		$this->commonContext = $environment->getContext("CommonContext");
 	}
 	
-	/**
-	 * @AfterScenario
-	 *
-	 * Nettoie la BDD après chaque test.
-	 * */
-	public function after()
-	{
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');
-	}
-	
 	// FEATURES
 	
 	/**

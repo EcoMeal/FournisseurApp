@@ -45,27 +45,6 @@ class StockContext extends WebTestCase implements Context {
 		$this->utilContext = $environment->getContext("UtilContext");
 	}
 	
-	/**
-	 * @AfterScenario
-	 *
-	 * Nettoie la BDD après chaque test
-	 * */
-	public function after()
-	{
-		// Clean all the products.
-		$this->client->request('GET', '/product/clean');
-	
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');
-			
-		// Clean all the baskets
-		$this->client->request('GET', '/basket/clean');
-			
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
-	
-	}
-	
 	// FEATURES
 	
 	/**

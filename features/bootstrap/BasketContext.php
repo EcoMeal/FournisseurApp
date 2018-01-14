@@ -45,30 +45,6 @@ class BasketContext extends WebTestCase implements Context
 	}
 	
 	/**
-	 * @AfterScenario
-	 *
-	 * Nettoie la BDD après chaque test.
-	 * */
-	public function after()
-	{
-		// Clear the error message.
-		$errorMessage = null;
-			
-		// Clean all the products.
-		$this->client->request('GET', '/product/clean');
-	
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');
-			
-		// Clean all the baskets
-		$this->client->request('GET', '/basket/clean');
-			
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
-			
-	}
-	
-	/**
 	 * @Given il n’y a aucun panier dans l'application
 	 */
 	public function ilNyAAucunPanierDansLapplication()
