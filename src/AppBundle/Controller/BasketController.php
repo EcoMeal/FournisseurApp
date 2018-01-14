@@ -107,7 +107,8 @@ class BasketController extends Controller
             "form" => $form->createView(),
             "basket_list" => $baskets, 
             "product_list" => $product_list,
-            "error" => $error
+            "error" => $error,
+        	"success" => ""
         ));
         
         

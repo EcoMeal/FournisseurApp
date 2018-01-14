@@ -2,31 +2,39 @@
 
 // To avoid the kernel exception due to WebtestCase...
 $_SERVER['KERNEL_DIR'] = __DIR__ . '/../../app/';
-use AppBundle\Entity\Product;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Behat\Behat\Tester\Exception\PendingException;
 
 /**
  * Defines application features from the specific context.
  */
 class CommonContext extends WebTestCase implements Context
 {
+
+	// Message d'erreur renvoyé quand on appelle un contrôleur API qui renvoie du JSON
+	private $jsonErrorMessage;
 	
-	private $commonMessage;
+	// Message d'information renvoyé quand on appelle un contrôleur API qui renvoie du JSON
+	private $jsonInfoMessage;
+	
+	// Message d'erreur affiché quand on appelle un formulaire retournant une vue twig
+	private $viewErrorMessage;
+	
+	// Message d'information affiché quand on appelle un formulaire retournant une vue twig
+	private $viewInfoMessage;
 	
 	/**
 	 * @AfterScenario
 	 *
 	 * Nettoie le message après chaque test
 	 * */
-	public function after()
-	{
-		// Clear the JSON message
-		$this->commonMessage = null;
+	public function after() {
+		$this->jsonErrorMessage = null;
+		$this->jsonInfoMessage = null;
+		$this->viewErrorMessage = null;
+		$this->viewInfoMessage = null;
 	}
-	
 	
 	//Features
 	
@@ -43,17 +51,48 @@ class CommonContext extends WebTestCase implements Context
 	/**
 	 * @Then l'application renvoie un message d'erreur :errorMessage
 	 */
-	public function lapplicationRenvoieUnMessageDerreur($errorMessage)
-	{
-		$this->assertEquals($errorMessage, $this->commonMessage['error']);
+	public function lapplicationRenvoieUnMessageDerreur($errorMessage) {
+		$this->assertEquals($errorMessage, $this->jsonErrorMessage);
 	}
 	
-	public function getMessage() {
-		return $this->commonMessage;
+	/**
+	 * @Then l'application renvoie un message d'information :infoMessage
+	 */
+	public function lapplicationRenvoieUnMessageDInformation($infoMessage) {
+		$this->assertEquals($infoMessage, $this->jsonInfoMessage);
 	}
 	
-	public function setMessage($message) {
-		$this->commonMessage = $message;
+	/**
+	 * @Then un message d'erreur s'affiche qui dit :messageText
+	 */
+	public function unMessageDErreurSAfficheQuiDit($messageText) {
+		$this->assertEquals($messageText, $this->viewErrorMessage);
+	}
+	
+	/**
+	 * @Then un message d'information s'affiche qui dit :messageText
+	 */
+	public function unMessageDInformationSAfficheQuiDit($messageText) {
+		$this->assertEquals($messageText, $this->viewInfoMessage);
+	}
+	
+	public function updateJsonMessage($content) {
+		if(array_key_exists("error", $content)) {
+			$this->jsonErrorMessage = $content["error"];
+		} else if(array_key_exists("success", $content)) {
+			$this->jsonInfoMessage = $content["success"];
+		}
+	}
+	
+	public function updateViewMessage($crawler) {
+		$error = $crawler->filter("#error-message > p");
+		if($error->count() == 1) {
+			$this->viewErrorMessage = $error->text();
+		}
+		$info = $crawler->filter("#success-message > p");
+		if($info->count() == 1) {
+			$this->viewInfoMessage = $info->text();
+		}
 	}
 	
 }

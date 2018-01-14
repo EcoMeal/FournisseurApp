@@ -19,9 +19,6 @@ class StockContext extends WebTestCase implements Context {
 	//Fonctions utiles (par exemple compter des items sur une page)
 	private $utilContext;
 	
-	//Fonctions communes à plusieurs features
-	private $commonContext;
-	
 	//Client pour les requêtes
 	private $client;
 	
@@ -46,7 +43,6 @@ class StockContext extends WebTestCase implements Context {
 		$environment = $scope->getEnvironment();
 		$this->entityCreationContext = $environment->getContext("EntityCreationContext");
 		$this->utilContext = $environment->getContext("UtilContext");
-		$this->commonContext = $environment->getContext("CommonContext");
 	}
 	
 	/**

@@ -20,6 +20,8 @@ class BasketContext extends WebTestCase implements Context
 	//Fonctions utiles (par exemple compter des items sur une page)
 	private $utilContext;
 	
+	private $commonContext;
+	
 	//Client pour les requêtes
 	private $client;
 	
@@ -39,6 +41,7 @@ class BasketContext extends WebTestCase implements Context
 		$environment = $scope->getEnvironment();
 		$this->entityCreationContext = $environment->getContext("EntityCreationContext");
 		$this->utilContext = $environment->getContext("UtilContext");
+		$this->commonContext = $environment->getContext("CommonContext");
 	}
 	
 	/**
@@ -111,7 +114,7 @@ class BasketContext extends WebTestCase implements Context
 	public function jajouteUnNouveauPanier($basket_name)
 	{
 		$crawler = $this->entityCreationContext->createBasketFromScratch($basket_name);
-		$this->errorMessage = trim($crawler->filter(".alert-danger")->text());
+		$this->commonContext->updateViewMessage($crawler);
 	}
 	
 	/**

@@ -32,7 +32,7 @@ class CategoryService
         foreach($product_list as $product){
             if($product->getCategory()->getId() == $id){
             	//If there is at least one, return an error message
-                return "Deletion impossible, the category is affected to a product";
+                return "Suppression impossible, la catégorie est utilisée";
             }
         }
         

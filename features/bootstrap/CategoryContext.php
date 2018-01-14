@@ -209,7 +209,7 @@ class CategoryContext extends WebTestCase implements Context {
 		 
 		// With the category  ID we can now delete it.
 		$this->client->request('DELETE', '/category/'.$categoryID);
-		$this->commonContext->setMessage(json_decode($this->client->getResponse()->getContent(), true));
+		$this->commonContext->updateJsonMessage(json_decode($this->client->getResponse()->getContent(), true));
 	}
 	
 }

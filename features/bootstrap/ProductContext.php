@@ -236,7 +236,7 @@ class ProductContext extends WebTestCase implements Context
         $productID = $this->utilContext->getItemCardId($crawler, $filter);
         // With the product ID we can now delete it.
         $this->client->request('DELETE', '/product/'.$productID);
-        $this->commonContext->setMessage(json_decode($this->client->getResponse()->getContent(), true)); 
+        $this->commonContext->updateJsonMessage(json_decode($this->client->getResponse()->getContent(), true)); 
     }
 	  	
 }

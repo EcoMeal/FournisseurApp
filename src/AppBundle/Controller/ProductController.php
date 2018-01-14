@@ -65,7 +65,8 @@ class ProductController extends Controller
 			
 	return $this->render('AppBundle:Product:add_product.html.twig',
                 array("form" => $form->createView(), "product_list" => $product_list,
-                    "error" => $error
+                    "error" => $error,
+                	"success" => ""
 	));
 		
     }

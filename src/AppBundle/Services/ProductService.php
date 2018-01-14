@@ -24,7 +24,7 @@ class ProductService
         foreach($basket_list as $basket){
             foreach($basket->getProductList() as $product){
                 if($product->getId() == $id){
-                    return "Deletion impossible, the product is used in a basket";
+                    return "Suppression impossible, le produit est utilisé";
                 }
             }
         }

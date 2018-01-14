@@ -49,7 +49,8 @@ class StockController extends Controller
 		
 		return $this->render('AppBundle:Stock:add_stock.html.twig', array(
 				"stock_history" => $stock_history,
-				"error" => $error 
+				"error" => $error,
+				"success" => ""
 		));
 	}
 

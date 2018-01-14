@@ -29,8 +29,8 @@ class OrderContext extends WebTestCase implements Context {
 	//L'identifiant de la commande
 	private $order_id;
 	
-        // The crawler to check data within an html page.
-        private $crawler;
+    // The crawler to check data within an html page.
+    private $crawler;
         
 	public function __construct() {
 		$this->client = static::createClient();
@@ -136,8 +136,7 @@ class OrderContext extends WebTestCase implements Context {
         public function leSystemeMafficheLaCommande()
         {
             $orderId = $this->order_id;
-            echo "Fooo";
-            echo "Expected order id = ".$orderId."\n";
+            
             // Find the commmand on the page.
             $orderCount = $this->crawler->filter(".card-title-command>.card-title-block:first-child")->reduce(
 				function ($node, $i) use ($orderId) {
