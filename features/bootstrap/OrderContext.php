@@ -29,8 +29,8 @@ class OrderContext extends WebTestCase implements Context {
 	//L'identifiant de la commande
 	private $order_id;
 	
-        // The crawler to check data within an html page.
-        private $crawler;
+    // The crawler to check data within an html page.
+    private $crawler;
         
 	public function __construct() {
 		$this->client = static::createClient();
@@ -45,21 +45,9 @@ class OrderContext extends WebTestCase implements Context {
 	
 	/** @AfterScenario */
 	public function after() {
-		
-                // Clean all the products.
-		$this->client->request('GET', '/product/clean');
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');	
-		// Clean all the baskets
-		$this->client->request('GET', '/basket/clean');		
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
-                // Clean all the orders.
-		$this->client->request('GET', '/orders/clean');
-                
-                $this->order_id = null;
-                $this->crawler = null;
-                $this->basket_id = null;
+  	    $this->order_id = null;
+        $this->crawler = null;
+        $this->basket_id = null;
 	}
 	
 	// FEATURES
@@ -136,8 +124,7 @@ class OrderContext extends WebTestCase implements Context {
         public function leSystemeMafficheLaCommande()
         {
             $orderId = $this->order_id;
-            echo "Fooo";
-            echo "Expected order id = ".$orderId."\n";
+            
             // Find the commmand on the page.
             $orderCount = $this->crawler->filter(".card-title-command>.card-title-block:first-child")->reduce(
 				function ($node, $i) use ($orderId) {

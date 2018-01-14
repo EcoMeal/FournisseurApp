@@ -12,13 +12,24 @@
 
     </br>
     {% if error is not empty %}
-        <div class="alert alert-danger alert-dismissable fade in">
+        <div id="error-message"  class="alert alert-danger alert-dismissable fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{error}}
+            <p>{{error}}</p>
+        </div>
+    {% endif %}
+
+    {% if success is not empty %}
+        <div id="success-message" class="alert alert-success alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p>{{success}}</p>
         </div>
     {% endif %}
 
     <div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    </div>
+
+    <div class="alert alert-success alert-dismissable fade in" style="display: none;">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     </div>
 
@@ -99,11 +110,16 @@
                 $.ajax( {
                     url : "/basket_category/" + id,
                     type : 'DELETE' // Le type de la requête HTTP.
-                }).done(function(error) {
-                    if(!error.error){
+                }).done(function(response) {
+                    if(!response.error){
                         $("#basket_category"+id).hide();
+                        if(response.success){
+                            $(".alert-success").append(response.success);
+                            $(".alert-success").show();
+                        }
                     }else{
-                        $(".alert-danger").append(error.error);
+                    	alert("erreur");
+                        $(".alert-danger").append(response.error);
                         $(".alert-danger").show();
                     }
                 });

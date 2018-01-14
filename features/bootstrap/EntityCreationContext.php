@@ -65,7 +65,7 @@ class EntityCreationContext extends WebTestCase implements Context
 	public function createProduct($product, $imagePath = NULL)
 	{
 		$crawler = $this->client->request('GET', '/product');
-	
+		
 		$form = $crawler->selectButton('Valider')->form();
 		// Set the task values
 		$form->setValues(array('appbundle_product[name]' => $product));
@@ -81,7 +81,9 @@ class EntityCreationContext extends WebTestCase implements Context
 	
 	public function createBasketCategory($basketCategory, $imagePath = NULL) {
 		$crawler = $this->client->request('GET', '/basket_category');
+		
 		$form = $crawler->selectButton('Valider')->form();
+		
 		// Set the task values
 		$form->setValues(array('appbundle_basketcategory[name]' => $basketCategory));
 	
@@ -107,29 +109,29 @@ class EntityCreationContext extends WebTestCase implements Context
 		return $this->client->submit($form);
 	}
         
-        public function createOrder($basketIdList, $delivery_time){
+    public function createOrder($basketIdList, $delivery_time){
             
-            $order = array(
-				"username" => "",
-				"order_time" => "",
-				"delivery_time" => $delivery_time,
-				"content" => json_encode($basketIdList)
+        $order = array(
+			"username" => "",
+			"order_time" => "",
+			"delivery_time" => $delivery_time,
+			"content" => json_encode($basketIdList)
 		);
 		
-            $this->client->request(
-				"POST", //Methode
-				"/api/basket_order", //URI 
-				array(), //Parametres
-				array(), //Fichiers
-				array("Content-Type" => "application/json"), //Headers
-				json_encode($order)); // Contenu
+        $this->client->request(
+			"POST", //Methode
+			"/api/basket_order", //URI 
+			array(), //Parametres
+			array(), //Fichiers
+			array("Content-Type" => "application/json"), //Headers
+			json_encode($order)); // Contenu
             
-            $response = $this->client->getResponse();
-            $data = json_decode($response->getContent());
+        $response = $this->client->getResponse();
+        $data = json_decode($response->getContent());
             
-            // Return the order id.
-            return $data->order_id;
-        }
+        // Return the order id.
+        return $data->order_id;
+    }
 	
 	public function setProductStock($product, $stock) {
 		$crawler = $this->client->request('GET', '/stock');

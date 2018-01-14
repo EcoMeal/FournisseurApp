@@ -11,8 +11,26 @@
 {% block body %}
 </br>
 
-<div class="alert alert-danger alert-dismissable fade in">
-	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+{% if error is not empty %}
+    <div class="alert alert-danger alert-dismissable fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <p>{{error}}</p>
+    </div>
+{% endif %}
+
+{% if success is not empty %}
+    <div class="alert alert-success alert-dismissable fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <p>{{success}}</p>
+    </div>
+{% endif %}
+
+<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+</div>
+
+<div class="alert alert-success alert-dismissable fade in" style="display: none;">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 </div>
 
 <div id="listproducts" class="row col-xs-12">
@@ -71,9 +89,13 @@
 				data: saveTab,
                 contentType: "application/json; charset=utf-8",
                 dataType:'json',  
-  				success: function(error) {
-                    if (error.error) {
-                        $(".alert-danger").append(error.error);
+  				success: function(response) {
+                    if(response.success){
+                        $(".alert-success").append(response.success);
+                        $(".alert-success").show(); 
+                    }
+                    if(response.error){
+                        $(".alert-danger").append(response.error);
                         $(".alert-danger").show();
                     }
                 }

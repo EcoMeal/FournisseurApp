@@ -55,11 +55,15 @@ class BasketCategoryController extends Controller
      * @Method({"DELETE"})
      * Deletes the basket category with the given id from the database.  
      */
-    public function deleteBasketCategoryAction($id,
-            BasketCategoryService $basketCategoryService)
-    {
-        $error = $basketCategoryService->deleteBasketCategory($id);
-        return $this->json(array('error' => $error));
+    public function deleteBasketCategoryAction($id, BasketCategoryService $basketCategoryService) {
+    	$retour = $basketCategoryService->deleteBasketCategory($id);
+        $response = null;
+         if($retour['type'] == "ERROR") {
+         	$response = array("error" => $retour['message']);
+        } else {
+         	$response = array("success" => $retour['message']);
+        }
+        return $this->json($response);
     }
     
       
@@ -67,8 +71,7 @@ class BasketCategoryController extends Controller
      * @Route("/basket_category")
      */
     public function saveBasketCategoryAction(Request $request,
-            BasketCategoryService $basketCategoryService)
-    {
+            BasketCategoryService $basketCategoryService) {
 		
         $basketCategory = new BasketCategory();
         $form = $this->createForm(BasketCategoryType::class, $basketCategory);
@@ -77,9 +80,9 @@ class BasketCategoryController extends Controller
         // Error flag
         $error = null;
 
-	// If the form is being processed and if it is valid
+		// If the form is being processed and if it is valid
         if ($form->isSubmitted() && $form->isValid()) {
-	    $error = $basketCategoryService->saveBasketCategory($basketCategory);
+	    	$error = $basketCategoryService->saveBasketCategory($basketCategory);
         }
 
         // Retrieves all the categories from the database
@@ -87,7 +90,10 @@ class BasketCategoryController extends Controller
         
         // Displays the form, the categories and the errors if there are any
         return $this->render('AppBundle:BasketCategory:add_basket_category.html.twig', array(
-                'categories' => $categories, "form" => $form->createView(), "error" => $error
+                'categories' => $categories, 
+        		"form" => $form->createView(), 
+        		"error" => $error,
+        		"success" => ""
         ));
 		
     }

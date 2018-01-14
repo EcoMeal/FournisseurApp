@@ -20,6 +20,8 @@ class BasketContext extends WebTestCase implements Context
 	//Fonctions utiles (par exemple compter des items sur une page)
 	private $utilContext;
 	
+	private $commonContext;
+	
 	//Client pour les requêtes
 	private $client;
 	
@@ -39,30 +41,7 @@ class BasketContext extends WebTestCase implements Context
 		$environment = $scope->getEnvironment();
 		$this->entityCreationContext = $environment->getContext("EntityCreationContext");
 		$this->utilContext = $environment->getContext("UtilContext");
-	}
-	
-	/**
-	 * @AfterScenario
-	 *
-	 * Nettoie la BDD après chaque test.
-	 * */
-	public function after()
-	{
-		// Clear the error message.
-		$errorMessage = null;
-			
-		// Clean all the products.
-		$this->client->request('GET', '/product/clean');
-	
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');
-			
-		// Clean all the baskets
-		$this->client->request('GET', '/basket/clean');
-			
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
-			
+		$this->commonContext = $environment->getContext("CommonContext");
 	}
 	
 	/**
@@ -111,7 +90,7 @@ class BasketContext extends WebTestCase implements Context
 	public function jajouteUnNouveauPanier($basket_name)
 	{
 		$crawler = $this->entityCreationContext->createBasketFromScratch($basket_name);
-		$this->errorMessage = trim($crawler->filter(".alert-danger")->text());
+		$this->commonContext->updateViewMessage($crawler);
 	}
 	
 	/**

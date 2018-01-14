@@ -67,7 +67,10 @@ class CategoryController extends Controller
                 
         // Displays the form, the categories and the errors if there are any
         return $this->render('AppBundle:Category:add_category.html.twig', array(
-                'categories' => $categories, "form" => $form->createView(), "error" => $error
+                'categories' => $categories, 
+        		"form" => $form->createView(), 
+        		"error" => $error,
+        		"success" => ""
         ));
 		
     }

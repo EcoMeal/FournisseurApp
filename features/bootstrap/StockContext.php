@@ -19,9 +19,6 @@ class StockContext extends WebTestCase implements Context {
 	//Fonctions utiles (par exemple compter des items sur une page)
 	private $utilContext;
 	
-	//Fonctions communes à plusieurs features
-	private $commonContext;
-	
 	//Client pour les requêtes
 	private $client;
 	
@@ -46,28 +43,6 @@ class StockContext extends WebTestCase implements Context {
 		$environment = $scope->getEnvironment();
 		$this->entityCreationContext = $environment->getContext("EntityCreationContext");
 		$this->utilContext = $environment->getContext("UtilContext");
-		$this->commonContext = $environment->getContext("CommonContext");
-	}
-	
-	/**
-	 * @AfterScenario
-	 *
-	 * Nettoie la BDD après chaque test
-	 * */
-	public function after()
-	{
-		// Clean all the products.
-		$this->client->request('GET', '/product/clean');
-	
-		// Clean all the categories.
-		$this->client->request('GET', '/category/clean');
-			
-		// Clean all the baskets
-		$this->client->request('GET', '/basket/clean');
-			
-		// Clean all the basket categories.
-		$this->client->request('GET', '/basket_category/clean');
-	
 	}
 	
 	// FEATURES

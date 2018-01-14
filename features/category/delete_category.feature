@@ -9,20 +9,17 @@ Feature: Supprimer une categorie
         // Règle à rajouter
         And tout les produits de la categorie <nom_categorie> ne sont plus affichés dans l'application
         
+        @category
         @delete_category
         Scenario: Supprimer une categorie affectée à un produit
                 Given il existe une categorie "testCategory" utilisé par un produit
                 When j'essaie de supprimer la categorie "testCategory"
-                Then l'application renvoie un message d'erreur "Deletion impossible, the category is affected to a product"
+                Then l'application renvoie un message d'erreur "Suppression impossible, la catégorie est utilisée"
 
+		@category
         @delete_category
-		Scenario Outline: Supprimer une categorie
-			Given il existe la categorie <nom_categorie> dans l'application
-			When je supprime la categorie <nom_categorie> dans l'application
-			Then la categorie <nom_categorie> n'est plus affichée dans l'application
-
-
-		Examples:
-			| nom_categorie	|
-			| "viande"	|
-			| "legumes"	|
+		Scenario: Supprimer une categorie
+			Given il existe la categorie "Légumes" dans l'application
+			When je supprime la categorie "Légumes" dans l'application
+			Then la categorie "Légumes" n'est plus affichée dans l'application
+			

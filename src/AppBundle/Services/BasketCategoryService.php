@@ -21,13 +21,22 @@ class BasketCategoryService
         $basket_list = $this->em->getRepository("AppBundle:Basket")->findAll();
         foreach($basket_list as $basket){
             if($basket->getCategory()->getId() == $id){
-                return "Deletion impossible, the basket category is used by a basket";
+                return array(
+                		"type" => "ERROR",
+                		"message" => "Suppression impossible, la catégorie de panier est utilisée"
+                );
             }
         }
         
         $basket_category = $this->em->getRepository("AppBundle:BasketCategory")->findOneById($id);    
         $this->em->remove($basket_category);          
         $this->em->flush();
+        
+        return array(
+        		"type" => "SUCCESS",
+        		"message" => "Catégorie supprimée"
+        );
+        
     }
     
     public function getAllBasketCategoryOrderedByName()
@@ -38,40 +47,40 @@ class BasketCategoryService
     public function saveBasketCategory($basketCategory)
     {
         	
-            // Checks if the category already exists
-            $basketCategoryWithSameName = $this->em->getRepository("AppBundle:BasketCategory")
-                    ->findOneByName($basketCategory->getName());
+        // Checks if the category already exists
+        $basketCategoryWithSameName = $this->em->getRepository("AppBundle:BasketCategory")
+                ->findOneByName($basketCategory->getName());
 
-            if(!is_null($basketCategoryWithSameName)) {
-                return "La catégorie existe déjà";
-            } else {
+        if(!is_null($basketCategoryWithSameName)) {
+            return "Ajout impossible, la catégorie de panier existe déjà";
+        } else {
 			
-                // Save the category image if it exists
-                if(!is_null($basketCategory->getImagePath())) {
+            // Save the category image if it exists
+            if(!is_null($basketCategory->getImagePath())) {
 
-                    // Get the file
-                    $file = $basketCategory->getImagePath();
+                // Get the file
+                $file = $basketCategory->getImagePath();
 
-                    // Generate a unique name for the file before saving it
-                    $fileName = md5(uniqid()).'.'.$file->guessExtension();
+                // Generate a unique name for the file before saving it
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
-                    // Move the file to the directory where images are stored
-                    $file->move(
-                            $this->container->getParameter('image_directory'),
-                            $fileName
-                    );
+                // Move the file to the directory where images are stored
+                $file->move(
+                        $this->container->getParameter('image_directory'),
+                        $fileName
+                );
 
-                    // Update imagePath in the category entity
-                    $basketCategory->setImagePath($fileName);
+                // Update imagePath in the category entity
+                $basketCategory->setImagePath($fileName);
 
-                }
-
-                // Save the category in database
-                $this->em->persist($basketCategory);
-                $this->em->flush();
             }
+
+            // Save the category in database
+            $this->em->persist($basketCategory);
+            $this->em->flush();
+    	}
+    	
     }
-    
     
 }
 
