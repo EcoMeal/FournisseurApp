@@ -44,6 +44,8 @@ class BasketContext extends WebTestCase implements Context
 		$this->commonContext = $environment->getContext("CommonContext");
 	}
 	
+	// GIVEN
+	
 	/**
 	 * @Given il n’y a aucun panier dans l'application
 	 */
@@ -57,12 +59,50 @@ class BasketContext extends WebTestCase implements Context
 	}
 	
 	/**
-	 * @When je crée un panier :basket_name dans l'application
+	 * @Given il existe un panier :basket_name
 	 */
-	public function jeCreeUnPanierDansLapplication($basket_name)
+	public function ilExisteUnPanier($basket_name)
 	{
 		$this->entityCreationContext->createBasketFromScratch($basket_name);
 	}
+	
+	/**
+	 * @Given il existe une commande en cours avec le panier :basket_name
+	 */
+	public function ilExisteUneCommandeEnCoursAvecLePanier($basket_name)
+	{
+		$crawler = $this->client->request('GET', '/basket');
+    	$filter = "[onclick*=\"deleteBasket('". $basket_name ."',\"]";
+    	$basketId = $this->utilContext->getItemCardId($crawler, $filter);
+    	$this->entityCreationContext->createOrder(array($basketId), 12345);
+	}
+	
+	// WHEN
+
+	/**
+	 * @When j'ajoute le panier :basket_name
+	 */
+	public function jajouteLePanier($basket_name)
+	{
+		$crawler = $this->entityCreationContext->createBasketFromScratch($basket_name);
+ 		$this->commonContext->updateViewMessage($crawler);
+	}
+	
+	/**
+	 * @When je supprime le panier :basket_name
+	 */
+	public function jeSupprimeLePanier($basket_name)
+	{
+		$crawler = $this->client->request('GET', '/basket');
+    	// Filter to find the correct onclick attribute for the basket.
+    	$filter = "[onclick*=\"deleteBasket('". $basket_name ."',\"]";
+    	$basketId = $this->utilContext->getItemCardId($crawler, $filter);
+    	// With the basket ID we can now delete it.
+    	$this->client->request('DELETE', '/basket/'.$basketId);
+    	$this->commonContext->updateJsonMessage(json_decode($this->client->getResponse()->getContent(), true));
+	}
+	
+	// THEN
 	
 	/**
 	 * @Then le panier :basket_name est affiché
@@ -70,27 +110,18 @@ class BasketContext extends WebTestCase implements Context
 	public function lePanierEstAffiche($basket_name)
 	{
 		$crawler = $this->client->request('GET', '/basket');
-	
 		$basket_count = $this->utilContext->getItemCardCount($crawler, $basket_name);
-	
 		$this->assertEquals(1, $basket_count, "Basket '". $basket_name ."' count is incorrect");
 	}
 	
 	/**
-	 * @Given j’ai un panier :basket_name disponible
+	 * @Then il n'y a plus de panier :basket_name
 	 */
-	public function jaiUnPanierDisponible($basket_name)
+	public function ilNyAPlusDePanier($basket_name)
 	{
-		$this->entityCreationContext->createBasketFromScratch($basket_name);
-	}
-	
-	/**
-	 * @When j’ajoute un nouveau panier :basket_name
-	 */
-	public function jajouteUnNouveauPanier($basket_name)
-	{
-		$crawler = $this->entityCreationContext->createBasketFromScratch($basket_name);
-		$this->commonContext->updateViewMessage($crawler);
+		$crawler = $this->client->request('GET', '/basket');
+		$basket_count = $this->utilContext->getItemCardCount($crawler, $basket_name);
+		$this->assertEquals(0, $basket_count, "Basket '". $basket_name ."' count is incorrect");
 	}
 	
 	/**

@@ -17,6 +17,14 @@ class BasketService {
     }
 
     public function deleteBasket($id) {
+    	
+    	//First, we check if there is a basketOrder using the basket
+        $orders = $this->em->getRepository("AppBundle:BasketOrder")->getAllOrdersWithBasketId($id);
+        
+		if(!is_null($orders) && !empty($orders)) {
+			return "Ce panier a été commandé. Veuillez attendre la fin de la commande avant de le supprimer";
+		}
+        
         $basket = $this->em->getRepository("AppBundle:Basket")->findOneById($id);
         $this->em->remove($basket);
         $this->em->flush();

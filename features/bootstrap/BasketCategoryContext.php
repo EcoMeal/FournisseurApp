@@ -117,16 +117,6 @@ class BasketCategoryContext extends WebTestCase implements Context
 	}
 	
 	/**
-	 * @Then la catégorie de panier :basket_category_name n'est pas crée parce qu'elle existe déjà
-	 */
-	public function laCategorieDePanierNestPasCreeParceQuelleExisteDeja($basket_category_name)
-	{
-		$crawler = $this->client->request('GET', '/basket_category');
-		$basket_category_count = $this->utilContext->getItemCardCount($crawler, $basket_category_name);
-		$this->assertEquals(1, $basket_category_count, "Basket category '". $basket_category_name ."' count is incorrect");
-	}
-	
-	/**
 	 * @Then il n'y a plus de catégorie de panier :basket_category_name
 	 */
 	public function ilNyAPlusDeCategorieDePanier($basket_category_name) {

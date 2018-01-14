@@ -53,5 +53,14 @@ class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
         $qb->setParameter(':id', $id);
         return $qb->getQuery()->getArrayResult();
     }
+    
+    public function getAllOrdersWithBasketId($basket_id) {
+    	$qb = $this->createQueryBuilder('o')
+    	->leftJoin('o.orderContent ', "basket")
+    	->addSelect('basket')
+    	->where('basket.id = :basket_id');
+    	$qb->setParameter(":basket_id", $basket_id);
+    	return $qb->getQuery()->getArrayResult();
+    }
 
 }
