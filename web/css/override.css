@@ -242,3 +242,10 @@ font-size: 20px;
 	padding: 0px;
 	min-width: 40px;
 }
+
+.input-card-label,.input-card-label:hover, .input-card-label:focus, .input-card-label:active{
+	border:none;
+	text-align:center;
+	background:#555;
+	outline: none;
+}
