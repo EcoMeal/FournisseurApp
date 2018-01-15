@@ -49,7 +49,7 @@ class Basket
     private $category;
     
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product", cascade={"refresh"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $product_list;
