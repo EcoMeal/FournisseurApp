@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="EcoMealBack" default="build">
+
+	<target name="build" depends="clean, phpunit" />
+	
+	<target name="clean">
+		<delete dir="${basedir}/build/coverage"/>
+		<mkdir dir="${basedir}/build/coverage" />
+	</target>
+	
+	<target name="phpunit">
+		<exec executable="${basedir}/phpunit-6.5.2.phar">
+			<arg value="--coverage-clover" />
+			<arg path="${basedir}/build/coverage/clover.xml" />
+		</exec>
+	</target>
+
+</project>
