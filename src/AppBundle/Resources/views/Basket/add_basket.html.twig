@@ -111,75 +111,6 @@
 	
 	</div>
 
-	<!--div  id="updateBasket" class="row col-md-offset-1 col-md-10 card hidden" style="display: none;">
-		<h2 class="card-title">Créer un panier</h2>
-        {{ form_start(form) }}
-
-        {{ form_errors(form) }}
-
-		<div class="form-horizontal">
-
-			<div class="form-group">
-                {{ form_label(form.name, "Nom du panier", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-				<div class="col-sm-6">
-                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-				</div>
-			</div>
-
-			<div class="form-group">
-                {{ form_label(form.price, "Prix", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-				<div class="col-sm-6">
-                    {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
-				</div>
-
-			</div>
-
-			<div class="form-group">
-                {{ form_label(form.category, "Catégorie", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-				<div class="col-sm-6">
-                    {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
-				</div>
-			</div>
-
-			<product_list>
-			<ul id="list_product" class="col-md-offset-1 col-md-6 zone-panier">
-                {% if product_list is defined %}
-					<input type="text" id="filterInput" onkeyup="filterProduct()" placeholder="chercher un produit...">
-                    {% for product in product_list %}
-
-						<div value="{{ product.id }}" class="card-container draggable draggable-product ui-widget-content ui-corner-tr">
-                            {% if product.imagePath != null %}
-								<img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}" />
-                            {% else %}
-								<img class="card-image" src="images/placeholder.png"/>
-                            {% endif %}
-							<div class="card-image-label card-small-label">
-                                {{ product.name }}
-							</div>
-						</div>
-
-                    {% endfor %}
-
-                {% endif %}
-			</ul>
-
-			<ul id="basket_product" class="col-md-offset-1 col-md-3 ui-widget-content ui-state-default zone-panier">
-				<span class="mdi mdi-basket icon-corner-basket" ></span>
-			</ul>
-
-
-			<div id="listProductForm" class="hidden">
-                {{ form_widget(form.product_list, {'attr': {'class': 'form-control'}}) }}
-			</div>
-
-			<div class="form-group">
-				<button type="submit" class="btn btn-default col-xs-offset-8">Valider</button>
-			</div>
-
-		</div>
-
-        {{ form_end(form) }}
-	</div-->
 
 	<div id="listpaniers" class="row col-xs-12">
 		<h2>Paniers :  <input type="text" id="filterInputPanier" onkeyup="filterBasket()" placeholder="chercher un panier..."> </h2>
@@ -205,7 +136,7 @@
 						<img class="card-image" src="images/placeholder.png"/>
 					{% endif %}
 					<div class="card-image-label">
-						{{ basket.name }}
+						<input id="basketname{{ basket.id }}" class="input-card-label" type="text" value="{{ basket.name }}" onkeypress="return updateBasket(event,'{{ basket.id }}')"/>
 					</div>
 
 					<div name="nameCategoryProduct" class="hidden">
@@ -301,6 +232,31 @@
                     }
                 });		
             }
+		}
+
+		function updateBasket(e,id){
+			if (e.keyCode != 13) {
+				return;
+			}
+			if(confirm("Voulez-vous vraiment changer le nom de ce panier")){
+				var name = $("#basketname"+id).val();
+				$.ajax( {
+                    url : "/basket/" + id,
+                    type : 'PUT', // Le type de la requête HTTP.
+                    data: {  name : name },
+	                contentType: "application/json; charset=utf-8",
+	                dataType:'json',  
+                }).done(function(response) {
+                	if(response.success){
+	                    $(".alert-success").append(response.success);
+	                    $(".alert-success").show();
+                	}
+                	if(response.error){
+                        $(".alert-danger").append(response.error);
+                        $(".alert-danger").show();
+					}
+                });
+			}
 		}
 
 		function filterProduct(){

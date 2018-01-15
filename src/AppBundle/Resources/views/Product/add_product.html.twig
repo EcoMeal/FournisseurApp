@@ -98,7 +98,7 @@
 						<img class="card-image" src="images/placeholder.png"/>
 					{% endif %}
 					<div class="card-image-label">
-						{{ product.name }}
+						<input id="productname{{ product.id }}" class="input-card-label" type="text" value="{{ product.name }}" onkeypress="return updateProduct(event,'{{ product.id }}')"/>
 					</div>
 					<div name="nameCategoryProduct" class="hidden">
 						{{ product.category.name }}
@@ -128,6 +128,32 @@
 	                        $(".alert-success").show();
                 		}
                 	}else{
+                        $(".alert-danger").append(response.error);
+                        $(".alert-danger").show();
+					}
+                });
+			}
+		}
+
+
+		function updateProduct(e,id){
+			if (e.keyCode != 13) {
+				return;
+			}
+			if(confirm("Voulez-vous vraiment changer le nom de ce produit")){
+				var name = $("#productname"+id).val();
+				$.ajax( {
+                    url : "/product/" + id,
+                    type : 'PUT', // Le type de la requête HTTP.
+                    data: {  name : name },
+	                contentType: "application/json; charset=utf-8",
+	                dataType:'json',  
+                }).done(function(response) {
+                	if(response.success){
+	                    $(".alert-success").append(response.success);
+	                    $(".alert-success").show();
+                	}
+                	if(response.error){
                         $(".alert-danger").append(response.error);
                         $(".alert-danger").show();
 					}
