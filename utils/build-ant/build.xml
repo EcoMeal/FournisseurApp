@@ -10,7 +10,7 @@
 	
 	<target name="phpunit">
 		<exec executable="php">
-			<arg path="${basedir}/phpunit-6.5.5.phar" />
+			<arg path="${basedir}/phpunit-6.5.2.phar" />
 			<arg value="--coverage-clover" />
 			<arg path="${basedir}/build/coverage/clover.xml" />
 		</exec>
