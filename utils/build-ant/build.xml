@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="EcoMealBack" default="build" basedir="../..">
 
-	<target name="build" depends="clean, phpunit" />
+	<target name="build" depends="clean, phpunit, behat" />
 	
 	<target name="clean">
 		<delete dir="${basedir}/build/coverage"/>
+		<delete dir="${basedir}/build/behat-coverage"/>
 		<mkdir dir="${basedir}/build/coverage" />
+		<mkdir dir="${basedir}/build/behat-coverage"/>
 	</target>
 	
 	<target name="phpunit">
@@ -14,6 +16,10 @@
 			<arg value="--coverage-clover" />
 			<arg path="${basedir}/build/coverage/clover.xml" />
 		</exec>
+	</target>
+	
+	<target name="behat">
+		<exec executable="${basedir}/vendor/bin/behat" />
 	</target>
 
 </project>

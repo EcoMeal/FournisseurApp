@@ -15,10 +15,11 @@
     },
     "require": {
         "php": ">=5.5.9",
-		"behat/behat": "^3.4",
+        "behat/behat": "^3.4",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "incenteev/composer-parameter-handler": "^2.0",
+        "leanphp/behat-code-coverage": "^3.0",
         "phpunit/phpunit": "^4.8",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^3.0.2",

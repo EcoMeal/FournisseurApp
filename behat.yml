@@ -15,3 +15,30 @@ default:
                 - EntityCreationContext
                 - UtilContext
                 - CommonContext
+    
+    extensions:
+        LeanPHP\Behat\CodeCoverage\Extension:
+            auth:       ~
+            drivers:
+                - local
+            filter:
+                whitelist:
+                    include:
+                        directories:
+                            'src':
+                                prefix: 'src'
+                blacklist:
+                    include:
+                        directories:
+                            'vendor':
+                                prefix: 'vendor'
+                            'var':
+                                prefix: 'var'
+                            'features':
+                                prefix: 'features'
+                            'app':
+                                prefix: 'app'
+            report:
+                format:   html
+                options:
+                    target: build/behat-coverage
