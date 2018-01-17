@@ -19,7 +19,8 @@ class ProductType extends AbstractType
         ->add('category', EntityType::class, array(
                 'class' => 'AppBundle:Category',
                 'choice_label' => 'name',
-                'multiple'     => false))
+                'multiple'     => false,
+                'required' => true))
         ->add('imagePath', FileType::class, array(
                 'required' => false,
         ));
