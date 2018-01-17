@@ -15,6 +15,9 @@ class CategoryContext extends WebTestCase implements Context {
 	
 	//Fonctions utiles (par exemple compter des items sur une page)
 	private $utilContext;
+        
+        // Utile pour recupérer les messages d'érreur.
+        private $commonContext;
 	
 	//Client pour les requêtes
 	private $client;
@@ -191,7 +194,7 @@ class CategoryContext extends WebTestCase implements Context {
 	public function jessaieDeSupprimerLaCategorie($category_name)
 	{
 		$crawler = $this->client->request('GET', '/category');
-		// Filter to find the correct onclick attribute for the product.
+		// Filter to find the correct onclick attribute for the category.
 		$filter = "[onclick*=\"deleteCategory('". $category_name ."',\"]";
 		 
 		$categoryID = $this->utilContext->getItemCardId($crawler, $filter);
@@ -200,5 +203,60 @@ class CategoryContext extends WebTestCase implements Context {
 		$this->client->request('DELETE', '/category/'.$categoryID);
 		$this->commonContext->updateJsonMessage(json_decode($this->client->getResponse()->getContent(), true));
 	}
+        
+        
+        /**
+         * @Given il y a une catégorie d’aliment :category_name
+         */
+        public function ilYAUneCategorieDaliment($category_name)
+        {
+            $crawler = $this->entityCreationContext->createProductCategory($category_name);
+	
+            $category_count = $this->utilContext->getItemCardCount($crawler, $category_name);
+	
+            $this->assertEquals(1, $category_count, "Category '". $category_name ."' count is incorrect");
+            
+        }
+
+        /**
+         * @When je renomme la catégorie d’aliment :product_name en :new_product_name
+         */
+        public function jeRenommeLaCategorieDalimentEn($category_name, $new_category_name)
+        {
+            
+                $crawler = $this->client->request('GET', '/category');
+		// Filter to find the correct onclick attribute for the category.
+		$filter = "[onclick*=\"deleteCategory('". $category_name ."',\"]";		 
+		$category_id = $this->utilContext->getItemCardId($crawler, $filter);
+              
+                
+		$this->client->request(
+			"PUT", //Methode
+			"/category/".$category_id, //URI
+			array(), //Parametres
+			array(), //Fichiers
+			array("Content-Type" => "application/json"), //Headers
+			$new_category_name); // Contenu*/
+                
+                $this->commonContext->updateJsonMessage(json_decode($this->client->getResponse()->getContent(), true));
+        }
+
+        /**
+         * @Then il n’y pas de catégorie d’aliment :category_name
+         */
+        public function ilNyPasDeCategorieDaliment($category_name)
+        {
+            $crawler = $this->client->request('GET', '/category');
+            $category_count = $this->utilContext->getItemCardCount($crawler, $category_name);
+            $this->assertEquals(0, $category_count, "Category '". $category_name ."' count is incorrect");
+        }
+
+        /**
+         * @Then un message d’erreur s’affiche qui dit :error_message
+         */
+        public function unMessageDerreurSafficheQuiDit($error_message)
+        {
+            $this->commonContext->lapplicationRenvoieUnMessageDerreur($error_message);
+        }
 	
 }

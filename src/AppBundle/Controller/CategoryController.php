@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Category;
 use AppBundle\Form\CategoryType;
 use AppBundle\Services\CategoryService;
@@ -85,6 +86,7 @@ class CategoryController extends Controller
     public function updateCategoryAction($id, Request $request, CategoryService $categoryService)
     {
         
+       
         $category = $categoryService->getCategory($id);
        
         // Error flag
@@ -94,25 +96,20 @@ class CategoryController extends Controller
         if($category == null){
             $error = "La catégorie à mettre à jour n'existe pas";
         } else {
-           
-            $form = $this->createForm(CategoryType::class, $category);
-            $form->handleRequest($request);
-
-            // If the form is being processed and if it is valid
-            if ($form->isSubmitted() && $form->isValid()) {	
-
+		$newName = $request->getContent();
+		
+		if(!empty($newName)) {
+                    $category->setName($newName);
                     $error = $categoryService->updateCategory($category);
-
-                    if(!$error){
-                        return $this->redirect('/category');
-                    }
             }
         }
-        // Displays the form, and the errors if there are any.
-        return $this->render("AppBundle:Category:update_category.html.twig", array(
-                "form" => $form->createView(), "error" => $error
-        ));
-
+        
+        if($error){
+            return new JsonResponse(array("error" => $error));
+        } else {
+             return new JsonResponse(array("success" => "Le nom de la catégorie à bien été mis à jour."));
+        }
+  
     }
 
 }

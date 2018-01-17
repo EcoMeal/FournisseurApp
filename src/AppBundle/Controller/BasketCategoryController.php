@@ -98,4 +98,40 @@ class BasketCategoryController extends Controller
 		
     }
     
+    
+     /**
+     * @Route("/basket_category/{id}", requirements={"id" = "\d+"})
+     * @Method({"PUT"})
+     * 
+     * Update an already existing category.
+     * 
+     */
+    public function updateCategoryAction($id, Request $request, BasketCategoryService $categoryService)
+    {
+
+        $category = $categoryService->getCategory($id);
+       
+        // Error flag
+        $error = null;
+        
+        // Wrong category id.
+        if($category == null){
+            $error = "La catégorie à mettre à jour n'existe pas";
+        } else {
+		$newName = $request->getContent();
+		
+		if(!empty($newName)) {
+                    $category->setName($newName);
+                    $error = $categoryService->updateCategory($category);
+            }
+        }
+        
+        if($error){
+            return new JsonResponse(array("error" => $error));
+        } else {
+             return new JsonResponse(array("success" => "Le nom de la catégorie à bien été mis à jour."));
+        }
+  
+    }
+    
 }
