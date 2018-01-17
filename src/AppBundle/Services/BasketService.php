@@ -24,8 +24,12 @@ class BasketService {
 		if(!is_null($orders) && !empty($orders)) {
 			return "Ce panier a été commandé. Veuillez attendre la fin de la commande avant de le supprimer";
 		}
-        
+		
         $basket = $this->em->getRepository("AppBundle:Basket")->findOneById($id);
+        
+		$basket->setProductList(array());
+		$this->em->persist($basket);
+		$this->em->flush();
         $this->em->remove($basket);
         $this->em->flush();
     }
