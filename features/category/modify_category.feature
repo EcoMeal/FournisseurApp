@@ -1,4 +1,4 @@
-Feature: Modifier le nom d’une catégorie
+Feature: Modifier le nom d’une catégorie de produit
                         En tant que gestionnaire, 
                         je souhaite modifier le nom d'une catégorie d'aliments 
                         afin de modifier le nom d'une catégorie d'aliments
