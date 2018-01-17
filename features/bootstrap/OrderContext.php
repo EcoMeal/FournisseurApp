@@ -95,8 +95,9 @@ class OrderContext extends WebTestCase implements Context {
            $this->entityCreationContext->createBasketFromScratch("Panier délicieux",
                    "testBasketCategory", $productName);
            
+           $stock_data = array($productName => 1);
            // Set the stock of the product.
-            $this->entityCreationContext->setProductStock($productName, 1);
+            $this->entityCreationContext->setProductStock($stock_data);
             
             
             // Récupérer l'id du panier

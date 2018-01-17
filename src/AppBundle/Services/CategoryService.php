@@ -110,7 +110,7 @@ class CategoryService
 
        	// If it does, returns an error
         if(!is_null($categoryWithSameName)) {
-        	return $error = "Une catégorie utilise déjà ce nom.";
+        	return "Une catégorie utilise déjà ce nom.";
         } else {
             // Save the category in database
             $this->em->persist($category);

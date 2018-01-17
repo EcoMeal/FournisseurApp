@@ -68,7 +68,7 @@ class BasketCategoryContext extends WebTestCase implements Context
 	 * @When j'ajoute la catégorie de panier :basket_category_name sans ajouter d'image
 	 */
 	public function jajouteLaCategorieDePanierSansAjouterDimage($basket_category_name) {
-		$cli = $this->entityCreationContext->createBasketCategory($basket_category_name);
+		$this->entityCreationContext->createBasketCategory($basket_category_name);
 	}
 	
  	/**
@@ -124,5 +124,37 @@ class BasketCategoryContext extends WebTestCase implements Context
 		$basket_category_count = $this->utilContext->getItemCardCount($crawler, $basket_category_name);
 		$this->assertEquals(0, $basket_category_count, "Basket category '". $basket_category_name ."' count is incorrect");
 	}
+        
+
+        /**
+         * @Given je cree une catégorie de panier :basket_category_name
+         */
+        public function jeCreeUneCategorieDePanier($basket_category_name)
+        {
+             $this->entityCreationContext->createBasketCategory($basket_category_name);
+        }
+
+        /**
+         * @When je renomme la catégorie de panier :basket_category_name en :new_basket_category_name
+         */
+        public function jeRenommeLaCategorieDePanierEn($basket_category_name, $new_basket_category_name)
+        {
+           
+            $crawler = $this->client->request('GET', '/basket_category');
+            // Filter to find the correct onclick attribute for the category.
+            $filter = "[onclick*=\"deleteCategory('". $basket_category_name ."',\"]";		 
+            $category_id = $this->utilContext->getItemCardId($crawler, $filter);
+              
+                
+            $this->client->request(
+                    "PUT", //Methode
+                    "/basket_category/".$category_id, //URI
+                    array(), //Parametres
+                    array(), //Fichiers
+                    array("Content-Type" => "application/json"), //Headers
+                    $new_basket_category_name); // Contenu*/
+                
+            $this->commonContext->updateJsonMessage(json_decode($this->client->getResponse()->getContent(), true));
+        }  
 	
 }
