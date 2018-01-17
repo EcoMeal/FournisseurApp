@@ -55,6 +55,7 @@ class StockContext extends WebTestCase implements Context {
 		$this->entityCreationContext->createProductFromScratch($produit);
 		$this->entityCreationContext->setProductStock($produit, $quantite);
 	}
+
 	
 	/**
 	 * @When je met à jour la quantité de :produit à :quantite

@@ -18,6 +18,9 @@ class StockService
  
     public function updateProductStock($productID, $newStock)
     {
+        if($newStock < 0){
+            return "Erreur le stock ne peut pas être négatif";
+        }
         // Add a more recent stock for this product.
         $stock = new Stock();
         
