@@ -23,3 +23,6 @@ php bin/console doctrine:schema:update --force
 Pour lancer le serveur :   
 - php bin/console server:start  
 
+
+git stash
+git stash apply
