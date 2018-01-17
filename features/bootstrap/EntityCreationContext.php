@@ -153,8 +153,6 @@ class EntityCreationContext extends WebTestCase implements Context
                 
                 $nb_items = count($array);
                 $i = 0;
-                echo "array = ";
-                print_r($array);
                
                 $modifQuantite = "";
                 foreach($array as $product_name => $stock){
@@ -169,7 +167,7 @@ class EntityCreationContext extends WebTestCase implements Context
                 }
                 
 		$modifQuantite = $id."=".$stock;
-		$this->client->request(
+		return $this->client->request(
 			"POST", //Methode
 			"/stock", //URI
 			array(), //Parametres
