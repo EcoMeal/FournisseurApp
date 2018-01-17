@@ -20,7 +20,6 @@ Feature: Modifier la quantité disponible d'un produit
 	Scenario: mettre à jour la quantité de plusieurs produits
 		Given la quantité de "Poulet" est "0"
                 And la quantité de "Salade" est "0"
-		When je met à jour la quantité de "Poulet" à "42"
-                And je met à jour la quantité de "Salade" à "13"
+		When je met à jour la quantité de "Poulet" à "42" et "Salade" à "13"
 		Then la quantité de "Poulet" est de "42"
                 And la quantité de "Salade" est de "13"

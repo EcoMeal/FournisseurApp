@@ -53,7 +53,9 @@ class StockContext extends WebTestCase implements Context {
 	public function laQuantiteDeEst($produit, $quantite)
 	{
 		$this->entityCreationContext->createProductFromScratch($produit);
-		$this->entityCreationContext->setProductStock($produit, $quantite);
+                
+                $data = array($produit => $quantite);
+		$this->entityCreationContext->setProductStock($data);
 	}
 
 	
@@ -62,8 +64,21 @@ class StockContext extends WebTestCase implements Context {
 	 */
 	public function jeMetAJourLaQuantiteDeA($produit, $quantite)
 	{
-		$this->entityCreationContext->setProductStock($produit, $quantite);
+                $data = array($produit => $quantite);
+		$this->entityCreationContext->setProductStock($data);
 	}
+        
+        /**
+        * @When je met à jour la quantité de :product1 à :quantity1 et :product2 à :quantity2
+        */
+        public function jeMetAJourLaQuantiteDeAEtA($product1, $quantity1, $product2, $quantity2)
+        {
+            
+            $data = array($product1 => $quantity1, $product2 => $quantity2);
+            
+            $this->entityCreationContext->setProductStock($data);
+        }
+
 	
 	/**
 	 * @Then la quantité de :produit est de :quantite
