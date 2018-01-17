@@ -110,6 +110,11 @@
 		{% endif %}
 	</div>
 	<script>
+
+		$(document).ready(function(){
+			$("#createProduct select").attr("required", "true");
+		});
+
 		function scrollCreate(){
 			$("#createProduct").show();
 			$("#createProduct").scrollTop();
