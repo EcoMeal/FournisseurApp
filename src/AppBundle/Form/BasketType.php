@@ -21,7 +21,8 @@ class BasketType extends AbstractType
             ->add('category', EntityType::class, array(
                 'class' => 'AppBundle:BasketCategory',
                 'choice_label' => 'name',
-                'multiple'     => false))
+                'multiple'     => false,
+                'required' => true))
             ->add('product_list', EntityType::class, array(
                 'class' => 'AppBundle:Product',
                 'choice_label' => 'name',
