@@ -132,10 +132,42 @@ class EntityCreationContext extends WebTestCase implements Context
         // Return the order id.
         return $data->order_id;
     }
-	
+	/*
 	public function setProductStock($product, $stock) {
 		$crawler = $this->client->request('GET', '/stock');
 		$id = $crawler->filter('[data-name="'. $product .'"]')->attr("data-id");
+		$modifQuantite = $id."=".$stock;
+		$this->client->request(
+			"POST", //Methode
+			"/stock", //URI
+			array(), //Parametres
+			array(), //Fichiers
+			array("Content-Type" => "application/json"), //Headers
+			$modifQuantite); // Contenu
+	}*/
+        
+        public function setProductStock($array) {
+		$crawler = $this->client->request('GET', '/stock');
+		
+                
+                
+                $nb_items = count($array);
+                $i = 0;
+                echo "array = ";
+                print_r($array);
+               
+                $modifQuantite = "";
+                foreach($array as $product_name => $stock){
+                    
+                    $id = $crawler->filter('[data-name="'. $product_name .'"]')->attr("data-id");
+                    
+                    $modifQuantite .= $id."=".$stock;
+                    if($i < $nb_items - 1){
+                        $modifQuantite .= "&";
+                    }
+                    $i++;
+                }
+                
 		$modifQuantite = $id."=".$stock;
 		$this->client->request(
 			"POST", //Methode
