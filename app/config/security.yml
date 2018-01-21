@@ -24,4 +24,9 @@ security:
  #       - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
  #       - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
  #       - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/basket, role: ROLE_ADMIN }
+        - { path: ^/basket$, role: ROLE_USER }
+        - { path: ^/basket_category$, role : ROLE_USER }
+        - { path: ^/product$, role : ROLE_USER }
+        - { path: ^/category$, role : ROLE_USER }
+        - { path: ^/stock$, role : ROLE_USER }
+        - { path: ^/stats$, role : ROLE_USER }
