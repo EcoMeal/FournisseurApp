@@ -28,7 +28,7 @@
   <body style="background-color: #eeeeee">
 	
 
-{% include 'topbar.html' %}
+{% include 'topbar.html.twig' %}
 
 {% for label, messages in app.flashes(['warning', 'error', "notice"]) %}
     {% for message in messages %}
