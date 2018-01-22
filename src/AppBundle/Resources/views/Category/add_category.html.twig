@@ -90,7 +90,7 @@
 						<img class="card-image" src="images/placeholder.png"/>
 					{% endif %}
 					<div class="card-image-label">
-						{{ category.name }}
+						<input id="categoryname{{ category.id }}" data-id='{{ category.id }}' class="input-card-label" type="text" value="{{ category.name }}" onkeypress="return updateCategory(event,'{{ category.id }}')"/>					
 					</div>
 
 				</div>
@@ -122,6 +122,53 @@
                 });
 		}
 	}
+
+$("input[id^='category'").blur(function(){
+            if(confirm("Voulez-vous vraiment changer le nom de cette category")){
+                var name = $(this).val();
+                var id = $(this).data('id');
+                $.ajax( {
+                    url : "/category/" + id,
+                    type : 'PUT', // Le type de la requête HTTP.
+                    data: name,
+                    contentType: "application/json; charset=utf-8",
+                    dataType:'json',  
+                }).done(function(response) {
+                    if(response.success){
+                        $(".alert-success").append(response.success);
+                        $(".alert-success").show();
+                    }
+                    if(response.error){
+                        $(".alert-danger").append(response.error);
+                        $(".alert-danger").show();
+                    }
+                });
+            }        });
+
+        function updateCategory(e,id){
+            if (e.keyCode != 13) {
+                return;
+            }
+            if(confirm("Voulez-vous vraiment changer le nom de cette category")){
+                var name = $("#category"+id).val();
+                $.ajax( {
+                    url : "/category/" + id,
+                    type : 'PUT', // Le type de la requête HTTP.
+                    data: name,
+                    contentType: "application/json; charset=utf-8",
+                    dataType:'json',  
+                }).done(function(response) {
+                    if(response.success){
+                        $(".alert-success").append(response.success);
+                        $(".alert-success").show();
+                    }
+                    if(response.error){
+                        $(".alert-danger").append(response.error);
+                        $(".alert-danger").show();
+                    }
+                });
+            }
+        }
 
     function filterCategories(){
         var filter = $("#filterInput").val();
