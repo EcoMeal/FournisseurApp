@@ -1,3 +1,4 @@
 twig:
     paths:
         '%kernel.project_dir%/app/Resources/FOSUserBundle/views/Security': fos_security
+        '%kernel.project_dir%/app/Resources/FOSUserBundle/views/Registration': fos_registering

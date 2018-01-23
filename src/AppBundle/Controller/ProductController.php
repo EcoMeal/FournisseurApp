@@ -2,11 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use AppBundle\Entity\Product;
 use AppBundle\Form\ProductType;
@@ -50,24 +49,24 @@ class ProductController extends Controller
     public function saveProductAction(Request $request, ProductService $productService)
     {
 		
-	$product = new Product();
-	$form = $this->createForm(ProductType::class, $product);
-	$form->handleRequest($request);
+		$product = new Product();
+		$form = $this->createForm(ProductType::class, $product);
+		$form->handleRequest($request);
+	
+		//Error
+		$error = null;
 
-	//Error
-	$error = null;
-
-	//En cas de formulaire valide
-        if ($form->isValid()) {
-            $error = $productService->saveProduct($product);
-	}
+		//En cas de formulaire valide
+	    if ($form->isValid()) {
+	    	$error = $productService->saveProduct($product);
+		}
         $product_list =  $productService->getAllProductOrderedByName();               
 			
-	return $this->render('AppBundle:Product:add_product.html.twig',
+		return $this->render('AppBundle:Product:add_product.html.twig',
                 array("form" => $form->createView(), "product_list" => $product_list,
                     "error" => $error,
                 	"success" => ""
-	));
+		));
 		
     }
 

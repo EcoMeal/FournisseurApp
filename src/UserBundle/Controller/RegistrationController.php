@@ -10,6 +10,9 @@ use FOS\UserBundle\Event\FilterUserResponseEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+use UserBundle\Entity\Company;
+use UserBundle\Form\CompanyType;
+
 class RegistrationController extends BaseController
 {
 	
@@ -25,6 +28,9 @@ class RegistrationController extends BaseController
         $user = $userManager->createUser();
         $user->setEnabled(true);
 
+        $company = new Company();
+        $companyForm = $this->createForm(CompanyType::class, $company);
+        
         $event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_INITIALIZE, $event);
 
@@ -32,20 +38,26 @@ class RegistrationController extends BaseController
             return $event->getResponse();
         }
 
-        $form = $formFactory->createForm();
-        $form->setData($user);
+        /*$form = $formFactory->createForm();
+        $form->setData($user);*/
 
-        $form->handleRequest($request);
+        //$form->handleRequest($request);
+        $companyForm->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $event = new FormEvent($form, $request);
+        if ($companyForm->isSubmitted()) {
+            if ($companyForm->isValid()) {
+                $event = new FormEvent($companyForm, $request);
                 $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
 
+                $user = $company->getUser();
+                $user->setEnabled(true);
                 $user->addRole("ROLE_FOURNISSEUR");
-                
                 $userManager->updateUser($user);
-
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($company);
+                $em->flush();
+                
                 if (null === $response = $event->getResponse()) {
                     $url = $this->generateUrl('fos_user_registration_confirmed');
                     $response = new RedirectResponse($url);
@@ -63,9 +75,9 @@ class RegistrationController extends BaseController
                 return $response;
             }
         }
-		        
+                
 		return $this->render('@FOSUser/Registration/register.html.twig', array(
-            'form' => $form->createView(),
+            'companyForm' => $companyForm->createView()
         ));
 		
     }

@@ -11,7 +11,7 @@
 	                <span class="icon-bar"></span>
 	            </button>
 	            <a class="navbar-brand" style="padding:2px" href="/">
-	                <img alt="Brand" src="images/camion.png" height="46px">
+	                <img alt="Brand" src="/images/camion.png" height="46px">
 	            </a>
 	
 	
@@ -54,6 +54,11 @@
 	                <li class="dropdown">
 	                    <a href="/orders" >Commande</a>
 	                </li>
+	                {% if is_granted("ROLE_ADMIN") %}
+		                <li class="dropdown">
+		                    <a href="/register" >Compte fournisseur</a>
+		                </li>
+	                {% endif %}
 	                {% if is_granted("ROLE_USER") %}
 		                <li class="dropdown">
 		                    <a href="/logout" >Déconnexion</a>
