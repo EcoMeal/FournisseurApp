@@ -63,6 +63,15 @@ services:
             $entityManager: '@doctrine.orm.entity_manager'
             $serviceContainer: '@service_container' 
             
+    UserBundle\Controller\:
+        resource: '../../src/UserBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+          
+    UserBundle\Services\CompanyService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            
 #    AppBundle\Services\DeliveryService:
 #         arguments:
 #            $entityManager: "@doctrine.orm.entity_manager"
