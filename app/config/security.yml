@@ -42,3 +42,4 @@ security:
         - { path: ^/stock$, role : ROLE_ADMIN }
         - { path: ^/stats$, role : ROLE_ADMIN }
         - { path: ^/orders$, role : ROLE_ADMIN }
+        - { path: ^/company$, role : ROLE_ADMIN }

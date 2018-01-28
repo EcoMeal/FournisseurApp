@@ -28,4 +28,19 @@ class CompanyController extends Controller
 		return $this->json($response);
 	}
 	
+	/**
+	 * @Route("/company")
+	 * @Method({"GET"})
+	 * 
+	 * Lists all the company accounts in the database.
+	 * 
+	 */
+	public function listCompanies() {
+		$em = $this->getDoctrine()->getManager();
+		$companies = $em->getRepository("UserBundle:Company")->findAll();
+		return $this->render('UserBundle:Company:list_companies.html.twig', array(
+				'companies' => $companies
+		));
+	}
+	
 }

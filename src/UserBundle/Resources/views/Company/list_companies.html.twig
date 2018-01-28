@@ -1,0 +1,23 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block title %}Ajout de catégories de paniers{% endblock %}
+
+{% block body %}
+
+	 {% if companies is defined %}
+
+     	{% for company in companies %}
+     	
+     		<p>Company {{ company.id }}</p>
+	
+		{% endfor %}
+
+    {% endif %}
+
+{% endblock %}
