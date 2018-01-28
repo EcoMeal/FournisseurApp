@@ -21,14 +21,28 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
 	public function __construct(HttpUtils $httpUtils)
 	{
 		$this->httpUtils = $httpUtils;
+		$this->exceptions = array(
+				array("url" => "login_customer", "method" => "POST"),
+				array("url" => "register_customer", "method" => "POST")
+		);
+	}
+	
+	public function noAuthRequired(Request $request) {
+		$method = $request->getMethod();
+		for($i = 0; $i < count($this->exceptions); $i++){
+            $exception = $this->exceptions[$i];
+            if($exception['method'] === $method && $this->httpUtils->checkRequestPath($request, '/api/'.$exception['url'])) {
+            	return true;
+            }
+        }
+        return false;
 	}
 	
 	public function createToken(Request $request, $providerKey)
 	{
 	
-		$targetUrl = '/api/login_customer';
-		// Si la requête est une création de token, aucune vérification n'est effectuée
-		if ($request->getMethod() === "POST" && $this->httpUtils->checkRequestPath($request, $targetUrl)) {
+		// Si la requête est une création de token ou une création de compte, aucune vérification n'est effectuée
+		if (self::noAuthRequired($request)) {
 			return;
 		}
 		
@@ -58,6 +72,7 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
 		}
 		
 		$tokenValue = $token->getCredentials();
+		
 		$authToken = $userProvider->getAuthToken($tokenValue);
 		
 		if(!$authToken || !$this->isTokenValid($authToken)) {
