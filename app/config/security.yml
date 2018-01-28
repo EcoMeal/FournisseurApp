@@ -9,8 +9,19 @@ security:
     providers:
         fos_userbundle:
             id: fos_user.user_provider.username
+        auth_token_user_provider:
+            id: auth_token_user_provider
 
     firewalls:
+    
+        secured-api:
+            pattern: ^/api/
+            stateless: true
+            simple_preauth:
+                authenticator: auth_token_authenticator
+            provider: auth_token_user_provider
+            anonymous: ~
+            
         main:
             pattern: ^/
             form_login:
