@@ -58,7 +58,7 @@ class AuthController extends Controller
 		$em->persist($authToken);
 		$em->flush();
 		
-		return new JsonResponse(array('X-Auth_Token' => $authToken->getToken()), 200);
+		return new JsonResponse(array('X-Auth_Token' => $authToken->getToken(), "mail" => $user->getEmail()), 200);
 		
 	}
 	
