@@ -41,10 +41,9 @@ class DeliveryPromiseController extends Controller
         
          //rint_r($form);
          
-        return $this->render('AppBundle:DeliveryPromise:add_delivery_promise.html.twig', array(
-            array("form" => $form->createView(),
-                )
-        ));
+        return $this->render('AppBundle:DeliveryPromise:add_delivery_promise.html.twig', 
+        		array("form" => $form->createView())
+        );
     }
 
 }
