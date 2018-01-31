@@ -3,6 +3,7 @@
 {% block css %}
 
     {{ parent() }}
+    <link rel="stylesheet" href="/css/company/company.css">
 
 {% endblock %}
 
@@ -10,14 +11,43 @@
 
 {% block body %}
 
-	 {% if companies is defined %}
+	<h1>Liste des fournisseurs</h1>
 
-     	{% for company in companies %}
-     	
-     		<p>Company {{ company.id }}</p>
-	
-		{% endfor %}
-
-    {% endif %}
+	<table>
+		<thead>
+			<tr>
+				<th>Nom du fournisseur</th>
+				<th>Siret</th>
+				<th>Adresse</th>
+				<th>Téléphone</th>
+				<th>Nom du contact</th>
+				<th>Mail du contact</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% if companies is defined %}
+				{% for company in companies %}
+					<tr>
+						<td>{{ company.companyname }}</td>
+		     			<td>{{ company.siret }}</td>
+		     			<td>{{ company.address }}</td>
+		     			<td>{{ company.phone }}</td>
+		     			<td>{{ company.user.username }}</td>
+		     			<td>{{ company.user.email }}</td>
+		     			<td><a onclick="javascript:deleteCompany({{company.id}});">x</a></td>
+					<tr>
+				{% endfor %}
+		    {% endif %}
+		</tbody>
+    </table>
+    
+    <script type="text/javascript">
+    
+    	function deleteCompany(id) {
+    		confirm("are you sure you want to delete company " + id + " ?");
+    	}
+    
+    </script>
 
 {% endblock %}
