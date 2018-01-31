@@ -44,9 +44,7 @@ class RegistrationController extends BaseController
 
         if ($companyForm->isSubmitted()) {
             if ($companyForm->isValid()) {
-                $event = new FormEvent($companyForm, $request);
-                $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
-
+                
                 $user = $company->getUser();
                 $user->setEnabled(true);
                 $user->addRole("ROLE_FOURNISSEUR");
@@ -56,16 +54,22 @@ class RegistrationController extends BaseController
                 $em->persist($company);
                 $em->flush();
                 
+                $company = new Company();
+                $companyForm = $this->createForm(CompanyType::class, $company);
+                $message = "Fournisseur créé avec succès";
+                
+                //A defaut de trouver mieux, on supprime les événements déclenchés à la création du compte
+                
+                /*$event = new FormEvent($companyForm, $request);
+                $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+                
                 if (null === $response = $event->getResponse()) {
                     $url = $this->generateUrl('fos_user_registration_confirmed');
                     $response = new RedirectResponse($url);
                 }
 
                 $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
-                
-                $company = new Company();
-                $companyForm = $this->createForm(CompanyType::class, $company);
-                $message = "Fournisseur créé avec succès";
+                */
 				
             } else {
             	
