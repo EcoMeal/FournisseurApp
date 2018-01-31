@@ -21,11 +21,8 @@ class RegistrationController extends BaseController
 	
 	public function registerAction(Request $request) {
 		
-		/** @var $formFactory FactoryInterface */
         $formFactory = $this->get('fos_user.registration.form.factory');
-        /** @var $userManager UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
-        /** @var $dispatcher EventDispatcherInterface */
         $dispatcher = $this->get('event_dispatcher');
 
         $user = $userManager->createUser();
@@ -40,12 +37,10 @@ class RegistrationController extends BaseController
         if (null !== $event->getResponse()) {
             return $event->getResponse();
         }
-
-        /*$form = $formFactory->createForm();
-        $form->setData($user);*/
-
-        //$form->handleRequest($request);
+        
         $companyForm->handleRequest($request);
+        
+        $message = "";
 
         if ($companyForm->isSubmitted()) {
             if ($companyForm->isValid()) {
@@ -67,20 +62,27 @@ class RegistrationController extends BaseController
                 }
 
                 $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
-
-                return $response;
+                
+                $company = new Company();
+                $companyForm = $this->createForm(CompanyType::class, $company);
+                $message = "Fournisseur créé avec succès";
+				
+            } else {
+            	
+	            $event = new FormEvent($form, $request);
+	            $dispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
+	
+	            if (null !== $response = $event->getResponse()) {
+	                return $response;
+	            }
+	            
             }
 
-            $event = new FormEvent($form, $request);
-            $dispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
-
-            if (null !== $response = $event->getResponse()) {
-                return $response;
-            }
         }
                 
 		return $this->render('@FOSUser/Registration/register.html.twig', array(
-            'companyForm' => $companyForm->createView()
+            'companyForm' => $companyForm->createView(),
+			'message' => $message
         ));
 		
     }
