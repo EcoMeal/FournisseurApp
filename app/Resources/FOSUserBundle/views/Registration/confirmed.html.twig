@@ -1,0 +1,12 @@
+{% extends "index.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block body %}
+
+	{% block fos_user_content %}
+	    <p>Le compte fournisseur {{user.username}} a été créé avec succès !</p>
+	    <p><input type="button" value="Retour" onclick="document.location.href='/register'"/></p>
+	{% endblock fos_user_content %}
+
+{% endblock %}

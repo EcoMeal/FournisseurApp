@@ -9,26 +9,26 @@
 	{% block css %}
 	
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/jquery-ui.min.css">
-    <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
-    <link rel="stylesheet" href="css/override.css">
-    <link href="css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" href="/css/override.css">
+    <link href="/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="/css/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
 
 	{% endblock %}
-    <script src="js/jquery.min.js"></script> 
-    <script src="js/jquery-ui.min.js"></script> 
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/Chart.bundle.min.js"></script>
-    <script src="js/Chart.min.js"></script>
+    <script src="/js/jquery.min.js"></script> 
+    <script src="/js/jquery-ui.min.js"></script> 
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/Chart.bundle.min.js"></script>
+    <script src="/js/Chart.min.js"></script>
 
   </head>	
   <body style="background-color: #eeeeee">
 	
 
-{% include 'topbar.html' %}
+{% include 'topbar.html.twig' %}
 
 {% for label, messages in app.flashes(['warning', 'error', "notice"]) %}
     {% for message in messages %}
@@ -38,7 +38,7 @@
     {% endfor %}
 {% endfor %}
   
-<div class="container-fluid" style="margin-top:40px">
+<div class="container-fluid" style="margin-top:51px">
     <div class="content-container col-lg-12 col-md-12 col-xs-12">
  	{% block body %}{% endblock %} 
     </div>   
