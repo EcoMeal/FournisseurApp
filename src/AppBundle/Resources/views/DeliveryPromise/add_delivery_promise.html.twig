@@ -1,0 +1,16 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block title %} Create a delivery {% endblock %}
+
+
+{% block body %}
+
+    {{ form(form) }}
+    
+{% endblock %}
