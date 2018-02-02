@@ -12,9 +12,17 @@
 {% block body %}
 <h1>Welcome to the DeliveryPromise:getAllDeliveryPromise page</h1>
 
+    {% if error is not empty %}
+		<div class="alert alert-danger alert-dismissable fade in">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<p>{{error}}</p>
+		</div>
+    {% endif %}
+ 
     {% if delivery_list is defined %}
+        
         {% for deliveryPromise in delivery_list %}
-
+            
             <div id="product{{ deliveryPromise.id }}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2">
 
                 {% for stockPromise in deliveryPromise.deliveryContent %}
