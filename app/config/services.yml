@@ -63,6 +63,11 @@ services:
             $entityManager: '@doctrine.orm.entity_manager'
             $serviceContainer: '@service_container' 
             
+    AppBundle\Services\DeliveryPromiseService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container' 
+            
     UserBundle\Controller\:
         resource: '../../src/UserBundle/Controller'
         public: true
@@ -71,6 +76,7 @@ services:
     UserBundle\Services\CompanyService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
+          
             
 #    AppBundle\Services\DeliveryService:
 #         arguments:
