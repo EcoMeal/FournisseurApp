@@ -6,44 +6,77 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-use AppBundle\Entity\DeliveryPromise;
-use AppBundle\Form\DeliveryPromiseType;
 use AppBundle\Services\DeliveryPromiseService;
+use AppBundle\Services\ProductService;
+use AppBundle\Services\StockService;
 
 class DeliveryPromiseController extends Controller
 {
+
+    
     /**
-     * @Route("delivery/list")
+     * @Route("confirm-delivery")
      */
-    public function getAllDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService)
+    public function getAllDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService,
+            StockService $stockService, Request $request)
     {
+        $error = NULL;
+        	
+	$rawData = $request->getContent();		
         
-       // $deliveryList = array();//$deliveryPromiseService->getAllDeliveryPromiseOrderedByDate();    
+	if(!empty($rawData)) {
+                
+            $deliveryPromise = json_decode($rawData);
+       
+            if($deliveryPromise != null){    
+                $error = $deliveryPromiseService->updateDeliveryPromise($stockService, $deliveryPromise);         
+            } else {
+                $error = "Erreur sur le format JSON.";
+            }         
+        }
         
+        $delivery_promise_list = $deliveryPromiseService->getAllDeliveryPromiseOrderedByDate();
+                
         return $this->render('AppBundle:DeliveryPromise:get_all_delivery_promise.html.twig', array(
-           
+           "delivery_list" => $delivery_promise_list,
+           "error" => $error,
         ));
     }
     
-    
-     /**
+   
+    /**
      * @Route("delivery")
      */
-    public function addDeliveryPromiseAction(Request $request)
+    public function addDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService,
+            ProductService $productService, Request $request)
     {
-        $delivery = new DeliveryPromise();
-    	$form = $this->createForm(DeliveryPromiseType::class, $delivery);
-    	$form->handleRequest($request);
+
+	$error = NULL;
+	
+        // The delivery promise format (product_id=quantityPromise&product_id2=quantityPromise2).	
+	$rawData = $request->getContent();
+		
+	if(!empty($rawData)) {
+                
+                // Multiples promises.
+		if(strstr($rawData, "&")) {
+			$deliveryPromiseItemList = explode("&", $rawData);
+		} 
+                // Only one promise.
+                else {
+			$deliveryPromiseItemList = array($rawData);
+		}
+
+                $error = $deliveryPromiseService->createDeliveryPromise($deliveryPromiseItemList);
+        }
         
-         if ($form->isValid()) {
-             // save the delivery promise.
-         }
+        $product_list = $productService->getAllProductOrderedByName();
         
-         //rint_r($form);
+        return $this->render('AppBundle:DeliveryPromise:add_delivery_promise.html.twig', array(
+           "product_list" => $product_list,
+            "error" => $error,
+        ));
          
-        return $this->render('AppBundle:DeliveryPromise:add_delivery_promise.html.twig', 
-        		array("form" => $form->createView())
-        );
     }
 
 }
