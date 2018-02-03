@@ -31,63 +31,81 @@ class RegistrationController extends BaseController
         $company = new Company();
         $companyForm = $this->createForm(CompanyType::class, $company);
         
-        $event = new GetResponseUserEvent($user, $request);
+        /*$event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_INITIALIZE, $event);
 
         if (null !== $event->getResponse()) {
             return $event->getResponse();
-        }
+        }*/
         
         $companyForm->handleRequest($request);
         
-        $message = "";
-
+ 		$success = NULL;
+ 		$error = NULL;
+        
         if ($companyForm->isSubmitted()) {
             if ($companyForm->isValid()) {
-                
-                $user = $company->getUser();
-                $user->setEnabled(true);
-                $user->addRole("ROLE_FOURNISSEUR");
-                $userManager->updateUser($user);
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($company);
-                $em->flush();
-                
-                $company = new Company();
-                $companyForm = $this->createForm(CompanyType::class, $company);
-                $message = "Fournisseur créé avec succès";
-                
-                //A defaut de trouver mieux, on supprime les événements déclenchés à la création du compte
-                
-                /*$event = new FormEvent($companyForm, $request);
-                $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
-                
-                if (null === $response = $event->getResponse()) {
-                    $url = $this->generateUrl('fos_user_registration_confirmed');
-                    $response = new RedirectResponse($url);
-                }
-
-                $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
-                */
-				
-            } else {
             	
-	            $event = new FormEvent($form, $request);
-	            $dispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
-	
-	            if (null !== $response = $event->getResponse()) {
-	                return $response;
-	            }
-	            
+            	
+            	$companyValid = true;
+            	
+            	//Vérifier que les données "uniques" ne sont pas déjà utilisées (username, mail, siret, companyname)
+            	$em = $this->getDoctrine()->getManager();
+            	$companies = $em->getRepository("UserBundle:Company")->findAll();
+            	$currentCompany;
+		        for($i = 0; $i < count($companies); $i++){
+		        	$currentCompany = $companies[$i];
+		        	if($currentCompany->getCompanyname() == $company->getCompanyname()) {
+		        		$error = "Nom de compagnie déjà utilisé";
+		        		$companyValid = false;
+		        		break;
+		        	} else if($currentCompany->getSiret() == $company->getSiret()) {
+		        		$error = "Siret déjà utilisé";
+		        		$companyValid = false;
+		        		break;
+		        	} else if($currentCompany->getUser()->getUsername() == $company->getUser()->getUsername()) {
+		        		$error = "Nom d'utilisateur déjà utilisé";
+		        		$companyValid = false;
+		        		break;
+		        	} else if($currentCompany->getUser()->getEmail() == $company->getUser()->getEmail()) {
+		        		$error = "Email déjà utilisé";
+		        		$companyValid = false;
+		        		break;
+		        	}
+		        }
+		        
+		        if($companyValid) {
+		        	$user = $company->getUser();
+		        	$user->setEnabled(true);
+		        	$user->addRole("ROLE_FOURNISSEUR");
+		        	$userManager->updateUser($user);
+		        	
+		        	$em = $this->getDoctrine()->getManager();
+		        	$em->persist($company);
+		        	$em->flush();
+		        	
+		        	$company = new Company();
+		        	$companyForm = $this->createForm(CompanyType::class, $company);
+		        	$success = "Fournisseur créé avec succès";
+		        }
+                
+            } else {
+            	$error = "Erreur lors de l'enregistrement : certaines données sont invalides";
             }
 
         }
                 
-		return $this->render('@FOSUser/Registration/register.html.twig', array(
-            'companyForm' => $companyForm->createView(),
-			'message' => $message
-        ));
+        $params = array('companyForm' => $companyForm->createView());
+        
+        if(!is_null($success)) {
+        	$params['success'] = $success;
+        }
+        
+        if(!is_null($error)) {
+        	$params['error'] = $error;
+        }
+        
+		return $this->render('@FOSUser/Registration/register.html.twig', $params);
 		
     }
     
