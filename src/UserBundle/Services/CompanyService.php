@@ -23,13 +23,13 @@ class CompanyService {
 			$this->em->flush();
 			return array(
 					"type" => "SUCCESS",
-					"message" => "Catégorie supprimée"
+					"message" => "Fournisseur supprimé avec succès"
 			);
 		}
 		
 		return array(
 				"type" => "ERROR",
-				"message" => "La companie n'existe pas"
+				"message" => "Erreur lors de la suppression du fournisseur. Aucun fournisseur correspondant à cet identifiant"
 		);
 		
 	}

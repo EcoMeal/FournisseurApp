@@ -11,7 +11,7 @@ class CompanyController extends Controller
 {
 	
 	/**
-	 * @Route("/company/delete/{id}", requirements={"id" = "\d+"})
+	 * @Route("/company/{id}", requirements={"id" = "\d+"})
 	 * @Method({"DELETE"})
 	 * 
 	 * Deletes a company account from the database.

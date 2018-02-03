@@ -11,6 +11,14 @@
 
 {% block body %}
 
+	<div class="alert alert-danger alert-dismissable fade in" style="display: none;">
+	    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	</div>
+	
+	<div class="alert alert-success alert-dismissable fade in" style="display: none;">
+	    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	</div>
+
 	<h1>Liste des fournisseurs</h1>
 
 	<table>
@@ -27,15 +35,20 @@
 		</thead>
 		<tbody>
 			{% if companies is defined %}
+				<tr id="tr-no-company" {% if companies is not empty %}style="display:none;"{% endif %}>
+					<td colspan="7" >Aucun fournisseur existant, cliquez <a href="/register">ici</a> pour en créer un.</td>
+				</tr>
 				{% for company in companies %}
-					<tr>
+					<tr id="company-{{company.id}}">
 						<td>{{ company.companyname }}</td>
 		     			<td>{{ company.siret }}</td>
 		     			<td>{{ company.address }}</td>
 		     			<td>{{ company.phone }}</td>
 		     			<td>{{ company.user.username }}</td>
 		     			<td>{{ company.user.email }}</td>
-		     			<td><a onclick="javascript:deleteCompany({{company.id}});">x</a></td>
+		     			<td>
+		     				<span class="col-xs-4 glyphicon glyphicon-remove" style="cursor:pointer;" onclick="javascript:deleteCompany({{company.id}});"> </span>
+		     			</td>
 					<tr>
 				{% endfor %}
 		    {% endif %}
@@ -44,9 +57,33 @@
     
     <script type="text/javascript">
     
+		
     	function deleteCompany(id) {
-    		confirm("are you sure you want to delete company " + id + " ?");
-    	}
+    	
+			if(confirm("Etes vous sûr de vouloir supprimer ce fournisseur ?")) {
+			
+	    		$.ajax( {
+					url : "/company/"+id,
+					type : 'DELETE',
+					success: function(response) {
+	                	if(response.success){
+	                		$("#company-"+id).remove();
+	                		var nbCompanies = $("tr[id^='company-']").length;
+	                		if(nbCompanies === 0) {
+	                			$("#tr-no-company").show();
+	                		}
+	                    	$(".alert-success").append(response.success);
+	                    	$(".alert-success").show(); 
+	                	}
+	                	if(response.error){
+	                    	$(".alert-danger").append(response.error);
+	                    	$(".alert-danger").show();
+	                	}
+	            	}
+				});
+    	
+    		}
+		}
     
     </script>
 

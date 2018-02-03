@@ -17,14 +17,12 @@ class DeliveryPromiseController extends Controller
     /**
      * @Route("confirm-delivery")
      */
-    public function getAllDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService,
-            StockService $stockService, Request $request)
-    {
+    public function getAllDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService, StockService $stockService, Request $request) {
         $error = NULL;
         	
-	$rawData = $request->getContent();		
+		$rawData = $request->getContent();		
         
-	if(!empty($rawData)) {
+		if(!empty($rawData)) {
                 
             $deliveryPromise = json_decode($rawData);
        
@@ -47,27 +45,25 @@ class DeliveryPromiseController extends Controller
     /**
      * @Route("delivery")
      */
-    public function addDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService,
-            ProductService $productService, Request $request)
-    {
+    public function addDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService, ProductService $productService, Request $request) {
 
-	$error = NULL;
-	
-        // The delivery promise format (product_id=quantityPromise&product_id2=quantityPromise2).	
-	$rawData = $request->getContent();
+		$error = NULL;
 		
-	if(!empty($rawData)) {
-                
-                // Multiples promises.
-		if(strstr($rawData, "&")) {
-			$deliveryPromiseItemList = explode("&", $rawData);
-		} 
-                // Only one promise.
-                else {
-			$deliveryPromiseItemList = array($rawData);
-		}
+	    // The delivery promise format (product_id=quantityPromise&product_id2=quantityPromise2).	
+		$rawData = $request->getContent();
+			
+		if(!empty($rawData)) {
+	                
+	        // Multiples promises.
+			if(strstr($rawData, "&")) {
+				$deliveryPromiseItemList = explode("&", $rawData);
+			} 
+            // Only one promise.
+            else {
+				$deliveryPromiseItemList = array($rawData);
+			}
 
-                $error = $deliveryPromiseService->createDeliveryPromise($deliveryPromiseItemList);
+            $error = $deliveryPromiseService->createDeliveryPromise($deliveryPromiseItemList);
         }
         
         $product_list = $productService->getAllProductOrderedByName();
