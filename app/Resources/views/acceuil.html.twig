@@ -16,6 +16,7 @@
     <link rel="shortcut icon" href="../favicon.ico">
 
 	{% if is_granted("ROLE_ADMIN") %}
+	
     	<div class="main clearfix">
         	</br></br></br>
 
@@ -28,7 +29,8 @@
 	                    	</span>
 	                    	<span>Produit</span>
 	                	</a>
-	            	</li><li>
+	            	</li>
+	            	<li>
 	                	<a href="/category">
 	                    	<span class="icon">
 	                        	<i aria-hidden="true" class="fa fa-sitemap"></i>
@@ -68,10 +70,10 @@
 		                    <span>Commande</span>
 		                </a>
 		            </li>
-	        </ul>
-    	</nav>
-	</div>
+	        	</ul>
+    		</nav>
+		</div>
 
-{% endif %}
+	{% endif %}
 
 {% endblock %}

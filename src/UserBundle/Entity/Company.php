@@ -50,10 +50,19 @@ class Company
     private $phone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+    
+    /**
+	 * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Category")
+	 * @ORM\JoinTable(name="company_category",
+	 *      joinColumns={@ORM\JoinColumn(name="company_id", referencedColumnName="id")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="category_id", referencedColumnName="id", unique=true)}
+	 * )
+	 */
+    private $categories;
 
     /**
      * Get id
@@ -183,6 +192,15 @@ class Company
     public function getUser()
     {
     	return $this->user;
+    }
+    
+    public function setCategories($categories) {
+    	$this->categories = $categories;
+    	return $this;
+    }
+    
+    public function getCategories() {
+    	return $this->categories;
     }
 }
 
