@@ -90,29 +90,29 @@
 	<script>
 		$('#userbundle_company_siret').blur(function() {
 			let siret = $('#userbundle_company_siret').val();
-			if((siret+"").length != 0 && (siret+"").length!=14){
-				$('#userbundle_company_siret').parent().parent().addClass('has-error')
+			if((siret+"").length === 0 || (siret+"").length === 14){
+				$('#userbundle_company_siret').parent().parent().removeClass('has-error');
 			} else {
-				$('#userbundle_company_siret').parent().parent().removeClass('has-error')
+				$('#userbundle_company_siret').parent().parent().addClass('has-error');
 			}
 		});
 
 		$('#userbundle_company_phone').blur(function() {
-			let siret = $('#userbundle_company_phone').val();
-			if((siret+"").length != 0 && (siret+"").length != 10){
-				$('#userbundle_company_phone').parent().parent().addClass('has-error')
+			let phone = $('#userbundle_company_phone').val();
+			if((phone+"").length === 0 ||  (phone+"").length === 10){
+				$('#userbundle_company_phone').parent().parent().removeClass('has-error');
 			} else {
-				$('#userbundle_company_phone').parent().parent().removeClass('has-error')
+				$('#userbundle_company_phone').parent().parent().addClass('has-error');
 			}
 		});
 
 		$('#userbundle_company_user_email').blur(function() {
 			let email = $('#userbundle_company_user_email').val();
 			let pattern = /^.+\@.+\..+/i;
-			if(email.length != 0 && !pattern.test(email)){
-				$('#userbundle_company_user_email').parent().parent().addClass('has-error')
-			} else {
+			if(email.length === 0 || pattern.test(email)){
 				$('#userbundle_company_user_email').parent().parent().removeClass('has-error')
+			} else {
+				$('#userbundle_company_user_email').parent().parent().addClass('has-error')
 			}
 		});
 	</script>
