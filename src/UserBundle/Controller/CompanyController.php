@@ -58,12 +58,9 @@ class CompanyController extends Controller
 		$companies = $em->getRepository("UserBundle:Company")->findAll();
 		$categories = $em->getRepository("AppBundle:Category")->findAll();
 		
-		$user = $this->container->get('security.token_storage')->getToken()->getUser();
-		
 		return $this->render("UserBundle:Company:add_company_categories.html.twig", array(
 				'companies' => $companies,
-				'categories' => $categories,
-				'user' => $user
+				'categories' => $categories
 		));
 		
 	}
@@ -92,8 +89,7 @@ class CompanyController extends Controller
 	 * @Method({"POST"})
 	 */
 	public function setCompanyCategoriesAction($id, Request $request) {
-			
-		var_dump("content = ".$request->getContent());
+		
 		$selectedCategories = json_decode($request->getContent());
 		$em = $this->getDoctrine()->getManager();
 		$allCategories = $em->getRepository("AppBundle:Category")->findAll();
