@@ -58,9 +58,12 @@ class CompanyController extends Controller
 		$companies = $em->getRepository("UserBundle:Company")->findAll();
 		$categories = $em->getRepository("AppBundle:Category")->findAll();
 		
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		
 		return $this->render("UserBundle:Company:add_company_categories.html.twig", array(
 				'companies' => $companies,
-				'categories' => $categories
+				'categories' => $categories,
+				'user' => $user
 		));
 		
 	}
@@ -80,7 +83,7 @@ class CompanyController extends Controller
         	}
         	return $this->json($arrayJson);
 		} else {
-			//TODO message d'erreur id invalide
+			return $this->json(null, 400);
 		}
 	}
 	
