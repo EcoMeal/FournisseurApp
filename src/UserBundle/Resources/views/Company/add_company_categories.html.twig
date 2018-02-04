@@ -1,0 +1,112 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block title %}Ajout de catégories au fournisseur{% endblock %}
+
+{% block body %}
+
+	<h1>Ajout de catégories</h1>
+	
+	<div>
+	
+		<label for="company">Fournisseur :</label>
+		<select id="company">
+			<option></option>
+			{% if companies is defined %}
+				{% for company in companies %}
+					<option value="{{company.id}}">{{company.companyname}}</option>
+				{% endfor %}
+			{% endif %}
+		</select>
+		
+		<br />
+		
+		<h3>Catégories associées :</h3>
+		
+		<br />
+		
+		{% if categories is defined %}
+			{% for category in categories %}
+				<input type="checkbox" id="category-{{category.id}}">
+				<label for="category-{{category.id}}">{{category.name}}</label>
+				<br />
+			{% endfor %}		
+		{% endif %}
+		
+		<input type="button" id="valid-button" value="Valider" />
+	
+	</div>
+	
+	<script type="text/javascript">
+	
+		$(document).ready(function() {
+			$("#company").on("change", selectCompany);
+			$("#valid-button").on("click", updateCompanyCategories);
+		});
+	
+		function updateCompanyCategories() {
+			var $companySelect = $("#company");
+			var optionSelect = $companySelect.children("option:selected");
+			var idCompany = optionSelect.val();
+			var selectedCategories = getSelectedCategories();
+			$.ajax({
+				url : "/company/"+idCompany+"/categories",
+				method : "POST",
+				data : JSON.stringify(selectedCategories),
+				contentType : "application/json; charset=utf-8",
+				dataType : 'json',  
+				success : function() {alert("Mise à jour effectuée");}
+			});
+		}
+		
+		function selectCompany() {
+			var $companySelect = $("#company");
+			var optionSelect = $companySelect.children("option:selected");
+			var idCompany = optionSelect.val();
+			
+			if(idCompany === "") {
+				clearAllCheckboxes();
+				return;
+			}
+			
+			$.ajax({
+				url : "/company/"+idCompany+"/categories",
+				method : "GET", 
+				success : setSelectedCategories
+			});
+		}
+		
+		function getSelectedCategories() {
+			var categories = new Array();
+			var checkboxes = $("input[type='checkbox']:checked");
+			$.each(checkboxes, function() {
+				var id = $(this).attr("id").substring(9, $(this).attr("id").length);
+				categories.push(id);
+			});
+			return categories;
+		}
+		
+		function setSelectedCategories(categories) {
+			clearAllCheckboxes();
+			var id;
+			for(var i in categories) {
+				id = categories[i];
+				$("#category-"+id).attr("checked", true);
+			}
+		}
+		
+		function clearAllCheckboxes() {
+			var allCheckboxes = $("input:checkbox");
+			$.each(allCheckboxes, function() {
+				$(this).attr("checked", false);
+			});
+		}
+	
+	</script>
+
+{% endblock %}
