@@ -74,8 +74,12 @@ class DeliveryPromiseService
         return false;
     }
     
+    public function getDeliveryPromiseFor($company)
+    {
+    	return $this->em->getRepository("AppBundle:DeliveryPromise")->findOneBy(array("company" => $company));
+    }
     
-    public function createDeliveryPromise($itemUpdateList)
+    public function createDeliveryPromise($company, $itemUpdateList)
     {
         $deliveryPromise = new DeliveryPromise();       
         $deliveryContent = array();
@@ -107,6 +111,15 @@ class DeliveryPromiseService
         $dateTime = new DateTime();
         $dateTime->setTimestamp(time());
         $deliveryPromise->setDeliveryDate($dateTime);
+        $deliveryPromise->setCompany($company);
+        
+        //If there is any old promise for that company, we remove it
+        $oldDeliveryPromise = $this->getDeliveryPromiseFor($company);
+        if(!is_null($oldDeliveryPromise)) {
+        	$this->em->remove($oldDeliveryPromise);
+        	$this->em->flush();
+        }
+        
         
         $this->em->persist($deliveryPromise);
         $this->em->flush();     

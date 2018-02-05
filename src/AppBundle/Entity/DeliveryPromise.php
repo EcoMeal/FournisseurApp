@@ -34,6 +34,12 @@ class DeliveryPromise
      * @ORM\JoinColumn(nullable=false)
      */
     private $deliveryContent;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="UserBundle\Entity\Company")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $company;
 
     /**
      * Get id
@@ -91,6 +97,15 @@ class DeliveryPromise
     public function getDeliveryContent()
     {
         return $this->deliveryContent;
+    }
+    
+    public function getCompany() {
+    	return $this->company;
+    }
+    
+    public function setCompany($company) {
+    	$this->company = $company;
+    	return $this;
     }
 }
 

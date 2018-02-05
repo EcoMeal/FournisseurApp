@@ -80,5 +80,9 @@ class ProductService
             }
     }
     
+    public function getAllProductByCompany($company) {
+    	return $this->em->getRepository("AppBundle:Product")->getProductByCompany($company);
+    }
+    
     
 }

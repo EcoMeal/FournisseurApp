@@ -58,16 +58,20 @@
 
 		function addProduct(name, id, quantity){
 			$("#product" + id).hide();
-			livraison.id = 0;
+			livraison[id] = 0;
 			$("#tableLivraison").append("<tr id=\"tab"+ id +"\"><td>" + name + "</td>" +
-									 "<td><input type=\"number\" value=\"" + quantity + "\"></td>" + 
+									 "<td><input id=\"input" + id + "\" type=\"number\" value=\"" + quantity + "\" onChange=\"updateProduit(" + id + ")\"></td>" + 
 									 "<td><span class=\"glyphicon glyphicon-remove\" style=\"size:20px;\" onclick=\"deleteProduct(" + id + ")\"></span></td></tr>");
 		}
 
 		function deleteProduct(id){
 			$("#tab" + id).remove();
 			$("#product" + id).show();
-			livraison.id = null;
+			livraison[id] = null;
+		}
+		
+		function updateProduit(id){
+			livraison[id] =$("#input"+id).val();
 		}
 
 		function filterProduct(){
@@ -93,7 +97,23 @@
 			{% endif %}
         }
         function savedelivery(){
-
+			 $.ajax( {
+				url : "/delivery",
+				type : 'POST', // Le type de la requête HTTP.
+				data: livraison,
+                contentType: "application/json; charset=utf-8",
+                dataType:'json',  
+  				success: function(response) {
+                    if(response.success){
+                        $(".alert-success").append(response.success);
+                        $(".alert-success").show(); 
+                    }
+                    if(response.error){
+                        $(".alert-danger").append(response.error);
+                        $(".alert-danger").show();
+                    }
+                }
+          });
         }
 	</script>
 

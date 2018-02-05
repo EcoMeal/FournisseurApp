@@ -45,13 +45,24 @@ class DeliveryPromiseController extends Controller
     /**
      * @Route("delivery")
      */
-    public function addDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService, ProductService $productService, Request $request) {
+    public function addDeliveryPromiseAction(Request $request, DeliveryPromiseService $deliveryPromiseService, ProductService $productService, Request $request) {
 
 		$error = NULL;
 		
 	    // The delivery promise format (product_id=quantityPromise&product_id2=quantityPromise2).	
 		$rawData = $request->getContent();
-			
+		
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		
+		$em = $this->getDoctrine()->getManager();
+		$company = NULL;
+		if($user->hasRole("ROLE_ADMIN")) {
+			$company_id = $request->query->get('company');
+			$company = $em->getRepository("UserBundle:Company")->find($company_id);
+		} else {
+			$company = $em->getRepository("UserBundle:Company")->findOneBy(array("user" => $user));
+		}
+		
 		if(!empty($rawData)) {
 	                
 	        // Multiples promises.
@@ -63,14 +74,19 @@ class DeliveryPromiseController extends Controller
 				$deliveryPromiseItemList = array($rawData);
 			}
 
-            $error = $deliveryPromiseService->createDeliveryPromise($deliveryPromiseItemList);
+            $error = $deliveryPromiseService->createDeliveryPromise($company, $deliveryPromiseItemList);
         }
         
-        $product_list = $productService->getAllProductOrderedByName();
+        if(!is_null($company)) {
+	        $product_list = $productService->getAllProductByCompany($company);
+        }
+		
+        $delivery_promise = $deliveryPromiseService->getDeliveryPromiseFor($company);
         
         return $this->render('AppBundle:DeliveryPromise:add_delivery_promise.html.twig', array(
            "product_list" => $product_list,
             "error" => $error,
+        	"delivery_promise" => $delivery_promise,        		
         ));
          
     }
