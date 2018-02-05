@@ -45,7 +45,7 @@ class DeliveryPromiseController extends Controller
     /**
      * @Route("delivery")
      */
-    public function addDeliveryPromiseAction(Request $request, DeliveryPromiseService $deliveryPromiseService, ProductService $productService, Request $request) {
+    public function addDeliveryPromiseAction(DeliveryPromiseService $deliveryPromiseService, ProductService $productService, Request $request) {
 
 		$error = NULL;
 		
@@ -82,8 +82,10 @@ class DeliveryPromiseController extends Controller
         }
 		
         $delivery_promise = $deliveryPromiseService->getDeliveryPromiseFor($company);
+        $companies = $em->getRepository("UserBundle:Company")->findAll();
         
         return $this->render('AppBundle:DeliveryPromise:add_delivery_promise.html.twig', array(
+            "companies" => $companies,
            "product_list" => $product_list,
             "error" => $error,
         	"delivery_promise" => $delivery_promise,        		

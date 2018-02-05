@@ -25,9 +25,10 @@
 		</select>
 		
 		<br />
+		<div class="row">
+			<h3>  Catégories produit:  <input type="text" id="filterInput" onkeyup="filterCategories()" placeholder="chercher une catégorie..."> </h3>
+		</div>	
 		<div id="listCategories" class="row col-xs-12">
-
-			<h3>Catégories associées :</h3>
 
 			{% if categories is defined %}
 		
@@ -52,9 +53,7 @@
 			<span class="mdi mdi-content-save" style="font-size:50px"></span>
 		</button>
 
-		<div class="row">
-			<h3>  Catégories produit:  <input type="text" id="filterInput" onkeyup="filterCategories()" placeholder="chercher une catégorie..."> </h3>
-		</div>	
+		
 	
 	</div>
 	
