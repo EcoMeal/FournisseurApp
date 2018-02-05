@@ -12,10 +12,10 @@
 
 	<h1>Ajout de catégories</h1>
 	
-	<div>
+	<div class="form-group">
 	
 		<label for="company">Fournisseur :</label>
-		<select id="company">
+		<select class="form-control" id="company" style="max-width: 600px">
 			<option></option>
 			{% if companies is defined %}
 				{% for company in companies %}
@@ -25,42 +25,72 @@
 		</select>
 		
 		<br />
+		<div id="listCategories" class="row col-xs-12">
+
+			<h3>Catégories associées :</h3>
+
+			{% if categories is defined %}
 		
-		<h3>Catégories associées :</h3>
-		
-		<br />
-		
-		{% if categories is defined %}
-			{% for category in categories %}
-				<input type="checkbox" id="category-{{category.id}}">
-				<label for="category-{{category.id}}">{{category.name}}</label>
-				<br />
-			{% endfor %}		
-		{% endif %}
-		
-		<input type="button" id="valid-button" value="Valider" />
+				{% for category in categories %}
+					<div id="category{{category.id}}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2" style="opacity: 0.3" onclick="selectCategory({{category.id}})">
+						{% if category.imagePath != null %}
+							<img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
+						{% else %}
+							<img class="card-image" src="/images/placeholder.png"/>
+						{% endif %}
+						<div class="card-image-label">
+							{{ category.name }}			
+						</div>
+
+					</div>
+				{% endfor %}
+			{% endif %}
+
+		</div>		
+
+		<button type="button" class="btn btn-primary btn-lg btn-save-fix" onclick="updateCompanyCategories()">
+			<span class="mdi mdi-content-save" style="font-size:50px"></span>
+		</button>
+
+		<div class="row">
+			<h3>  Catégories produit:  <input type="text" id="filterInput" onkeyup="filterCategories()" placeholder="chercher une catégorie..."> </h3>
+		</div>	
 	
 	</div>
 	
 	<script type="text/javascript">
-	
+		var selectedCategories = [];
 		$(document).ready(function() {
 			$("#company").on("change", selectCompany);
-			$("#valid-button").on("click", updateCompanyCategories);
 		});
 	
+		function selectCategory(id){
+			var category = $("#category" + id);
+			if(selectedCategories.includes(id)){
+				category.fadeTo( "slow" , 0.3, function() {
+				selectedCategories = selectedCategories.filter(elem => elem !== id);
+			  });
+			} else {				
+				category.fadeTo( "slow" , 1, function() {
+				selectedCategories.push(id);
+			  });
+			}
+			
+		}
+
 		function updateCompanyCategories() {
 			var $companySelect = $("#company");
 			var optionSelect = $companySelect.children("option:selected");
 			var idCompany = optionSelect.val();
-			var selectedCategories = getSelectedCategories();
 			$.ajax({
 				url : "/company/"+idCompany+"/categories",
 				method : "POST",
 				data : JSON.stringify(selectedCategories),
 				contentType : "application/json; charset=utf-8",
 				dataType : 'json',  
-				success : function() {alert("Mise à jour effectuée");}
+				statusCode : {
+					200 : function() {alert("Mise à jour effectuée");}
+				}
 			});
 		}
 		
@@ -81,31 +111,32 @@
 			});
 		}
 		
-		function getSelectedCategories() {
-			var categories = new Array();
-			var checkboxes = $("input[type='checkbox']:checked");
-			$.each(checkboxes, function() {
-				var id = $(this).attr("id").substring(9, $(this).attr("id").length);
-				categories.push(id);
-			});
-			return categories;
-		}
-		
 		function setSelectedCategories(categories) {
 			clearAllCheckboxes();
 			var id;
 			for(var i in categories) {
 				id = categories[i];
-				$("#category-"+id).attr("checked", true);
+				selectedCategories.push(id);
+				$("#category"+id).fadeTo( 0, 1, null );
 			}
 		}
 		
 		function clearAllCheckboxes() {
-			var allCheckboxes = $("input:checkbox");
-			$.each(allCheckboxes, function() {
-				$(this).attr("checked", false);
-			});
+			$(".card-container").fadeTo( 0, 0.3, null);
+			selectedCategories = [];
 		}
+
+		function filterCategories(){
+	        var filter = $("#filterInput").val();
+	        var list = $("#listCategories > .card-container");
+	        var listNameCategory = $("#listCategories > .card-container > .card-image-label");
+
+	        var regexp = new RegExp(filter, 'i');
+	        !filter ? list.eq(0).show() : list.eq(0).hide();
+	        for(var i=1;i<list.length;i++){
+	            listNameCategory.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
+	        }
+	    }
 	
 	</script>
 
