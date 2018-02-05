@@ -80,7 +80,7 @@ class CompanyController extends Controller
         	}
         	return $this->json($arrayJson);
 		} else {
-			//TODO message d'erreur id invalide
+			return $this->json(null, 400);
 		}
 	}
 	
@@ -89,8 +89,7 @@ class CompanyController extends Controller
 	 * @Method({"POST"})
 	 */
 	public function setCompanyCategoriesAction($id, Request $request) {
-			
-		var_dump("content = ".$request->getContent());
+		
 		$selectedCategories = json_decode($request->getContent());
 		$em = $this->getDoctrine()->getManager();
 		$allCategories = $em->getRepository("AppBundle:Category")->findAll();
