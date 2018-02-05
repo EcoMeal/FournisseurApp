@@ -33,8 +33,7 @@
 	color : white;
 	padding : 8px;
 	text-align: center;
-font-size: 20px;
-
+	font-size: 20px;
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -115,6 +114,14 @@ font-size: 20px;
     bottom: 40px;
     right: 40px;
 }
+
+.btn-save-fix2 {
+	z-index: 50px;
+	position: fixed;
+    bottom: 40px;
+    right: 130px;
+}
+
 .card-title-block{
 	color:white;
 	text-align:center;
@@ -134,9 +141,8 @@ font-size: 20px;
 }
 
 .bg-warning-light{
-		background-color: #ffc107;
-
-	 filter: saturate(85%);
+	background-color: #ffc107;
+	filter: saturate(85%);
 }
 
 .bg-success{
@@ -248,4 +254,5 @@ font-size: 20px;
 	text-align:center;
 	background:#555;
 	outline: none;
+	width: 100%;
 }

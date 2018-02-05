@@ -52,6 +52,8 @@ class DeliveryPromiseController extends Controller
 	    // The delivery promise format (product_id=quantityPromise&product_id2=quantityPromise2).	
 		$rawData = $request->getContent();
 			
+
+            
 		if(!empty($rawData)) {
 	                
 	        // Multiples promises.
@@ -65,10 +67,11 @@ class DeliveryPromiseController extends Controller
 
             $error = $deliveryPromiseService->createDeliveryPromise($deliveryPromiseItemList);
         }
-        
+        $em = $this->getDoctrine()->getManager();
         $product_list = $productService->getAllProductOrderedByName();
-        
+        $companies = $em->getRepository("UserBundle:Company")->findAll();
         return $this->render('AppBundle:DeliveryPromise:add_delivery_promise.html.twig', array(
+            "companies" => $companies,
            "product_list" => $product_list,
             "error" => $error,
         ));

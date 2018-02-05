@@ -10,6 +10,20 @@
 
 {% block body %}
 
+	{% if is_granted("ROLE_ADMIN") %}
+		{% if companies is defined %}
+			<div id="listproducts" class="row col-xs-12">
+				<label for="company">Fournisseur :</label>
+				<select class="form-control" id="company" style="max-width: 600px" onchange="changeCompany()">
+					<option></option>
+						{% for company in companies %}
+							<option value="{{company.id}}">{{company.companyname}}</option>
+						{% endfor %}
+				</select>
+			</div>
+		{% endif %}
+	{% endif %}
+
 	<table class="table">
 		<thead>
 			<tr>
@@ -22,7 +36,6 @@
 			
 		</tbody>
     </table>
-
 
     <div id="listproducts" class="row col-xs-12">
 		<h2>Produits: <input type="text" id="filterInput" onkeyup="filterProduct()" placeholder="chercher un produit..."></h2>
@@ -52,9 +65,21 @@
 	</div>
 	<button type="button" class="btn btn-primary btn-lg btn-save-fix" onclick="savedelivery()">
 		<span class="mdi mdi-content-save" style="font-size:50px"></span>
-	</button>
+	</button>	
+	{% if is_granted("ROLE_ADMIN") %}
+		<button type="button" class="btn btn-primary btn-lg btn-save-fix2" onclick="comfirmdelivery()">
+			<span class="mdi mdi-check" style="font-size:50px"></span>
+		</button>
+	{% endif %}
+
 	<script>
 		var livraison = {};
+
+		$(document).ready(function() {
+			$("#company").val(urlParam('company'));
+			$("#company").on("change", changeCompany);
+
+		});
 
 		function addProduct(name, id, quantity){
 			$("#product" + id).hide();
@@ -85,6 +110,7 @@
 
             }
         }
+
 		function initDelivery(){
 			{% if deliveries is defined %}
 				{% for delivery in deliveries %}
@@ -92,9 +118,31 @@
 				{% endfor %}
 			{% endif %}
         }
+
         function savedelivery(){
 
         }
+
+        function comfirmdelivery(){
+        	
+			$.ajax({
+				url : "/company/"+idCompany+"/categories",
+				method : "GET", 
+				success : setSelectedCategories
+			});
+        }
+
+        function changeCompany(){
+			var $companySelect = $("#company");
+			var optionSelect = $companySelect.children("option:selected");
+			var idCompany = optionSelect.val();
+        	window.location = '/delivery?company=' + idCompany;
+        }
+
+	    function urlParam(name){
+	        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	        return results[1] || 0;
+	    }
 	</script>
 
 {% endblock %}
