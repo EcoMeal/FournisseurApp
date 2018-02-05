@@ -14,14 +14,14 @@
 {% block body %}
     <script src="js/modernizr.custom.js"></script>
     <link rel="shortcut icon" href="../favicon.ico">
-
-	{% if is_granted("ROLE_ADMIN") %}
 	
     	<div class="main clearfix">
         	</br></br></br>
 
         	<nav id="menu" class="nav-home">
 	        	<ul>
+
+					{% if is_granted("ROLE_ADMIN") %}
 	            	<li>
 	                	<a href="/product">
 	                    	<span class="icon">
@@ -31,27 +31,11 @@
 	                	</a>
 	            	</li>
 	            	<li>
-	                	<a href="/category">
-	                    	<span class="icon">
-	                        	<i aria-hidden="true" class="fa fa-sitemap"></i>
-	                    	</span>
-	                    	<span>Catégorie Produit</span>
-	                	</a>
-	            	</li>
-	            	<li>
 		                <a href="/basket">
 		                    <span class="icon">
 		                        <i aria-hidden="true" class="material-icons">shopping_basket</i>
 		                    </span>
 		                    <span>Panier</span>
-		                </a>
-		            </li>
-		            <li>
-		                <a href="/basket_category">
-		                    <span class="icon">
-		                        <i aria-hidden="true" class="fa fa-sitemap"></i>
-		                    </span>
-		                    <span>Catégorie Panier</span>
 		                </a>
 		            </li>
 		            <li>
@@ -70,10 +54,25 @@
 		                    <span>Commande</span>
 		                </a>
 		            </li>
+		            <li>
+		                <a href="/delivery">
+		                    <span class="icon">
+		                        <i aria-hidden="true" class="fa fa-sitemap"></i>
+		                    </span>
+		                    <span>Bon de livraison</span>
+		                </a>
+		            </li>
+					{% endif %}
+	            	<li>
+	                	<a href="/comfirm-delivery">
+	                    	<span class="icon">
+	                        	<i aria-hidden="true" class="fa fa-sitemap"></i>
+	                    	</span>
+	                    	<span>Livraison</span>
+	                	</a>
+	            	</li>
 	        	</ul>
     		</nav>
 		</div>
-
-	{% endif %}
 
 {% endblock %}
