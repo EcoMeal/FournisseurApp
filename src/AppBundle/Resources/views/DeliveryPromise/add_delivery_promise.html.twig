@@ -1,0 +1,100 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block title %} Create a delivery {% endblock %}
+
+{% block body %}
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Produit</th>
+				<th>Quantité</th>
+				<th>Supprimer</th>
+			</tr>
+		</thead>
+		<tbody id="tableLivraison">
+			
+		</tbody>
+    </table>
+
+
+    <div id="listproducts" class="row col-xs-12">
+		<h2>Produits: <input type="text" id="filterInput" onkeyup="filterProduct()" placeholder="chercher un produit..."></h2>
+	
+		{% if product_list is defined %}
+	
+			{% for product in product_list %}
+			
+
+				<div id="product{{ product.id }}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2"  onclick="addProduct('{{ product.name }}', '{{ product.id }}', 0)">
+					{% if product.imagePath != null %}
+						<img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}"/>
+					{% else %}
+						<img class="card-image" src="images/placeholder.png"/>
+					{% endif %}
+					<div class="card-image-label">
+						{{ product.name }}
+					</div>
+					<div name="nameCategoryProduct" class="hidden">
+						{{ product.category.name }}
+					</div>
+
+				</div>
+			{% endfor %}
+
+		{% endif %}
+	</div>
+	<button type="button" class="btn btn-primary btn-lg btn-save-fix" onclick="savedelivery()">
+		<span class="mdi mdi-content-save" style="font-size:50px"></span>
+	</button>
+	<script>
+		var livraison = {};
+
+		function addProduct(name, id, quantity){
+			$("#product" + id).hide();
+			livraison.id = 0;
+			$("#tableLivraison").append("<tr id=\"tab"+ id +"\"><td>" + name + "</td>" +
+									 "<td><input type=\"number\" value=\"" + quantity + "\"></td>" + 
+									 "<td><span class=\"glyphicon glyphicon-remove\" style=\"size:20px;\" onclick=\"deleteProduct(" + id + ")\"></span></td></tr>");
+		}
+
+		function deleteProduct(id){
+			$("#tab" + id).remove();
+			$("#product" + id).show();
+			livraison.id = null;
+		}
+
+		function filterProduct(){
+            var filter = $("#filterInput").val();
+            var list = $("#listproducts > .card-container");
+            var listNameProduct = $("#listproducts > .card-container > .card-image-label");
+            var listNameCategory = $("#listproducts > .card-container > [name='nameCategoryProduct']");
+            var regexp = new RegExp(filter, 'i');
+            !filter ? list.eq(0).show() : list.eq(0).hide();
+            for(var i=1;i<list.length;i++){
+                listNameProduct.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
+                if(listNameCategory.eq(i-1).text().trim().match(regexp)){
+                    list.eq(i).show()
+                }
+
+            }
+        }
+		function initDelivery(){
+			{% if deliveries is defined %}
+				{% for delivery in deliveries %}
+					addProduct(delivery.product.name, delivery.product.id, delivery.quantity);
+				{% endfor %}
+			{% endif %}
+        }
+        function savedelivery(){
+
+        }
+	</script>
+
+{% endblock %}

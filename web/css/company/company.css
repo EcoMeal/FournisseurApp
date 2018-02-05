@@ -1,0 +1,28 @@
+table {
+	border: 1px solid black;
+	box-sizing: border-box;
+}
+
+th, td {
+	border: 1px solid black;
+	min-width: 30px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+th {
+	background-color: #222;
+	color: #9d9d9d;
+}
+
+tr {
+	
+}
+
+a {
+	cursor: pointer;
+	font-weight: bold;
+}

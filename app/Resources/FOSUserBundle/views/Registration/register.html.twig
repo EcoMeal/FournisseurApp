@@ -1,0 +1,11 @@
+{% extends "index.html.twig" %}
+
+{% block body %}
+
+	<h1> Création de compte fournisseur </h1>
+	
+	{% block fos_user_content %}
+		{{ include('@fos_registering/register_content.html.twig') }}
+	{% endblock fos_user_content %}
+
+{% endblock %}

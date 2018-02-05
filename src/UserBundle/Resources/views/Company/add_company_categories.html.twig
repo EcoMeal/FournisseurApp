@@ -1,0 +1,143 @@
+{% extends "::index.html.twig" %}
+
+{% block css %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block title %}Ajout de catégories au fournisseur{% endblock %}
+
+{% block body %}
+
+	<h1>Ajout de catégories</h1>
+	
+	<div class="form-group">
+	
+		<label for="company">Fournisseur :</label>
+		<select class="form-control" id="company" style="max-width: 600px">
+			<option></option>
+			{% if companies is defined %}
+				{% for company in companies %}
+					<option value="{{company.id}}">{{company.companyname}}</option>
+				{% endfor %}
+			{% endif %}
+		</select>
+		
+		<br />
+		<div id="listCategories" class="row col-xs-12">
+
+			<h3>Catégories associées :</h3>
+
+			{% if categories is defined %}
+		
+				{% for category in categories %}
+					<div id="category{{category.id}}" class="card-container col-xs-12 col-sm-4 col-md-3 col-lg-2" style="opacity: 0.3" onclick="selectCategory({{category.id}})">
+						{% if category.imagePath != null %}
+							<img class="card-image" src="{{ asset('uploads/images/' ~ category.imagePath) }}"/>
+						{% else %}
+							<img class="card-image" src="/images/placeholder.png"/>
+						{% endif %}
+						<div class="card-image-label">
+							{{ category.name }}			
+						</div>
+
+					</div>
+				{% endfor %}
+			{% endif %}
+
+		</div>		
+
+		<button type="button" class="btn btn-primary btn-lg btn-save-fix" onclick="updateCompanyCategories()">
+			<span class="mdi mdi-content-save" style="font-size:50px"></span>
+		</button>
+
+		<div class="row">
+			<h3>  Catégories produit:  <input type="text" id="filterInput" onkeyup="filterCategories()" placeholder="chercher une catégorie..."> </h3>
+		</div>	
+	
+	</div>
+	
+	<script type="text/javascript">
+		var selectedCategories = [];
+		$(document).ready(function() {
+			$("#company").on("change", selectCompany);
+		});
+	
+		function selectCategory(id){
+			var category = $("#category" + id);
+			if(selectedCategories.includes(id)){
+				category.fadeTo( "slow" , 0.3, function() {
+				selectedCategories = selectedCategories.filter(elem => elem !== id);
+			  });
+			} else {				
+				category.fadeTo( "slow" , 1, function() {
+				selectedCategories.push(id);
+			  });
+			}
+			
+		}
+
+		function updateCompanyCategories() {
+			var $companySelect = $("#company");
+			var optionSelect = $companySelect.children("option:selected");
+			var idCompany = optionSelect.val();
+			$.ajax({
+				url : "/company/"+idCompany+"/categories",
+				method : "POST",
+				data : JSON.stringify(selectedCategories),
+				contentType : "application/json; charset=utf-8",
+				dataType : 'json',  
+				statusCode : {
+					200 : function() {alert("Mise à jour effectuée");}
+				}
+			});
+		}
+		
+		function selectCompany() {
+			var $companySelect = $("#company");
+			var optionSelect = $companySelect.children("option:selected");
+			var idCompany = optionSelect.val();
+			
+			if(idCompany === "") {
+				clearAllCheckboxes();
+				return;
+			}
+			
+			$.ajax({
+				url : "/company/"+idCompany+"/categories",
+				method : "GET", 
+				success : setSelectedCategories
+			});
+		}
+		
+		function setSelectedCategories(categories) {
+			clearAllCheckboxes();
+			var id;
+			for(var i in categories) {
+				id = categories[i];
+				selectedCategories.push(id);
+				$("#category"+id).fadeTo( 0, 1, null );
+			}
+		}
+		
+		function clearAllCheckboxes() {
+			$(".card-container").fadeTo( 0, 0.3, null);
+			selectedCategories = [];
+		}
+
+		function filterCategories(){
+	        var filter = $("#filterInput").val();
+	        var list = $("#listCategories > .card-container");
+	        var listNameCategory = $("#listCategories > .card-container > .card-image-label");
+
+	        var regexp = new RegExp(filter, 'i');
+	        !filter ? list.eq(0).show() : list.eq(0).hide();
+	        for(var i=1;i<list.length;i++){
+	            listNameCategory.eq(i).text().trim().match(regexp) ? list.eq(i).show() : list.eq(i).hide();
+	        }
+	    }
+	
+	</script>
+
+{% endblock %}

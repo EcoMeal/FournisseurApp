@@ -34,6 +34,65 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $serviceContainer: '@service_container'
+            
+    AppBundle\Services\BasketCategoryService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container'       
+
+    AppBundle\Services\BasketOrderService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            
+    AppBundle\Services\BasketService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container'       
+            
+    AppBundle\Services\DeliveryService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            
+    AppBundle\Services\ProductService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container'       
+            
+    AppBundle\Services\StockService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container' 
+            
+    AppBundle\Services\DeliveryPromiseService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $serviceContainer: '@service_container' 
+            
+    UserBundle\Controller\:
+        resource: '../../src/UserBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+          
+    UserBundle\Services\CompanyService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+          
+            
 #    AppBundle\Services\DeliveryService:
 #         arguments:
 #            $entityManager: "@doctrine.orm.entity_manager"
+
+    auth_token_user_provider:
+        class: UserBundle\Security\AuthTokenUserProvider
+        arguments: ["@auth_token_repository", "@fos_user.user_manager"]
+        public:    false
+        
+    auth_token_repository:
+        class:   Doctrine\ORM\EntityManager
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments: ["UserBundle:AuthToken"]
+        
+    auth_token_authenticator:
+        class:     UserBundle\Security\AuthTokenAuthenticator
+        arguments: ["@security.http_utils"]
+        public:    false
