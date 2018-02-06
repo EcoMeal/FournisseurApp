@@ -10,20 +10,6 @@
 
 {% block body %}
 
-{% if error is not empty %}
-    <div class="alert alert-danger alert-dismissable fade in">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <p>{{error}}</p>
-    </div>
-{% endif %}
-
-{% if success is not empty %}
-    <div class="alert alert-success alert-dismissable fade in">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <p>{{success}}</p>
-    </div>
-{% endif %}
-
 <div class="alert alert-danger alert-dismissable fade in" style="display: none;">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 </div>
