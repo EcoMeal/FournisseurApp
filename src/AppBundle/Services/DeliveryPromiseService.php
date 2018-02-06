@@ -39,7 +39,8 @@ class DeliveryPromiseService
         }
                 
         foreach ($deliveryPromise->getDeliveryContent() as $stockPromise) {
-            $error .= $stockService->updateProductStock($stockPromise->getProduct()->getId(), $stockPromise->getQuantity());
+        	$product = $stockPromise->getProduct();
+            $error .= $stockService->updateProductStock($product->getId(), $stockPromise->getQuantity() + $product->getQuantity());
         }
 
         // Remove the delivery promise.

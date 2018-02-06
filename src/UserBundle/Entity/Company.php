@@ -59,7 +59,7 @@ class Company
 	 * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Category")
 	 * @ORM\JoinTable(name="company_category",
 	 *      joinColumns={@ORM\JoinColumn(name="company_id", referencedColumnName="id")},
-	 *      inverseJoinColumns={@ORM\JoinColumn(name="category_id", referencedColumnName="id", unique=true)}
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="category_id", referencedColumnName="id")}
 	 * )
 	 */
     private $categories;
