@@ -31,7 +31,7 @@ class DeliveryPromise
     /**
      * Contains the content of the promise order (An array of StockPromise)
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\StockPromise", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $deliveryContent;
     

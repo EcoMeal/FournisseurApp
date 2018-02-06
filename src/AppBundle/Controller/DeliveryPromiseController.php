@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Services\DeliveryPromiseService;
 use AppBundle\Services\ProductService;
 use AppBundle\Services\StockService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DeliveryPromiseController extends Controller
 {
@@ -24,6 +25,8 @@ class DeliveryPromiseController extends Controller
         
 		if(!empty($deliveryPromiseID)) {
             $error = $deliveryPromiseService->confirmDeliveryPromise($stockService, $deliveryPromiseID);              
+        } else {
+            $error = "Aucune donnée reçue.";
         }
         
         if($error != NULL){
@@ -52,7 +55,6 @@ class DeliveryPromiseController extends Controller
 		if($user->hasRole("ROLE_ADMIN")) {
 			$company_id = $request->query->get('company');
            if(!is_null($company_id)){
-            echo "Company id = ".$company_id;
               $company = $em->getRepository("UserBundle:Company")->findOneById($company_id);
            }
 		} else {

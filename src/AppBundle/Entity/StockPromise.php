@@ -21,7 +21,7 @@ class StockPromise
      */
     private $id;
 
-     /**
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */

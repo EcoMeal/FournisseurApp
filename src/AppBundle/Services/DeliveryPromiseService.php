@@ -28,15 +28,16 @@ class DeliveryPromiseService
     
     public function confirmDeliveryPromise(StockService $stockService, $deliveryPromiseID)
     {
+
         $error = NULL;
         
         $deliveryPromise = $this->em->getRepository("AppBundle:DeliveryPromise")->findOneById($deliveryPromiseID);
-        
+
+
         if($deliveryPromise == null){
             return "Erreur: le bon de livraison n'existe pas.";
         }
-        
-        
+                
         foreach ($deliveryPromise->getDeliveryContent() as $stockPromise) {
         	$product = $stockPromise->getProduct();
         	$stock = $this->em->getRepository("AppBundle:Stock")->findCurrentStockFor($product->getId());
@@ -47,6 +48,7 @@ class DeliveryPromiseService
         $this->em->remove($deliveryPromise);          
         $this->em->flush();
         
+
         return $error;
     }
  
@@ -105,10 +107,11 @@ class DeliveryPromiseService
         //If there is any old promise for that company, we remove it
         $oldDeliveryPromise = $this->getDeliveryPromiseFor($company);
         if(!is_null($oldDeliveryPromise)) {
+           
+            echo "Removed the oldDeliveryPromise ".$oldDeliveryPromise->getId();
         	$this->em->remove($oldDeliveryPromise);
         	$this->em->flush();
         }
-        
         
         $this->em->persist($deliveryPromise);
         $this->em->flush();     
