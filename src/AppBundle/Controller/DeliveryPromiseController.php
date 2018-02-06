@@ -73,6 +73,13 @@ class DeliveryPromiseController extends Controller
 			}
 
             $error = $deliveryPromiseService->createDeliveryPromise($company, $deliveryPromiseItemList);
+            
+            if($error != NULL){
+            	return new JsonResponse(array("error" => $error));
+            } else {
+            	return new JsonResponse(array("success" => "Le bon de commande à été crée."));
+            }
+            
         }
 
         if(!is_null($company)) {
