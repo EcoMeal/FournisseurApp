@@ -28,15 +28,15 @@
                     </div>
                     {% set price_basket = 0 %}
 
-                    {% for basket in order.orderContent %}
-                        {% set price_basket = price_basket + basket.price %}
+                    {% for basketOrderContent in order.basketOrderContent %}
+                        {% set price_basket = price_basket + (basketOrderContent.basket.price * basketOrderContent.quantity) %}
                         <div class="col-xs-12 card-title-block bg-dark-light">
-                            <span class="col-xs-9" >{{ basket.name }}</span>
-                            <span class="col-xs-3" >{{ basket.price }}€</span>
+                            <span class="col-xs-9" >{{ basketOrderContent.quantity }} x {{ basketOrderContent.basket.name }}</span>
+                            <span class="col-xs-3" >{{ basketOrderContent.basket.price }}€</span>
                        </div>
                         <span class="col-xs-12" style="background-color : #DDD;">
-                            {% if basket.product_list is defined %}
-                                {% for product in basket.product_list %}
+                            {% if basketOrderContent.basket.product_list is defined %}
+                                {% for product in basketOrderContent.basket.product_list %}
                                     <div value="{{ product.id }}" class="card-container image-product ui-widget-content ui-corner-tr">
                                         {% if product.imagePath != null %}
                                             <img class="card-image" src="{{ asset('uploads/images/' ~ product.imagePath) }}" />

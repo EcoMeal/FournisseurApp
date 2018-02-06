@@ -30,11 +30,12 @@ class BasketOrder
 
 
     /**
-     * Contains the content of a BasketOrder (An array of Baskets)
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Basket", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * Contains the content of a BasketOrder (An array of BasketOrderContent)
+     * 
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\BasketOrderContent", mappedBy="basketOrder", cascade={"persist"})
+     * @ORM\JoinColumn(name="basket_order_id")
      */
-    private $orderContent;
+    private $basketOrderContent;
     
     /**
      * Get id
@@ -72,20 +73,20 @@ class BasketOrder
     
     /**
      * Returns the baskets contained in the order
-     * @return Array<Basket> 
+     * @return Array<BasketOr> 
      * 
      */
-    public function getOrderContent() {
-    	return $this->orderContent;
+    public function getBasketOrderContent() {
+    	return $this->basketOrderContent;
     }
     
     /**
-     * Set the basket contained in the order
-     * @param Array<Basket> $order_content
+     * Set the baskets contained in the order
+     * @param Array<BasketOrderContent> $basketOrderContent
      * @return $this
      */
-    public function setOrderContent($orderContent) {
-    	$this->orderContent = $orderContent;
+    public function setBasketOrderContent($basketOrderContent) {
+    	$this->basketOrderContent = $basketOrderContent;
     	return $this;
     }
 

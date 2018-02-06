@@ -113,21 +113,22 @@ class BasketOrderController extends Controller {
         ));
     }
 
-    /**
-     * Show the order corresponding to the $id in GET with its content
-     * QueryParameter($id_order)
-     * @Route("/order")
-     * @Method({"GET"})
-     */
-    public function order_summary(Request $request, BasketOrderService $basketOrderService) {
-        $id = $request->query->get('id_order'); // Get the $id_order GET variable
-        //Get the order with its baskets
-        $order = $basketOrderService->getOrder($id);
+//     /**
+//      * Show the order corresponding to the $id in GET with its content
+//      * QueryParameter($id_order)
+//      * @Route("/order")
+//      * @Method({"GET"})
+//      */
+//     public function order_summary(Request $request, BasketOrderService $basketOrderService) {
+//         $id = $request->query->get('id_order'); // Get the $id_order GET variable
+//         //Get the order with its baskets
+//         $order = $basketOrderService->getOrder($id);
 
-        // Display the order and its content
-        return $this->render('AppBundle:BasketOrder:recap_order.html.twig', array(
-                    "order" => $order
-        ));
-    }
+//         var_dump($order);
+//         // Display the order and its content
+//         return $this->render('AppBundle:BasketOrder:recap_order.html.twig', array(
+//                     "order" => $order
+//         ));
+//     }
 
 }

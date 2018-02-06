@@ -29,12 +29,14 @@ class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
      * @return Array<BasketOrder>
      */
     public function getAllOrdersWithBasketListOrderedByTime() {
-        $qb = $this->createQueryBuilder('o')
-                ->leftJoin('o.orderContent ', "basket")
+        $qb = $this->createQueryBuilder('b')
+                ->leftJoin('b.basketOrderContent ', "basketOrderContent")
+                ->addSelect('basketOrderContent')
+                ->leftJoin('basketOrderContent.basket', 'basket')
                 ->addSelect('basket')
                 ->leftJoin('basket.product_list ', "product")
                 ->addSelect('product')
-                ->orderBy('o.deliveryTime');
+                ->orderBy('b.deliveryTime');
         return $qb->getQuery()->getArrayResult();
     }
 
@@ -44,19 +46,23 @@ class BasketOrderRepository extends \Doctrine\ORM\EntityRepository {
      * @return BasketOrder
      */
     public function getOrderWithBasketList($id) {
-        $qb = $this->createQueryBuilder('o')
-                ->leftJoin('o.orderContent ', "basket")
+        $qb = $this->createQueryBuilder('b')
+                ->leftJoin('b.basketOrderContent ', "basketOrderContent")
+                ->addSelect('basketOrderContent')
+                ->leftJoin('basketOrderContent.basket', 'basket')
                 ->addSelect('basket')
                 ->leftJoin('basket.product_list ', "product")
                 ->addSelect('product')
-                ->where('o.id = :id');
+                ->where('b.id = :id');
         $qb->setParameter(':id', $id);
         return $qb->getQuery()->getArrayResult();
     }
     
     public function getAllOrdersWithBasketId($basket_id) {
-    	$qb = $this->createQueryBuilder('o')
-    	->leftJoin('o.orderContent ', "basket")
+    	$qb = $this->createQueryBuilder('b')
+    	->leftJoin('b.basketOrderContent ', "basketOrderContent")
+    	->addSelect('basketOrderContent')
+    	->leftJoin('basketOrderContent.basket', 'basket')
     	->addSelect('basket')
     	->where('basket.id = :basket_id');
     	$qb->setParameter(":basket_id", $basket_id);

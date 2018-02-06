@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\BasketOrder;
 use AppBundle\Entity\Stock;
 use DateTime;
+use AppBundle\Entity\BasketOrderContent;
 
 class BasketOrderService {
 	
@@ -115,9 +116,27 @@ class BasketOrderService {
 			$basketOrder = new BasketOrder();
 			$baskets = array();
 			
+			$basketOrderContents = array();
+			
 			//Get all the baskets from database
 			foreach($order->content as $basket_id) {
+				
+				//Get the basket with that id
 				$basket = $basketRepository->find($basket_id);
+				
+				//If the basket id is not already passed, create a new basketorderContent with the id of the basket
+				if(array_key_exists($basket_id, $basketOrderContents)) {
+					$basketOrderContent = $basketOrderContents[$basket_id];
+					$basketOrderContent->setQuantity($basketOrderContent->getQuantity()+1);
+				} else {
+					//Else update the quantity for the existing content
+					$basketOrderContent = new BasketOrderContent();
+					$basketOrderContent->setQuantity(1);
+					$basketOrderContent->setBasket($basket);
+					$basketOrderContent->setBasketOrder($basketOrder);
+					$basketOrderContents[$basket_id] = $basketOrderContent;
+				}
+				
 				foreach($basket->getProductList() as $product) {
 					$stock = $this->em->getRepository("AppBundle:Stock")
 						->findCurrentStockFor($product->getId());
@@ -133,7 +152,7 @@ class BasketOrderService {
 				array_push($baskets, $basket);
 			}
 			
-			$basketOrder->setOrderContent($baskets);
+			$basketOrder->setBasketOrderContent(array_values($basketOrderContents));
 			$date = new DateTime();
 			$date->setTimestamp($order->delivery_time);
 			$basketOrder->setDeliveryTime($date);
