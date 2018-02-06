@@ -7,6 +7,7 @@ use AppBundle\Services\StockService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class StockController extends Controller
 {
@@ -40,14 +41,17 @@ class StockController extends Controller
 				$error = $stockService->updateProductStock($productID, $newStock);
 				
 			}
+			if($error != NULL){
+            	return new JsonResponse(array("error" => $error));
+	        } else {
+	            return new JsonResponse(array("success" => "Le stock à été mis à jour."));
+	        }
 		}
 		
 		$stock_history = $em->getRepository("AppBundle:Stock")->getCurrentStock();
 		
 		return $this->render('AppBundle:Stock:add_stock.html.twig', array(
 				"stock_history" => $stock_history,
-				"error" => $error,
-				"success" => ""
 		));
 	}
 
