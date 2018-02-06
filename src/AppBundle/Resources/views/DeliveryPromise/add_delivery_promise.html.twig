@@ -67,9 +67,11 @@
 		<span class="mdi mdi-content-save" style="font-size:50px"></span>
 	</button>	
 	{% if is_granted("ROLE_ADMIN") %}
-		<button type="button" class="btn btn-primary btn-lg btn-save-fix2" onclick="comfirmdelivery()">
-			<span class="mdi mdi-check" style="font-size:50px"></span>
-		</button>
+		{% if delivery_promise != null %}
+			<button type="button" class="btn btn-primary btn-lg btn-save-fix2" onclick="comfirmdelivery({{ delivery_promise.id }})">
+				<span class="mdi mdi-check" style="font-size:50px"></span>
+			</button>
+		{% endif %}
 	{% endif %}
 
 	<script>
@@ -116,9 +118,9 @@
         }
 
 		function initDelivery(){
-			{% if deliveries is defined %}
-				{% for delivery in deliveries %}
-					addProduct(delivery.product.name, delivery.product.id, delivery.quantity);
+			{% if delivery_promise != null %}
+				{% for stock_promise in delivery_promise.deliveryContent %}
+					addProduct(stock_promise.product, stock_promise.product.id, stock_promise.quantity);
 				{% endfor %}
 			{% endif %}
         }
@@ -143,12 +145,10 @@
           });
         }
 
-        function comfirmdelivery(){
-        	
+        function comfirmdelivery(id){
 			$.ajax({
-				url : "/company/"+idCompany+"/categories",
-				method : "GET", 
-				success : setSelectedCategories
+				url : "/confirm-delivery/" + id,
+				method : "POST", 
 			});
         }
 

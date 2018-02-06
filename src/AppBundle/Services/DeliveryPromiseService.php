@@ -26,34 +26,22 @@ class DeliveryPromiseService
     }
     
     
-    public function updateDeliveryPromise(StockService $stockService, $deliveryPromiseJson)
+    public function confirmDeliveryPromise(StockService $stockService, $deliveryPromiseID)
     {
         $error = NULL;
         
-        $deliveryPromise = $this->em->getRepository("AppBundle:DeliveryPromise")->findOneById($deliveryPromiseJson->id);
+        $deliveryPromise = $this->em->getRepository("AppBundle:DeliveryPromise")->findOneById($deliveryPromiseID);
         
         if($deliveryPromise == null){
             return "Erreur: le bon de livraison n'existe pas.";
         }
         
-        $confirmedStockPromiseList = $deliveryPromiseJson->confirmed;
         
-        $size = count($confirmedStockPromiseList);
-        for($i = 0; $i < $size; $i ++) {
-            
-            $stockPromiseID = $confirmedStockPromiseList[$i];
-            $stockPromise = $this->em->getRepository("AppBundle:StockPromise")->findOneById($stockPromiseID);
-           
-            
-            // The stock promise exist and is confirmed.
-            if($stockPromise != null && $this->deliveryPromiseContains($deliveryPromise, $stockPromise)){
-                $error .= $stockService->updateProductStock($stockPromise->getProduct()->getId(), $stockPromise->getQuantity());
-                
-            } else {
-                $error .= "La promesse de stock n".$confirmedStockPromiseList[$i]." n'existe pas pour le bon"
-                        ." de commande n".$deliveryPromise->getId()." et n'a pas été traité.";
-            }
+        foreach ($deliveryPromise->getDeliveryContent() as $stockPromise) {
+        	$product = $stockPromise->getProduct();
+            $error .= $stockService->updateProductStock($product->getId(), $stockPromise->getQuantity() + $product->getQuantity());
         }
+
         // Remove the delivery promise.
         $this->em->remove($deliveryPromise);          
         $this->em->flush();
