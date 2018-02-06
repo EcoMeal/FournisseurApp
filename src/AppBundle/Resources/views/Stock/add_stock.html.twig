@@ -69,7 +69,7 @@
 		function changeQuantity(id, old){
 			var quantity = $("#product"+id).val();
 			var number = Number.parseInt(quantity ,10);
-			if(!number){
+			if(number !== 0 && !number){
                 saveTab[id] = null;
                 $("#product"+id).val(old);
 			} else if(number != old) {
