@@ -40,7 +40,8 @@ class DeliveryPromiseService
                 
         foreach ($deliveryPromise->getDeliveryContent() as $stockPromise) {
         	$product = $stockPromise->getProduct();
-            $error .= $stockService->updateProductStock($product->getId(), $stockPromise->getQuantity() + $product->getQuantity());
+        	$stock = $this->em->getRepository("AppBundle:Stock")->findCurrentStockFor($product->getId());
+            $error .= $stockService->updateProductStock($product->getId(), $stockPromise->getQuantity() + $stock->getQuantity());
         }
 
         // Remove the delivery promise.
