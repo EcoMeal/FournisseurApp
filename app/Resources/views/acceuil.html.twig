@@ -55,14 +55,18 @@
 		                </a>
 		            </li>
 					{% endif %}
-		            <li>
-		                <a href="/delivery">
-		                    <span class="icon">
-		                        <i aria-hidden="true" class="fa fa-sitemap"></i>
-		                    </span>
-		                    <span>Bon de livraison</span>
-		                </a>
-		            </li>
+					
+					{% if is_granted("ROLE_ADMIN") or is_granted("ROLE_FOURNISSEUR") %}
+			            <li>
+			                <a href="/delivery">
+			                    <span class="icon">
+			                        <i aria-hidden="true" class="fa fa-sitemap"></i>
+			                    </span>
+			                    <span>Bon de livraison</span>
+			                </a>
+			            </li>
+					{% endif %}
+		            
 	        	</ul>
     		</nav>
 		</div>
